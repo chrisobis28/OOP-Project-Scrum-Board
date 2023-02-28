@@ -10,6 +10,7 @@ Add your own name (do not add the names for others!) to the section below.
 
 | Profile Picture | Name | Email |
 |---|---|---|
+| <img src="docs/Pictures/pfp_SSM.png" width="50">| Secuiu Stefan - Maniu | secuiu-1@student.tudelft.nl |
 | <img src="docs/Pictures/profile-picture-chris-obis.png" width="50">| Chris Obis | c.obis-1@student.tudelft.nl |
 | <img src="docs/Pictures/Tymon_Jastrzemski_Picture.jpg" width ="50"/>|Tymon Jastrzemski | T.H.Jastrzemski@student.tudelft.nl|
 | <img src="docs/Pictures/Coman_Tudor_Andrei.jpg" width ="50"/>|Tudor - Andrei Coman | T.A.Coman@student.tudelft.nl|
