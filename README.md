@@ -14,6 +14,7 @@ Add your own name (do not add the names for others!) to the section below.
 | <img src="docs/Pictures/profile-picture-chris-obis.png" width="50">| Chris Obis | c.obis-1@student.tudelft.nl |
 | <img src="docs/Pictures/Tymon_Jastrzemski_Picture.jpg" width ="50"/>|Tymon Jastrzemski | T.H.Jastrzemski@student.tudelft.nl|
 | <img src="docs/Pictures/Coman_Tudor_Andrei.jpg" width ="50"/>|Tudor - Andrei Coman | T.A.Coman@student.tudelft.nl|
+| <img src="docs/Pictures/Andrei_Ionita.jpeg" width = "50"/>| Andrei Ionita | A.Ionita@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
