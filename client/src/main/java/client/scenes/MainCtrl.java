@@ -19,39 +19,50 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javafx.scene.image.Image;
 
 public class MainCtrl {
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
+    private WelcomeScreenCtrl overviewCtrl;
     private Scene overview;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    //private BoardViewCtrl boardViewCtrl;
+    //private Scene boardView;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    //public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview, Pair<BoardViewCtrl, Parent> board)
+    public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview) {
         this.primaryStage = primaryStage;
+
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+//        this.boardViewCtrl = board.getKey();
+//        this.boardView = new Scene(board.getValue());
 
         showOverview();
         primaryStage.show();
+
     }
 
     public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
+
+        //When starting the app show the welcome screen
+        primaryStage.setTitle("Talio");
         primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+
+        //Icon for the App
+        Image icon = new Image("icon.png");
+        primaryStage.getIcons().add((icon));
+
+        overview.setOnKeyPressed(e -> overviewCtrl.keyPressed(e));
     }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    public void showBoard() {
+        primaryStage.setTitle("Your Board");
+//        primaryStage.setScene(boardView);
+        //for key presses: boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
     }
+
 }

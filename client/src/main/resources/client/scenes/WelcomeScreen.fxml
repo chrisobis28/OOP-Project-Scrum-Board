@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client.scenes.WelcomeScreenCtrl">
+   <VBox fx:id="mainVbox" alignment="CENTER" layoutX="80.0" layoutY="144.0" scaleShape="false"
+         AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0"
+         AnchorPane.topAnchor="144.0">
+      <Label fx:id="title" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" text="Welcome to Talio!"
+             textAlignment="CENTER">
+         <font>
+            <Font size="55.0"/>
+         </font>
+      </Label>
+      <HBox fx:id="mainHbox" alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" scaleShape="false" spacing="10.0">
+         <opaqueInsets>
+            <Insets/>
+         </opaqueInsets>
+         <Label fx:id="addresstext" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                text="Server Address:">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="serverInput" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity"
+                    promptText="Choose a server...">
+            <font>
+               <Font name="Arial" size="15.0"/>
+            </font>
+         </TextField>
+         <Button fx:id="connectButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                 mnemonicParsing="false" onAction="#connect" text="Connect" textAlignment="CENTER"/>
+      </HBox>
+   </VBox>
+</AnchorPane>
