@@ -2,23 +2,27 @@ package commons;
 
 import org.jetbrains.annotations.Contract;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@Entity
 public class Board {
 
 
-        /**
-         * The circularly linked list class. Note that there is only a tail field.
-         * The size can be obtained in O(N) via the getSize() method.
-         */
-        private List tail, head;
-        private String description = "", name = "", backgroundColour = "#FFFFFF";
-    private List l;
-    private int index;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+    @SuppressWarnings("JpaAttributeTypeInspection")
+    private CardList tail, head;
+    private String description = "", name = "", backgroundColour = "#FFFFFF";
+    private int index, size;
 
     /**
-     * Constructor for the board. It utilises a Doubly-Linked-List structure to keep all the lists
+     * Constructor for the board. It utilises a Doubly-Linked-List structure to keep all the CardLists
      */
         public Board() {
             this.tail = null;
@@ -27,12 +31,12 @@ public class Board {
 
         /**
          * Gets the size of the board.
-         * @return the size of the list.
+         * @return the size of the CardList.
          */
         public int getSize() {
             if (tail == null) return 0;
             int size = 1;
-            List currentList = this.tail.getNext();
+            CardList currentList = this.tail.getNext();
             while (currentList != this.tail) {
                 size++;
                 currentList = currentList.getNext();
@@ -41,7 +45,7 @@ public class Board {
         }
 
         /**
-         * Checks if the list is empty.
+         * Checks if the CardList is empty.
          * @return true if it is empty, false if not.
          */
         public boolean isEmpty() {
@@ -49,10 +53,10 @@ public class Board {
         }
 
         /**
-         * Returns the implicit head of the list.
-         * @return the first List.
+         * Returns the implicit head of the CardList.
+         * @return the first CardList.
          */
-        public List getFirst() {
+        public CardList getFirst() {
             if (this.tail == null) {
                 return null;
             }
@@ -60,10 +64,10 @@ public class Board {
         }
 
         /**
-         * Returns the tail of the list.
+         * Returns the tail of the CardList.
          * @return the last element.
          */
-        public List getTail() {
+        public CardList getTail() {
             if (this.isEmpty()) {
                 return null;
             }
@@ -71,13 +75,16 @@ public class Board {
         }
 
         /**
-         * Add a list at a specific index of the list, 1 indexed
+         * Add a CardList at a specific index of the CardList, 1 indexed
          *    OBJ1    OBJ2
          *  1       2      3
-         * these are the positions where a new list could be inserted, first being at the front
+         * these are the positions where a new CardList could be inserted, first being at the front
          * @param index the element to add.
+         * Throws Runtime exception when l is null
          */
-        public void add(List l, int index) {
+        public void add(CardList l, int index) {
+            if(l == null)
+                throw new NullPointerException();
             if (this.head.getNext().equals(tail)) {
                 if(index != 1)
                     throw new IndexOutOfBoundsException();
@@ -89,7 +96,7 @@ public class Board {
             }
             if(this.getSize() <= index)
                 throw new IndexOutOfBoundsException();
-            List current = head;
+            CardList current = head;
             for(int i = 1; i < index; i++)
                 current = current.getNext();
             head.setNext(l);
@@ -100,11 +107,15 @@ public class Board {
 
 
         /**
-         * Add the list to the end of the board when not specified a position
-         * @param l List to be inserted
+         * Add the CardList to the end of the board when not specified a position
+         * @param l CardList to be inserted
+         * Throws Runtime exception when l is null
          */
-        public void add(List l) {
-            List prev = tail.getPrev();
+        public void add(CardList l) {
+            if(l == null)
+                throw new NullPointerException();
+
+            CardList prev = tail.getPrev();
             prev.setNext(l);
             l.setPrev(prev);
             l.setNext(tail);
@@ -112,12 +123,12 @@ public class Board {
         }
 
     /**
-     * Returns all Lists on the board
-     * @return returns a list of type List
+     * Returns all CardLists on the board
+     * @return returns a CardList of type CardList
      */
-        public ArrayList<List> getAll(){
-            ArrayList<List> all = new ArrayList<>();
-            List l = head.getNext();
+        public ArrayList<CardList> getAll(){
+            ArrayList<CardList> all = new ArrayList<>();
+            CardList l = head.getNext();
             while(!l.equals(tail)) {
                 all.add(l);
             }
@@ -125,13 +136,13 @@ public class Board {
         }
 
     /**
-     * Returns a string formatted form of the board, containing all the lists the board has.
+     * Returns a string formatted form of the board, containing all the CardLists the board has.
      * @return the string the method constructs.
      */
         @Override
         public String toString() {
             StringBuilder s = new StringBuilder("Board:" + '\n');
-            ArrayList<List> all = this.getAll();
+            ArrayList<CardList> all = this.getAll();
             for(int i = 0; i < all.size(); i++) {
                 s.append("List on position ");
                 s.append(i);
@@ -228,5 +239,43 @@ public class Board {
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getBackgroundColour() != null ? getBackgroundColour().hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Reorders the list based on a specified arraylist
+     * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
+     *              new order of the list (where n is the size of the list)
+     * Throws Runtime exception when the sizes do not match
+     * Throws NPE when order contains a null reference
+     */
+    public void reorder(ArrayList<Integer> order){
+        if(order.size() != this.getSize())
+            throw new RuntimeException("Unequal sized arrays.");
+        if(order.contains(null))
+            throw new NullPointerException();
+        ArrayList<CardList> all = new ArrayList<>();
+        CardList cl = head.getNext();
+        while(!cl.equals(tail)){
+            all.add(cl);
+            cl = cl.getNext();
+        }
+
+    }
+
+    /**
+     * Returns the CardList of the specified index.
+     * @param index the index of the desired CardList on the board.
+     * @return returns the CardList at the desired location
+     * Throws index out of bounds exception when index is negative, 0 or
+     * out of bounds
+     */
+    public CardList getAtIndex(int index){
+        if(index < 1 || index > this.getSize())
+            throw new IndexOutOfBoundsException();
+        CardList cl = head.getNext();
+        for(int i = 1; i < index; i++){
+            cl = cl.getNext();
+        }
+        return cl;
     }
 }
