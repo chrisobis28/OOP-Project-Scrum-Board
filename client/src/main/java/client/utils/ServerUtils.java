@@ -32,20 +32,20 @@ import org.checkerframework.checker.units.qual.A;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
- *  Utilities class for the server
+ *  Utilities class for the server.
  */
 public class ServerUtils {
 
   private String server = "http://localhost:8080/";
 
   /**
-   * Constructor with no parameters for ServerUtils
+   * Constructor with no parameters for ServerUtils.
    */
 
   public ServerUtils() {}
 
   /**
-   * Constructor with a parameter for ServerUtils
+   * Constructor with a parameter for ServerUtils.
    *
    * @param address IP address of the server
    */
@@ -81,8 +81,11 @@ public class ServerUtils {
   }
 
   /**
+   * Function to check validity of an IP address by checking if the output is the same
+   *     as the output from the local server.
    *
-   * @return true if the address is valid (the output of the server is the same as the Main controller), false otherwise
+   * @return true if the address is valid (the output of the server is the same as the Main
+   *     controller), false otherwise
    */
   public Boolean checkServerValidity() {
     return ClientBuilder.newClient(new ClientConfig())
