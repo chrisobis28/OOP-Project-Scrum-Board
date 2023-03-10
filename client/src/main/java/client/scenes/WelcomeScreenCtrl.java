@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +20,8 @@ import java.util.Objects;
 public class WelcomeScreenCtrl{
 
     private final MainCtrl mainCtrl;
+
+    private ServerUtils server;
 
     @FXML private VBox mainVbox;
 
@@ -48,11 +51,14 @@ public class WelcomeScreenCtrl{
      */
     public void connect() {
         System.out.println("You tried to connect to: " + serverInput.getText());
-        if(!serverInput.getText().contains("wrong")) {
-            serverInput.setText("");
+        this.server = new ServerUtils(serverInput.getText());
+        if (this.server.checkServerValidity()) {
             mainCtrl.showBoard();
         }
-        //TO DO: actually connect to a server with that input lol
+        else {
+            //To add UI in case of invalid server address
+            return;
+        }
     }
 
     /**
