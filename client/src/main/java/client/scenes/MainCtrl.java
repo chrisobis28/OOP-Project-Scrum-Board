@@ -28,8 +28,8 @@ public class MainCtrl {
     private WelcomeScreenCtrl overviewCtrl;
     private Scene overview;
 
-    //private BoardViewCtrl boardViewCtrl;
-    //private Scene boardView;
+    private BoardViewCtrl boardViewCtrl;
+    private Scene boardView;
 
     //public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview, Pair<BoardViewCtrl, Parent> board)
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview) {
@@ -38,8 +38,8 @@ public class MainCtrl {
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
 
-//        this.boardViewCtrl = board.getKey();
-//        this.boardView = new Scene(board.getValue());
+        //this.boardViewCtrl = board.getKey();
+        //this.boardView = new Scene(board.getValue());
 
         showOverview();
         primaryStage.show();
@@ -61,8 +61,9 @@ public class MainCtrl {
 
     public void showBoard() {
         primaryStage.setTitle("Your Board");
-//        primaryStage.setScene(boardView);
-        //for key presses: boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
+        primaryStage.setScene(boardView);
+        //for key presses:
+        boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
     }
 
 }
