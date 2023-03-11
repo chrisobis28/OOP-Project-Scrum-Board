@@ -20,7 +20,7 @@ import static com.google.inject.Guice.createInjector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-//import client.scenes.BoardViewCtrl;
+import client.scenes.BoardViewCtrl;
 import client.scenes.WelcomeScreenCtrl;
 import com.google.inject.Injector;
 import client.scenes.MainCtrl;
@@ -36,14 +36,22 @@ public class Main extends Application {
         launch();
     }
 
+    /**
+     * Create the base of the application.
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws IOException
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
 
         var overview = FXML.load(WelcomeScreenCtrl.class, "client", "scenes", "WelcomeScreen.fxml");
-        //var boards = FXML.load(BoardViewCtrl.class, "client", "scenes", "BoardView.fxml");
+        var boards = FXML.load(BoardViewCtrl.class, "client", "scenes", "BoardView.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        //mainCtrl.initialize(primaryStage, overview, boards);
-        mainCtrl.initialize(primaryStage, overview);
+        mainCtrl.initialize(primaryStage, overview, boards);
     }
 }

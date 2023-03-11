@@ -86,10 +86,14 @@ public class ServerUtils {
    *     controller), false otherwise
    */
   public Boolean checkServerValidity() {
-    return ClientBuilder.newClient(new ClientConfig())
-            .target(server).path("")
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .get(String.class).equals("Hello world!");
+    try {
+     return ClientBuilder.newClient(new ClientConfig())
+              .target(server).path("")
+              .request(APPLICATION_JSON)
+              .accept(APPLICATION_JSON)
+              .get(String.class).equals("Hello world!");
+    } catch (Exception e) {
+      return false;
+    }
   }
 }
