@@ -1,3 +1,4 @@
+
 package commons;
 
 import org.jetbrains.annotations.Contract;
@@ -279,3 +280,5 @@ public class Board {
         return cl;
     }
 }
+
+

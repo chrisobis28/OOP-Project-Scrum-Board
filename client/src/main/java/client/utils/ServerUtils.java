@@ -13,37 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.List;
-
-import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.List;
+import org.glassfish.jersey.client.ClientConfig;
 
+/**
+ *  Utilities class for the server.
+ */
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+  private String server = "http://localhost:8080/";
 
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
+  /**
+   * Constructor with no parameters for ServerUtils.
+   */
 
+<<<<<<< HEAD
     public List<Quote> getQuotes() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/quotes") //
@@ -52,12 +49,58 @@ public class ServerUtils {
                 .get(new GenericType<List<Quote>>() {
                 });
     }
+=======
+  public ServerUtils() {}
+>>>>>>> f5a72f031ceba810e5d07bf455ce1692d002534d
 
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+  /**
+   * Constructor with a parameter for ServerUtils.
+   *
+   * @param address IP address of the server
+   */
+  public ServerUtils(String address) {
+    this.server = address;
+  }
+
+  public void getQuotesTheHardWay() throws IOException {
+    var url = new URL("http://localhost:8080/api/quotes");
+    var is = url.openConnection().getInputStream();
+    var br = new BufferedReader(new InputStreamReader(is));
+    String line;
+    while ((line = br.readLine()) != null) {
+      System.out.println(line);
     }
+  }
+
+  public List<Quote> getQuotes() {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/quotes") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .get(new GenericType<List<Quote>>() {
+            });
+  }
+
+  public Quote addQuote(Quote quote) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/quotes") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+  }
+
+  /**
+   * Function to check validity of an IP address by checking if the output is the same
+   *     as the output from the local server.
+   *
+   * @return true if the address is valid (the output of the server is the same as the Main
+   *     controller), false otherwise
+   */
+  public Boolean checkServerValidity() {
+    return ClientBuilder.newClient(new ClientConfig())
+            .target(server).path("")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(String.class).equals("Hello world!");
+  }
 }
