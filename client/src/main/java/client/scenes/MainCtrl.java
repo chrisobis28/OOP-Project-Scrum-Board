@@ -31,21 +31,31 @@ public class MainCtrl {
     private BoardViewCtrl boardViewCtrl;
     private Scene boardView;
 
-    //public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview, Pair<BoardViewCtrl, Parent> board)
-    public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview) {
+    /**
+     * Initialize the stage with the scenes for the application, along with their respective controllers.
+     *
+     * @param primaryStage
+     * @param overview
+     * @param board
+     */
+    public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
+                           Pair<BoardViewCtrl, Parent> board) {
         this.primaryStage = primaryStage;
 
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
 
-        //this.boardViewCtrl = board.getKey();
-        //this.boardView = new Scene(board.getValue());
+        this.boardViewCtrl = board.getKey();
+        this.boardView = new Scene(board.getValue());
 
         showOverview();
         primaryStage.show();
 
     }
 
+    /**
+     * Show the Welcome screen.
+     */
     public void showOverview() {
 
         //When starting the app show the welcome screen
@@ -59,9 +69,13 @@ public class MainCtrl {
         overview.setOnKeyPressed(e -> overviewCtrl.keyPressed(e));
     }
 
+    /**
+     * Show the Board View scene.
+     */
     public void showBoard() {
         primaryStage.setTitle("Your Board");
         primaryStage.setScene(boardView);
+
         //for key presses:
         boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
     }
