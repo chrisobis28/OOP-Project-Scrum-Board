@@ -4,110 +4,119 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane snapToPixel="false" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.BoardViewCtrl">
-    <children>
-        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
-            <children>
-                <VBox style="-fx-background-color: #80808020;">
-                    <children>
-                        <TableView fx:id="table" blendMode="DARKEN" style="-fx-background-color: #80808020;">
-                            <columns>
-                                <TableColumn fx:id="colTable" maxWidth="247.0" minWidth="-1.0" prefWidth="247.0" sortable="false"
-                                             text="Boards" />
-                            </columns>
-                        </TableView>
-                        <VBox alignment="CENTER" spacing="10.0">
-                            <children>
-                                <Button alignment="CENTER" mnemonicParsing="false" text="Refresh">
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0"
-                                        text="Admin Login">
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                            </children>
-                            <opaqueInsets>
-                                <Insets top="5.0" />
-                            </opaqueInsets>
-                            <padding>
-                                <Insets top="10.0" />
-                            </padding>
-                        </VBox>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" />
-                    </padding>
-                </VBox>
-                <VBox>
-                    <children>
-                        <VBox alignment="CENTER">
-                            <children>
-                                <HBox alignment="CENTER">
-                                    <children>
-                                        <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity"
-                                                   maxWidth="-Infinity" minHeight="-Infinity" minWidth="140.0" prefHeight="26.0"
-                                                   prefWidth="281.0" promptText="Search for a board..."
-                                                   style="-fx-background-color: #80808020;" />
-                                        <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                                                minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#search"
-                                                prefHeight="25.0" prefWidth="33.0" text="OK">
-                                            <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                            </cursor>
-                                        </Button>
-                                    </children>
-                                    <padding>
-                                        <Insets top="10.0" />
-                                    </padding>
-                                </HBox>
-                                <Label fx:id="boardTitle" alignment="CENTER" contentDisplay="CENTER" text="Board Name"
-                                       textAlignment="CENTER">
-                                    <font>
-                                        <Font size="36.0" />
-                                    </font>
-                                    <padding>
-                                        <Insets bottom="10.0" top="10.0" />
-                                    </padding>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <SplitPane dividerPositions="0.5">
-                            <items>
-                                <TableView layoutX="10.0" layoutY="10.0">
-                                    <columns>
-                                        <TableColumn fx:id="listTitle" maxWidth="265.0" minWidth="-1.0" prefWidth="265.0"
-                                                     sortable="false" text="List2 Title" />
-                                    </columns>
-                                </TableView>
-                                <TableView>
-                                    <columns>
-                                        <TableColumn fx:id="listTItle" maxWidth="256.0" minWidth="-1.0" prefWidth="256.0"
-                                                     sortable="false" text="List1 Title" />
-                                    </columns>
-                                </TableView>
-                            </items>
-                        </SplitPane>
-                    </children>
-                    <padding>
-                        <Insets left="10.0" />
-                    </padding>
-                </VBox>
-            </children>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" snapToPixel="false" xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardViewCtrl">
+    <AnchorPane fx:id="sideMenuClosed" maxWidth="-Infinity" prefHeight="600.0" prefWidth="36.0"
+                style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <effect>
+            <DropShadow>
+                <color>
+                    <Color opacity="0.31679388880729675"/>
+                </color>
+            </DropShadow>
+        </effect>
+        <ImageView fx:id="menuHamburgerClosed" fitHeight="36.0" fitWidth="39.0" nodeOrientation="INHERIT"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@/burger-bar.png"/>
+        </ImageView>
+    </AnchorPane>
+    <VBox alignment="CENTER" layoutX="41.0" prefHeight="600.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+        <padding>
+            <Insets left="10.0"/>
+        </padding>
+        <HBox alignment="CENTER" spacing="5.0">
+            <padding>
+                <Insets top="10.0"/>
+            </padding>
+            <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                       minHeight="-Infinity" minWidth="140.0" prefHeight="26.0" prefWidth="281.0"
+                       promptText="Search for a board..." style="-fx-background-color: #80808020;"/>
+            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                    mnemonicParsing="false" onMouseClicked="#search" prefHeight="25.0" prefWidth="33.0"
+                    text="OK">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
         </HBox>
-    </children>
+        <Label fx:id="boardTitle" alignment="TOP_LEFT" text="Board Name" textAlignment="CENTER">
+            <font>
+                <Font size="36.0"/>
+            </font>
+            <padding>
+                <Insets bottom="10.0" top="10.0"/>
+            </padding>
+        </Label>
+        <HBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="746.0" spacing="15.0" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets bottom="20.0"/>
+            </padding>
+            <TableView>
+                <columns>
+                    <TableColumn fx:id="listTItle" maxWidth="256.0" minWidth="-1.0" prefWidth="256.0"
+                                 sortable="false" text="List1 Title"/>
+                </columns>
+            </TableView>
+            <TableView>
+                <columns>
+                    <TableColumn fx:id="listTitle" maxWidth="265.0" minWidth="-1.0" prefWidth="265.0"
+                                 sortable="false" text="List2 Title"/>
+                </columns>
+            </TableView>
+        </HBox>
+    </VBox>
+    <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="249.0"
+                style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <effect>
+            <DropShadow radius="9.2675" width="18.07"/>
+        </effect>
+        <ImageView fx:id="menuHamburger" fitHeight="36.0" fitWidth="39.0" layoutX="205.0" layoutY="1.0"
+                   nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@/burger-bar.png"/>
+            </image>
+        </ImageView>
+        <TableView fx:id="table" blendMode="DARKEN" layoutY="40.0" prefHeight="465.0" prefWidth="249.0"
+                   style="-fx-background-color: #80808020;" AnchorPane.bottomAnchor="95.0"
+                   AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="colTable" maxWidth="247.0" minWidth="-1.0" prefWidth="247.0" sortable="false"
+                             text="Boards"/>
+            </columns>
+        </TableView>
+        <VBox alignment="CENTER" layoutX="72.0" layoutY="501.0" prefHeight="64.0" prefWidth="105.0" spacing="10.0"
+              AnchorPane.bottomAnchor="20.0">
+            <opaqueInsets>
+                <Insets top="5.0"/>
+            </opaqueInsets>
+            <padding>
+                <Insets top="10.0"/>
+            </padding>
+            <Button alignment="CENTER" mnemonicParsing="false" text="Refresh">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0"
+                    text="Admin Login">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+            </Button>
+        </VBox>
+    </AnchorPane>
 </AnchorPane>
