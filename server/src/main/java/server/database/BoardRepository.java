@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
  * Copyright 2021 Delft University of Technology
  *
@@ -31,3 +32,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 }
 >>>>>>> f5a72f031ceba810e5d07bf455ce1692d002534d
+=======
+package server.database;
+
+import commons.Board;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+}
+>>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9

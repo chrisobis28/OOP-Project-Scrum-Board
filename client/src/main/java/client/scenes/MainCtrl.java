@@ -32,25 +32,45 @@ public class MainCtrl {
     private Scene boardView;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
                            Pair<AddQuoteCtrl, Parent> add) {
 =======
     //public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview, Pair<BoardViewCtrl, Parent> board)
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview) {
 >>>>>>> f5a72f031ceba810e5d07bf455ce1692d002534d
+=======
+    /**
+     * Initialize the stage with the scenes for the application, along with their respective controllers.
+     *
+     * @param primaryStage
+     * @param overview
+     * @param board
+     */
+    public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
+                           Pair<BoardViewCtrl, Parent> board) {
+>>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
         this.primaryStage = primaryStage;
 
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
 
+<<<<<<< HEAD
         //this.boardViewCtrl = board.getKey();
         //this.boardView = new Scene(board.getValue());
+=======
+        this.boardViewCtrl = board.getKey();
+        this.boardView = new Scene(board.getValue());
+>>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
 
         showOverview();
         primaryStage.show();
 
     }
 
+    /**
+     * Show the Welcome screen.
+     */
     public void showOverview() {
 
         //When starting the app show the welcome screen
@@ -64,9 +84,19 @@ public class MainCtrl {
         overview.setOnKeyPressed(e -> overviewCtrl.keyPressed(e));
     }
 
+<<<<<<< HEAD
     public void showBoard() {
         primaryStage.setTitle("Your Board");
         primaryStage.setScene(boardView);
+=======
+    /**
+     * Show the Board View scene.
+     */
+    public void showBoard() {
+        primaryStage.setTitle("Your Board");
+        primaryStage.setScene(boardView);
+
+>>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
         //for key presses:
         boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
     }
