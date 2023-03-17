@@ -128,6 +128,7 @@ public class BoardViewCtrl implements Initializable {
             event.consume();
         });
 
+        // Event for the close button image so that it acts as a button that switches to the welcome screen
         closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             mainCtrl.showOverview();
             event.consume();
