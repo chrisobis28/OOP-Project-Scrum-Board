@@ -1,28 +1,35 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
+import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 
 public class BoardViewCtrl implements Initializable {
-    public ObservableList<String> boards;
-
+    public ObservableList<Node> data;
+    private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
 
@@ -30,10 +37,10 @@ public class BoardViewCtrl implements Initializable {
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
 
     @FXML
-    private TableView<String> table;
+    private HBox board;
 
     @FXML
-    private TableColumn<String, String> colTable;
+    private Button newListButton;
 
     private final MainCtrl mainCtrl;
 
@@ -43,27 +50,20 @@ public class BoardViewCtrl implements Initializable {
      * @param mainCtrl the main controller of the application.
      */
     @Inject
-    public BoardViewCtrl(MainCtrl mainCtrl) {
+    public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
-        boards = FXCollections.observableArrayList();
-        for(int i = 0; i < 5; i++){
-            String s = "Board "+i;
-            boards.add(s);
-        }
-        refresh();
+        this.server = server;
+//        for(int i = 0; i < 5; i++){
+//            String s = "Board "+i;
+//            boards.add(s);
+//        }
     }
 
     /**
      * Searches the database for a board with the name in the searchbar
      */
     public void search(){
-        refresh();
-    }
-    /**
-     * Refreshes the list of boards
-     **/
-    public void refresh(){
-        //table.setItems(boards);
+        //TODO: search function
     }
 
     /**
@@ -107,6 +107,26 @@ public class BoardViewCtrl implements Initializable {
         translate.play();
     }
 
+    public void addNewList() {
+        mainCtrl.showAddList();
+    }
+
+    public void refreshBoard() {
+        var cardlist = server.getCardList();
+        List<Node> nodes = new ArrayList<>();
+        for (Cardlist card : cardlist) {
+            VBox v = new VBox();
+            v.getChildren().add(new Label(card.getCardlistName()));
+            nodes.add(v);
+        }
+
+        data = FXCollections.observableList(nodes);
+        board.getChildren().clear();
+        board.getChildren().addAll(data);
+        data.clear();
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -115,6 +135,7 @@ public class BoardViewCtrl implements Initializable {
         translate.setNode(sideMenu);
         translate.setToX(-300);
         translate.play();
+        refreshBoard();
 
         // Event for the image which acts like a button to open the side menu
         menuHamburgerClosed.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

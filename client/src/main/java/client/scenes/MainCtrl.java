@@ -17,6 +17,7 @@ package client.scenes;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.image.Image;
@@ -31,6 +32,10 @@ public class MainCtrl {
     private BoardViewCtrl boardViewCtrl;
     private Scene boardView;
 
+    private AddCardlistCtrl addListCtrl;
+    private Scene addList;
+    private Image icon;
+
     /**
      * Initialize the stage with the scenes for the application, along with their respective controllers.
      *
@@ -39,7 +44,7 @@ public class MainCtrl {
      * @param board the board view scene
      */
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
-                           Pair<BoardViewCtrl, Parent> board) {
+                           Pair<BoardViewCtrl, Parent> board, Pair<AddCardlistCtrl, Parent> addList) {
         this.primaryStage = primaryStage;
 
         this.overviewCtrl = overview.getKey();
@@ -47,6 +52,11 @@ public class MainCtrl {
 
         this.boardViewCtrl = board.getKey();
         this.boardView = new Scene(board.getValue());
+
+        this.addListCtrl = addList.getKey();
+        this.addList = new Scene(addList.getValue());
+
+        icon = new Image("icon.png");
 
         showOverview();
         primaryStage.show();
@@ -63,8 +73,7 @@ public class MainCtrl {
         primaryStage.setScene(overview);
 
         //Icon for the App
-        Image icon = new Image("icon.png");
-        primaryStage.getIcons().add((icon));
+        primaryStage.getIcons().add(icon);
 
         overview.setOnKeyPressed(e -> overviewCtrl.keyPressed(e));
     }
@@ -80,4 +89,16 @@ public class MainCtrl {
         boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));
     }
 
+    public void showAddList() {
+        Stage stage = new Stage();
+        stage.setTitle("New List");
+        stage.getIcons().add(icon);
+        stage.setScene(addList);
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.WINDOW_MODAL);
+        addList.setOnKeyPressed(e -> addListCtrl.keyPressed(e));
+        stage.showAndWait();
+
+        boardViewCtrl.refreshBoard();
+    }
 }
