@@ -27,7 +27,7 @@ public class BoardViewCtrl implements Initializable {
     AnchorPane sideMenu, sideMenuClosed;
 
     @FXML
-    ImageView menuHamburger, menuHamburgerClosed;
+    ImageView menuHamburger, menuHamburgerClosed, closeButton;
 
     @FXML
     private TableView<String> table;
@@ -125,6 +125,12 @@ public class BoardViewCtrl implements Initializable {
         // Event for the image which acts like a button to close the side menu
         menuHamburger.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             hideMenu();
+            event.consume();
+        });
+
+        // Event for the close button image so that it acts as a button that switches to the welcome screen
+        closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            mainCtrl.showOverview();
             event.consume();
         });
     }
