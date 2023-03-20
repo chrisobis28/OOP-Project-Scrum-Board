@@ -27,6 +27,8 @@ public class Cardlist extends AnchorPane {
         }
     }
 
+
+    // GETTERS AND SETTERS
     public Label getListname() {
         return listname;
     }

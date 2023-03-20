@@ -105,10 +105,16 @@ public class BoardViewCtrl implements Initializable {
         translate.play();
     }
 
+    /**
+     * Start the process for adding a list.
+     */
     public void addNewList() {
         mainCtrl.showAddList();
     }
 
+    /**
+     * reset all the lists.
+     */
     public void refreshBoard() {
         var cardlists = server.getCardList();
         List<Node> nodes = new ArrayList<>();

@@ -27,15 +27,20 @@ public class AddCardlistCtrl {
     public AddCardlistCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
-
-
     }
+
+    /**
+     * stop everything
+     */
     public void cancel() {
         stage = (Stage) cancel.getScene().getWindow();
         listName.clear();
         stage.close();
     }
 
+    /**
+     * Send the list to the repo.
+     */
     public void ok() {
         stage = (Stage) cancel.getScene().getWindow();
         String name;
@@ -55,6 +60,10 @@ public class AddCardlistCtrl {
         stage.close();
     }
 
+    /**
+     * Add functionality for kew presses.
+     * @param e a kew press
+     */
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
             case ENTER:

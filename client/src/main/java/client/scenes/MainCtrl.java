@@ -89,6 +89,9 @@ public class MainCtrl {
         boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));
     }
 
+    /**
+     * Show the new stage where you can add a new list to the board.
+     */
     public void showAddList() {
         Stage stage = new Stage();
         stage.setTitle("New List");
