@@ -1,7 +1,7 @@
 package client.scenes;
 
+import client.components.Cardlist;
 import client.utils.ServerUtils;
-import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -112,11 +112,11 @@ public class BoardViewCtrl implements Initializable {
     }
 
     public void refreshBoard() {
-        var cardlist = server.getCardList();
+        var cardlists = server.getCardList();
         List<Node> nodes = new ArrayList<>();
-        for (Cardlist card : cardlist) {
-            VBox v = new VBox();
-            v.getChildren().add(new Label(card.getCardlistName()));
+        for (var card : cardlists) {
+            var v = new Cardlist();
+            v.setListname(card.getCardlistName());
             nodes.add(v);
         }
 
