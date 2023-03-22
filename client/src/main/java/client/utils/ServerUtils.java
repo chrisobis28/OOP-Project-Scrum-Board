@@ -18,6 +18,7 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.Cardlist;
 import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -95,5 +96,22 @@ public class ServerUtils {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  public Cardlist addCardList(Cardlist cardlist) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/cardlist") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .post(Entity.entity(cardlist, APPLICATION_JSON), Cardlist.class);
+  }
+
+  public List<Cardlist> getCardList() {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/cardlist") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .get(new GenericType<List<Cardlist>>() {
+            });
   }
 }
