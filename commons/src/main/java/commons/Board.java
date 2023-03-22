@@ -1,15 +1,13 @@
-<<<<<<< HEAD
+
 
 package commons;
 
 import org.jetbrains.annotations.Contract;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Board {
@@ -18,133 +16,119 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    @SuppressWarnings("JpaAttributeTypeInspection")
-    private CardList tail, head;
+    private ArrayList<Cardlist> Cardlists;
+    @OneToMany(mappedBy = "board")
+    public Set<Tag> tagList;
     private String description = "", name = "", backgroundColour = "#FFFFFF";
-    private int index, size;
+    private int size = 0;
 
     /**
-     * Constructor for the board. It utilises a Doubly-Linked-List structure to keep all the CardLists
+     * Constructor for the board.
      */
         public Board() {
-            this.tail = null;
-            this.head = null;
+            Cardlists = new ArrayList<>();
         }
+
+    /**
+     * Constructor for the board with String parameter
+     */
+    public Board(String name) {
+        Cardlists = new ArrayList<>();
+        this.name = name;
+    }
 
         /**
          * Gets the size of the board.
-         * @return the size of the CardList.
+         * @return the size of the Cardlists array.
          */
         public int getSize() {
-            if (tail == null) return 0;
-            int size = 1;
-            CardList currentList = this.tail.getNext();
-            while (currentList != this.tail) {
-                size++;
-                currentList = currentList.getNext();
-            }
             return size;
         }
 
         /**
-         * Checks if the CardList is empty.
+         * Checks if the Cardlist is empty.
          * @return true if it is empty, false if not.
          */
         public boolean isEmpty() {
-            return this.tail == null;
+            return size == 0;
         }
 
         /**
-         * Returns the implicit head of the CardList.
-         * @return the first CardList.
+         * Returns the implicit head of the Cardlist.
+         *
+         * @return the first Cardlist.
          */
-        public CardList getFirst() {
-            if (this.tail == null) {
-                return null;
-            }
-            return tail.getNext();
+        public Cardlist getFirst() {
+            return Cardlists.get(0);
         }
 
-        /**
-         * Returns the tail of the CardList.
-         * @return the last element.
-         */
-        public CardList getTail() {
-            if (this.isEmpty()) {
-                return null;
-            }
-            return tail;
-        }
+
 
         /**
-         * Add a CardList at a specific index of the CardList, 1 indexed
+         * Add a Cardlist at a specific index of the Cardlist
          *    OBJ1    OBJ2
-         *  1       2      3
-         * these are the positions where a new CardList could be inserted, first being at the front
+         *  0       1      2
+         * these are the positions where a new Cardlist could be inserted, first being at the front
          * @param index the element to add.
-         * Throws Runtime exception when l is null
+         * Throws Index Out Of Bounds exception when the insetion at the provided
+         * index provided is not possible.
+         * Throws Runtime exception when l is null.
          */
-        public void add(CardList l, int index) {
+        public void add(Cardlist l, int index) {
             if(l == null)
                 throw new NullPointerException();
-            if (this.head.getNext().equals(tail)) {
-                if(index != 1)
-                    throw new IndexOutOfBoundsException();
-                head.setNext(l);
-               l.setPrev(head);
-               l.setNext(tail);
-               tail.setPrev(l);
+            if(index == size) {
+                Cardlists.add(l);
                 return;
             }
-            if(this.getSize() <= index)
+            if(this.getSize() < index || index < 0)
                 throw new IndexOutOfBoundsException();
-            CardList current = head;
-            for(int i = 1; i < index; i++)
-                current = current.getNext();
-            head.setNext(l);
-            l.setPrev(head);
-            l.setNext(tail);
-            tail.setPrev(l);
+            for(int i = size; i > index; i--)
+               Cardlists.set(i, Cardlists.get(i - 1));
+
         }
 
 
         /**
-         * Add the CardList to the end of the board when not specified a position
-         * @param l CardList to be inserted
+         * Add the Cardlist to the end of the board when a position is not specified
+         * @param l Cardlist to be inserted
          * Throws Runtime exception when l is null
          */
-        public void add(CardList l) {
+        public void add(Cardlist l) {
             if(l == null)
                 throw new NullPointerException();
-
-            CardList prev = tail.getPrev();
-            prev.setNext(l);
-            l.setPrev(prev);
-            l.setNext(tail);
-            tail.setPrev(l);
+            Cardlists.add(l);
         }
 
     /**
-     * Returns all CardLists on the board
-     * @return returns a CardList of type CardList
+     * Returns all Cardlists on the board
+     * @return returns a Cardlist of type Cardlist
      */
-        public ArrayList<CardList> getAll(){
-            ArrayList<CardList> all = new ArrayList<>();
-            CardList l = head.getNext();
-            while(!l.equals(tail)) {
-                all.add(l);
-            }
-            return all;
+        public ArrayList<Cardlist> getAll(){
+            return Cardlists;
         }
 
     /**
-     * Returns a string formatted form of the board, containing all the CardLists the board has.
+     * Returns the Cardlist of the specified index.
+     * @param index the index of the desired Cardlist on the board.
+     * @return returns the Cardlist at the desired location
+     * Throws index out of bounds exception when index is negative, 0 or
+     * out of bounds
+     */
+    public Cardlist get(int index){
+        if(index < 0 || index >= size)
+            throw new IndexOutOfBoundsException();
+        return Cardlists.get(index);
+    }
+
+    /**
+     * Returns a string formatted form of the board, containing all the Cardlists the board has.
      * @return the string the method constructs.
      */
         @Override
         public String toString() {
             StringBuilder s = new StringBuilder("Board:" + '\n');
-            ArrayList<CardList> all = this.getAll();
+            ArrayList<Cardlist> all = this.getAll();
             for(int i = 0; i < all.size(); i++) {
                 s.append("List on position ");
                 s.append(i);
@@ -221,13 +205,16 @@ public class Board {
 
         Board board = (Board) o;
 
-        if (getTail() != null ? !getTail().equals(board.getTail()) : board.getTail() != null) return false;
-        if (!Objects.equals(head, board.head)) return false;
+        if (id != board.id) return false;
+        if (getSize() != board.getSize()) return false;
+        if (!Objects.equals(Cardlists, board.Cardlists)) return false;
+        if (!Objects.equals(tagList, board.tagList)) return false;
         if (getDescription() != null ? !getDescription().equals(board.getDescription()) : board.getDescription() != null)
             return false;
         if (getName() != null ? !getName().equals(board.getName()) : board.getName() != null) return false;
         return getBackgroundColour() != null ? getBackgroundColour().equals(board.getBackgroundColour()) : board.getBackgroundColour() == null;
     }
+
 
     /**
      * hashcode
@@ -235,125 +222,36 @@ public class Board {
      */
     @Override
     public int hashCode() {
-        int result = getTail() != null ? getTail().hashCode() : 0;
-        result = 31 * result + (head != null ? head.hashCode() : 0);
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (Cardlists != null ? Cardlists.hashCode() : 0);
+        result = 31 * result + (tagList != null ? tagList.hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getBackgroundColour() != null ? getBackgroundColour().hashCode() : 0);
+        result = 31 * result + getSize();
         return result;
     }
 
     /**
      * Reorders the list based on a specified arraylist
      * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
-     *              new order of the list (where n is the size of the list)
+     * new order of the list (where n is the size of the list)
      * Throws Runtime exception when the sizes do not match
-     * Throws NPE when order contains a null reference
+     * Throws NPE when order is null or contains a null reference
      */
-    public void reorder(ArrayList<Integer> order){
-        if(order.size() != this.getSize())
-            throw new RuntimeException("Unequal sized arrays.");
-        if(order.contains(null))
+    public void reorder(int[] order){
+        if(order.length != size)
+            throw new RuntimeException("Unequal sized arrays, cannot reorder.");
+        if(order == null)
             throw new NullPointerException();
-        ArrayList<CardList> all = new ArrayList<>();
-        CardList cl = head.getNext();
-        while(!cl.equals(tail)){
-            all.add(cl);
-            cl = cl.getNext();
+
+        ArrayList<Cardlist> copy = Cardlists;
+        for(int i = 0; i <= size; i++){
+            Cardlists.set(i, copy.get(order[i]));
         }
 
     }
 
-    /**
-     * Returns the CardList of the specified index.
-     * @param index the index of the desired CardList on the board.
-     * @return returns the CardList at the desired location
-     * Throws index out of bounds exception when index is negative, 0 or
-     * out of bounds
-     */
-    public CardList getAtIndex(int index){
-        if(index < 1 || index > this.getSize())
-            throw new IndexOutOfBoundsException();
-        CardList cl = head.getNext();
-        for(int i = 1; i < index; i++){
-            cl = cl.getNext();
-        }
-        return cl;
-    }
+
 }
 
-
-=======
-package commons;
-
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-@Entity
-public class Board {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  public long id;
-
-  public String boardName;
-
-  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-  public Set<Cardlist> cardlistList;
-
-  @OneToMany(mappedBy = "board")
-  public Set<Tag> tagList;
-
-  public String boardBackgroundColour = "#FFFFFF";
-
-  public String listsBackgroundColour = "#FFFFFF";
-
-  public Board(){
-
-  }
-
-  public Board(String boardName){
-    this.boardName = boardName;
-    tagList = new HashSet<>();
-    cardlistList = new HashSet<>();
-  }
-
-  public void setBoardName(String boardName) {
-    this.boardName = boardName;
-  }
-
-
-  public void setBoardBackgroundColour(String boardBackgroundColour) {
-    this.boardBackgroundColour = boardBackgroundColour;
-  }
-
-  public void setListsBackgroundColour(String listsBackgroundColour) {
-    this.listsBackgroundColour = listsBackgroundColour;
-  }
-
-  @Override
-  public boolean equals(Object obj){
-    return EqualsBuilder.reflectionEquals(this, obj);
-  }
-
-  @Override
-  public int hashCode(){
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
-
-  @Override
-  public String toString(){
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-  }
-}
->>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
