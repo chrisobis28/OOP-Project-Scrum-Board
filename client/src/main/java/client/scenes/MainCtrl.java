@@ -43,9 +43,9 @@ public class MainCtrl {
     /**
      * Initialize the stage with the scenes for the application, along with their respective controllers.
      *
-     * @param primaryStage
-     * @param overview
-     * @param board
+     * @param primaryStage the main stage of the application
+     * @param overview the first scene, which is the welcome screen here
+     * @param board the board view scene
      */
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
                            Pair<BoardViewCtrl, Parent> board) {
@@ -98,7 +98,7 @@ public class MainCtrl {
 
 >>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
         //for key presses:
-        boardView.setOnKeyPressed(e -> boardViewCtrl.keyPressed(e));
+        boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));
     }
 
 }

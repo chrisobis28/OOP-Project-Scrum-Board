@@ -105,5 +105,7 @@ public class WelcomeScreenCtrl {
     if (Objects.requireNonNull(e.getCode()) == KeyCode.ENTER) {
       connect();
     }
+
+    e.consume();
   }
 }
