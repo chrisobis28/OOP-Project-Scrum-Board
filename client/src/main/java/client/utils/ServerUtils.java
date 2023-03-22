@@ -40,22 +40,7 @@ public class ServerUtils {
    * Constructor with no parameters for ServerUtils.
    */
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {
-                });
-    }
-=======
   public ServerUtils() {}
->>>>>>> f5a72f031ceba810e5d07bf455ce1692d002534d
-=======
-  public ServerUtils() {}
->>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
 
   /**
    * Constructor with a parameter for ServerUtils.
@@ -101,13 +86,6 @@ public class ServerUtils {
    *     controller), false otherwise
    */
   public Boolean checkServerValidity() {
-<<<<<<< HEAD
-    return ClientBuilder.newClient(new ClientConfig())
-            .target(server).path("")
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .get(String.class).equals("Hello world!");
-=======
     try {
      return ClientBuilder.newClient(new ClientConfig())
               .target(server).path("")
@@ -117,6 +95,5 @@ public class ServerUtils {
     } catch (Exception e) {
       return false;
     }
->>>>>>> 9cf2c8ed802b0720102e891c15f6150df6e242e9
   }
 }

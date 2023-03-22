@@ -2,7 +2,6 @@
 
 package commons;
 
-import org.jetbrains.annotations.Contract;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,30 +15,31 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    private ArrayList<Cardlist> Cardlists;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private ArrayList<Cardlist> cardlistList;
     @OneToMany(mappedBy = "board")
     public Set<Tag> tagList;
-    private String description = "", name = "", backgroundColour = "#FFFFFF";
+    private String description = "", boardName = "", boardBackgroundColour = "#FFFFFF";
     private int size = 0;
 
     /**
      * Constructor for the board.
      */
         public Board() {
-            Cardlists = new ArrayList<>();
+            cardlistList = new ArrayList<>();
         }
 
     /**
      * Constructor for the board with String parameter
      */
-    public Board(String name) {
-        Cardlists = new ArrayList<>();
-        this.name = name;
+    public Board(String boardName) {
+        cardlistList = new ArrayList<>();
+        this.boardName = boardName;
     }
 
         /**
          * Gets the size of the board.
-         * @return the size of the Cardlists array.
+         * @return the size of the cardlistList array.
          */
         public int getSize() {
             return size;
@@ -59,7 +59,7 @@ public class Board {
          * @return the first Cardlist.
          */
         public Cardlist getFirst() {
-            return Cardlists.get(0);
+            return cardlistList.get(0);
         }
 
 
@@ -78,13 +78,13 @@ public class Board {
             if(l == null)
                 throw new NullPointerException();
             if(index == size) {
-                Cardlists.add(l);
+                cardlistList.add(l);
                 return;
             }
             if(this.getSize() < index || index < 0)
                 throw new IndexOutOfBoundsException();
             for(int i = size; i > index; i--)
-               Cardlists.set(i, Cardlists.get(i - 1));
+               cardlistList.set(i, cardlistList.get(i - 1));
 
         }
 
@@ -97,15 +97,15 @@ public class Board {
         public void add(Cardlist l) {
             if(l == null)
                 throw new NullPointerException();
-            Cardlists.add(l);
+            cardlistList.add(l);
         }
 
     /**
-     * Returns all Cardlists on the board
+     * Returns all cardlistList on the board
      * @return returns a Cardlist of type Cardlist
      */
         public ArrayList<Cardlist> getAll(){
-            return Cardlists;
+            return cardlistList;
         }
 
     /**
@@ -118,11 +118,11 @@ public class Board {
     public Cardlist get(int index){
         if(index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
-        return Cardlists.get(index);
+        return cardlistList.get(index);
     }
 
     /**
-     * Returns a string formatted form of the board, containing all the Cardlists the board has.
+     * Returns a string formatted form of the board, containing all the cardlistList the board has.
      * @return the string the method constructs.
      */
         @Override
@@ -148,11 +148,11 @@ public class Board {
     }
 
     /**
-     * Returns the name of the board, which is empty by default.
-     * @return the name of the board.
+     * Returns the boardName of the board, which is empty by default.
+     * @return the boardName of the board.
      */
     public String getName() {
-        return name;
+        return boardName;
     }
 
     /**
@@ -160,7 +160,7 @@ public class Board {
      * @return the colour of the board.
      */
     public String getBackgroundColour() {
-        return backgroundColour;
+        return boardBackgroundColour;
     }
 
     /**
@@ -172,11 +172,11 @@ public class Board {
     }
 
     /**
-     * Updates the name with the provided string.
-     * @param name the new name this board should have.
+     * Updates the boardName with the provided string.
+     * @param boardName the new boardName this board should have.
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String boardName) {
+        this.boardName = boardName;
     }
 
     /**
@@ -185,10 +185,10 @@ public class Board {
      */
     public void setBackgroundColour(String colour) {
         if(colour.substring(0,1).equals("#"))
-            this.backgroundColour = colour;
+            this.boardBackgroundColour = colour;
         else
         {
-            this.backgroundColour = "#" + colour;
+            this.boardBackgroundColour = "#" + colour;
         }
     }
 
@@ -197,7 +197,6 @@ public class Board {
      * @param o the object that we are comparing this to.
      * @return a boolean with the truth value of the equality.
      */
-    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -207,7 +206,7 @@ public class Board {
 
         if (id != board.id) return false;
         if (getSize() != board.getSize()) return false;
-        if (!Objects.equals(Cardlists, board.Cardlists)) return false;
+        if (!Objects.equals(cardlistList, board.cardlistList)) return false;
         if (!Objects.equals(tagList, board.tagList)) return false;
         if (getDescription() != null ? !getDescription().equals(board.getDescription()) : board.getDescription() != null)
             return false;
@@ -223,7 +222,7 @@ public class Board {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (Cardlists != null ? Cardlists.hashCode() : 0);
+        result = 31 * result + (cardlistList != null ? cardlistList.hashCode() : 0);
         result = 31 * result + (tagList != null ? tagList.hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
@@ -245,9 +244,9 @@ public class Board {
         if(order == null)
             throw new NullPointerException();
 
-        ArrayList<Cardlist> copy = Cardlists;
+        ArrayList<Cardlist> copy = cardlistList;
         for(int i = 0; i <= size; i++){
-            Cardlists.set(i, copy.get(order[i]));
+            cardlistList.set(i, copy.get(order[i]));
         }
 
     }

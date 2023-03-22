@@ -5,7 +5,7 @@
 
 <module name="Checker">
     <module name="TreeWalker">
-        <module name="UnusedImports"/>
+        <module name="UnusedImports" />
     </module>
 
     <!-- TODO: decide in your team with other checkers to add! -->
