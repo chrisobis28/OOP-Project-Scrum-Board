@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Cardlist {
+public class Cardlist{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,6 +35,10 @@ public class Cardlist {
 
   public void setCardlistName(String cardlistName) {
     this.cardlistName = cardlistName;
+  }
+
+  public String getCardlistName() {
+    return cardlistName;
   }
 
   @Override

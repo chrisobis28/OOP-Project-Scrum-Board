@@ -29,31 +29,23 @@
             <Image url="@/burger-bar.png" />
         </ImageView>
     </AnchorPane>
-    <VBox alignment="CENTER" layoutX="41.0" prefHeight="600.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+    <VBox alignment="CENTER" layoutX="41.0" prefHeight="600.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
         <padding>
             <Insets left="10.0" />
         </padding>
-        <HBox alignment="CENTER_LEFT" spacing="5.0">
+        <HBox alignment="CENTER" prefHeight="36.0" prefWidth="442.0" spacing="5.0">
             <padding>
                 <Insets top="10.0" />
             </padding>
             <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="140.0" prefHeight="26.0" prefWidth="281.0" promptText="Search for a board..." style="-fx-background-color: #80808020;">
             <HBox.margin>
-               <Insets left="208.0" />
+               <Insets />
             </HBox.margin></TextField>
             <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#search" prefHeight="25.0" prefWidth="33.0" text="OK">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-         <ImageView fx:id="closeButton" fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <HBox.margin>
-               <Insets left="175.0" />
-            </HBox.margin>
-            <image>
-               <Image url="@/closeButton.png" />
-            </image>
-         </ImageView>
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -66,20 +58,10 @@
                 <Insets bottom="10.0" top="10.0" />
             </padding>
         </Label>
-        <HBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="746.0" spacing="15.0" VBox.vgrow="ALWAYS">
+        <HBox fx:id="board" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="746.0" spacing="15.0" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets bottom="20.0" />
             </padding>
-            <TableView>
-                <columns>
-                    <TableColumn fx:id="listTItle" maxWidth="256.0" minWidth="-1.0" prefWidth="256.0" sortable="false" text="List1 Title" />
-                </columns>
-            </TableView>
-            <TableView>
-                <columns>
-                    <TableColumn fx:id="listTitle" maxWidth="265.0" minWidth="-1.0" prefWidth="265.0" sortable="false" text="List2 Title" />
-                </columns>
-            </TableView>
         </HBox>
     </VBox>
     <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="249.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -115,4 +97,10 @@
             </Button>
         </VBox>
     </AnchorPane>
+   <Button fx:id="newListButton" layoutX="760.0" layoutY="574.0" mnemonicParsing="false" onAction="#addNewList" text="New list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" />
+   <ImageView fx:id="closeButton" fitHeight="26.0" fitWidth="26.0" layoutX="800.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <image>
+         <Image url="@/closeButton.png" />
+      </image>
+   </ImageView>
 </AnchorPane>
