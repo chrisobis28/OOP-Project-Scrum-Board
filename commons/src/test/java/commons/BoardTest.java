@@ -22,6 +22,13 @@ public class BoardTest {
   }
 
   @Test
+  public void checkBoardNameGetter() {
+    var p = new Board("example-name");
+    String testName = p.getName();
+    assertEquals("example-name", testName);
+  }
+
+  @Test
   public void checkBoardColourSetter(){
     var p = new Board("some-name");
     assertEquals("#FFFFFF", p.boardBackgroundColour);
