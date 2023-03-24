@@ -27,7 +27,7 @@ public class BoardController {
     @GetMapping("boards/{name}")
     public ResponseEntity<Board> getByName(@PathVariable("name") String name) {
         for (Board board : boards) {
-            if (board.getName().equals(name))
+            if (board.getBoardName().equals(name))
                 return ResponseEntity.ok(board);
         }
             return ResponseEntity.badRequest().build();
