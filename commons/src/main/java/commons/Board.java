@@ -3,6 +3,9 @@
 package commons;
 
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -107,18 +110,7 @@ public class Board {
      */
         @Override
         public String toString() {
-            StringBuilder s = new StringBuilder("Board:" + '\n');
-            Set<Cardlist> copy = new HashSet<>(cardlistList);
-            Iterator iter = copy.iterator();
-            int i = 1;
-            while(iter.hasNext()) {
-                s.append("List on position ");
-                s.append(i++);
-                s.append(" :");
-                s.append(iter.next());
-                s.append('\n');
-            }
-            return s.toString();
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
         }
 
     /**
@@ -206,15 +198,16 @@ public class Board {
         Board board = (Board) o;
 
         if (id != board.id) return false;
-        if (getSize() != board.getSize()) return false;
         if (!Objects.equals(cardlistList, board.cardlistList)) return false;
         if (!Objects.equals(tagList, board.tagList)) return false;
         if (getDescription() != null ? !getDescription().equals(board.getDescription()) : board.getDescription() != null)
             return false;
-        if (getBoardName() != null ? !getBoardName().equals(board.getBoardName()) : board.getBoardName() != null) return false;
-        return getBoardBackgroundColour() != null ? getBoardBackgroundColour().equals(board.getBoardBackgroundColour()) : board.getBoardBackgroundColour() == null;
+        if (getBoardName() != null ? !getBoardName().equals(board.getBoardName()) : board.getBoardName() != null)
+            return false;
+        if (getBoardBackgroundColour() != null ? !getBoardBackgroundColour().equals(board.getBoardBackgroundColour()) : board.getBoardBackgroundColour() != null)
+            return false;
+        return Objects.equals(listsBackgroundColour, board.listsBackgroundColour);
     }
-
 
     /**
      * hashcode
