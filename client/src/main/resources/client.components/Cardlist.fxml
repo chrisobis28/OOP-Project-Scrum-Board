@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: #73877a; -fx-border-radius: 20; -fx-border-color: black; -fx-border-image-width: 1; -fx-background-radius: 20;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="421.0" prefWidth="226.0" style="-fx-background-color: #73877a; -fx-border-radius: 20; -fx-border-color: black; -fx-border-image-width: 1; -fx-background-radius: 20;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <effect>
       <DropShadow height="10.0" radius="4.5" width="10.0" />
    </effect>
@@ -16,6 +18,11 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <VBox fx:id="tasks" layoutY="30.0" prefHeight="260.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+      <ScrollPane layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
+         <content>
+            <VBox fx:id="tasks" prefHeight="260.0" prefWidth="200.0" spacing="5.0" />
+         </content>
+      </ScrollPane>
+      <Button fx:id="mybutton" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
    </children>
 </fx:root>
