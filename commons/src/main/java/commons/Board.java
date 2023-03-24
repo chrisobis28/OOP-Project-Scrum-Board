@@ -221,7 +221,7 @@ public class Board {
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getBoardName() != null ? getBoardName().hashCode() : 0);
         result = 31 * result + (getBoardBackgroundColour() != null ? getBoardBackgroundColour().hashCode() : 0);
-        result = 31 * result + getSize();
+        result = 31 * result + (listsBackgroundColour != null ? listsBackgroundColour.hashCode() : 0);
         return result;
     }
 
