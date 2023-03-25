@@ -24,11 +24,11 @@ public class Cardlist extends AnchorPane {
     @FXML
     private Label listname;
     @FXML
-    private VBox tasks;
+    private VBox cards;
     @FXML
-    private Button mybutton;
+    private Button toAddCard;
     @FXML
-    private Button todelete;
+    private Button toDelete;
 
     /**
      * Card list constructor.
@@ -48,9 +48,9 @@ public class Cardlist extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
-        this.mybutton.setOnAction(event -> addCard());
-        this.todelete.setOnAction(event -> deleteList());
-        this.mybutton.setText("Add a Card");
+        this.toAddCard.setOnAction(event -> addCard());
+        this.toDelete.setOnAction(event -> deleteList());
+        this.toAddCard.setText("Add a Card");
     }
 
     /**
@@ -60,7 +60,7 @@ public class Cardlist extends AnchorPane {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
         try {
             Node node = fxmlLoader.load();
-            tasks.getChildren().add(node);
+            cards.getChildren().add(node);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -110,8 +110,8 @@ public class Cardlist extends AnchorPane {
      *
      * @return the VBox containing tasks.
      */
-    public VBox getTasks() {
-        return tasks;
+    public VBox getCards() {
+        return cards;
     }
 
     /**
