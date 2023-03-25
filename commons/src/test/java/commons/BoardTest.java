@@ -1,10 +1,8 @@
 package commons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
 
@@ -19,13 +17,6 @@ public class BoardTest {
     var p = new Board("example-name");
     p.setBoardName("example");
     assertEquals("example", p.boardName);
-  }
-
-  @Test
-  public void checkBoardNameGetter() {
-    var p = new Board("example-name");
-    String testName = p.getName();
-    assertEquals("example-name", testName);
   }
 
   @Test

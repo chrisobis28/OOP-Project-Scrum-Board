@@ -1,16 +1,16 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import java.util.Objects;
-import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import javax.inject.Inject;
+import java.util.Objects;
+import java.util.Optional;
 
 
 /**
