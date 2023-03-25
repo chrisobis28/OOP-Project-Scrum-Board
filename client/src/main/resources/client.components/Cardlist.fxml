@@ -20,9 +20,14 @@
       </Label>
       <ScrollPane layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
          <content>
-            <VBox fx:id="tasks" prefHeight="260.0" prefWidth="200.0" spacing="5.0" />
+            <VBox fx:id="cards" prefHeight="340.0" prefWidth="215.0" spacing="5.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="mybutton" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
+      <Button fx:id="toAddCard" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
+      <Button fx:id="toDelete" layoutX="191.0" layoutY="-3.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="13.0" prefWidth="31.0" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="-3.0">
+         <font>
+            <Font name="Arial Black" size="17.0" />
+         </font>
+      </Button>
    </children>
 </fx:root>
