@@ -1,8 +1,6 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
-import client.scenes.MainCtrl;
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
