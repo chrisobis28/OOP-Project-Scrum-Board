@@ -9,11 +9,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
@@ -35,16 +37,18 @@ public class BoardViewCtrl implements Initializable {
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
 
     @FXML
-    private HBox board;
+    private FlowPane board;
 
     @FXML
     private Button newListButton;
+    @FXML
+    private ScrollPane scrollpane;
 
     private final MainCtrl mainCtrl;
 
     /**
      * Constructor for the BoardViewCtrl
-     * Right now also creates a list of boards
+     *
      * @param mainCtrl the main controller of the application.
      */
     @Inject
@@ -66,6 +70,7 @@ public class BoardViewCtrl implements Initializable {
 
     /**
      * For handling e key pressed
+     *
      * @param e the event when a key is pressed
      */
     public void keyPressed(KeyEvent e) {
@@ -113,14 +118,26 @@ public class BoardViewCtrl implements Initializable {
     }
 
     /**
+     * Delete a card list by its id.
+     *
+     * @param id the id of the card list to be deleted.
+     */
+    public void deleteList(long id) {
+        server.deleteCardList(id);
+
+        refreshBoard();
+    }
+
+    /**
      * reset all the lists.
      */
     public void refreshBoard() {
         var cardlists = server.getCardList();
         List<Node> nodes = new ArrayList<>();
-        for (var card : cardlists) {
-            var v = new Cardlist();
-            v.setListname(card.getCardlistName());
+        for (var cardlist : cardlists) {
+            var v = new Cardlist(this);
+            v.setListname(cardlist.getCardlistName());
+            v.setId(cardlist.getId());
             nodes.add(v);
         }
 
@@ -140,6 +157,9 @@ public class BoardViewCtrl implements Initializable {
         translate.setToX(-300);
         translate.play();
         refreshBoard();
+
+        scrollpane.setFitToHeight(true);
+        scrollpane.setFitToWidth(true);
 
         // Event for the image which acts like a button to open the side menu
         menuHamburgerClosed.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

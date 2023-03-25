@@ -4,6 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
@@ -58,11 +60,18 @@
                 <Insets bottom="10.0" top="10.0" />
             </padding>
         </Label>
-        <HBox fx:id="board" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="746.0" spacing="15.0" VBox.vgrow="ALWAYS">
-            <padding>
-                <Insets bottom="20.0" />
-            </padding>
-        </HBox>
+      <ScrollPane fx:id="scrollpane" pannable="true" prefHeight="455.0" prefWidth="734.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="38.0" />
+         </VBox.margin>
+         <content>
+            <FlowPane fx:id="board" hgap="18.0" prefHeight="452.0" prefWidth="731.0" vgap="14.0">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="5.0" />
+               </padding>
+            </FlowPane>
+         </content>
+      </ScrollPane>
     </VBox>
     <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="249.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
         <effect>
