@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -41,7 +42,6 @@ public class ServerUtils {
   /**
    * Constructor with no parameters for ServerUtils.
    */
-
   public ServerUtils() {}
 
   /**
@@ -99,6 +99,13 @@ public class ServerUtils {
     }
   }
 
+  /**
+   * Add a card list to the repository by sending a post request with the card list
+   *  to the server following the path "api/cardlist".
+   *
+   * @param cardlist The card list to be added to the repository.
+   * @return Response entity for the Cardlist.
+   */
   public Cardlist addCardList(Cardlist cardlist) {
     return ClientBuilder.newClient(new ClientConfig()) //
             .target(server).path("api/cardlist") //
@@ -115,6 +122,12 @@ public class ServerUtils {
             .post(Entity.entity(card, APPLICATION_JSON), Card.class);
   }
 
+  /**
+   * A function to send a GET request to the server for the card lists
+   *  arranged in a list.
+   *
+   * @return The list containing all the card lists in the repository.
+   */
   public List<Cardlist> getCardList() {
     return ClientBuilder.newClient(new ClientConfig()) //
             .target(server).path("api/cardlist") //
@@ -122,5 +135,24 @@ public class ServerUtils {
             .accept(APPLICATION_JSON) //
             .get(new GenericType<List<Cardlist>>() {
             });
+  }
+
+  /**
+   * A function that sends a DELETE request to the server, targeting
+   *  a specific card list by its id.
+   *
+   * @param id The id of the card list to be deleted.
+   */
+  public void deleteCardList(long id) {
+    try {
+      String path = "api/cardlist/" + id;
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .delete();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

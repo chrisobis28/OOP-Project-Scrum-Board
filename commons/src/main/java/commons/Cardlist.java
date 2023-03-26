@@ -37,8 +37,22 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
+  /**
+   * Getter for the card list title.
+   *
+   * @return the card list title.
+   */
   public String getCardlistName() {
     return cardlistName;
+  }
+
+  /**
+   * Getter for the Id of the card list.
+   *
+   * @return Card list Id.
+   */
+  public long getId() {
+    return id;
   }
 
   @Override

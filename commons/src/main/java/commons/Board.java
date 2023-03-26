@@ -3,11 +3,11 @@
 package commons;
 
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Board {
@@ -17,7 +17,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    public ArrayList<Cardlist> cardlistList;
+    public Set<Cardlist> cardlistList;
     @OneToMany(mappedBy = "board")
     public Set<Tag> tagList;
     public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF", listsBackgroundColour = "#FFFFFF";
@@ -26,7 +26,7 @@ public class Board {
      * Constructor for the board.
      */
         public Board() {
-            cardlistList = new ArrayList<>();
+            cardlistList = new HashSet<>();
             tagList = new HashSet<>();
         }
 
@@ -34,7 +34,7 @@ public class Board {
      * Constructor for the board with String parameter
      */
     public Board(String boardName) {
-        cardlistList = new ArrayList<>();
+        cardlistList = new HashSet<>();
         this.boardName = boardName;
         tagList = new HashSet<>();
     }
@@ -58,36 +58,15 @@ public class Board {
         /**
          * Returns the implicit head of the Cardlist.
          *
-         * @return the first Cardlist.
+         * @return the first Cardlist of the board.
          */
         public Cardlist getFirst() {
-            return cardlistList.get(0);
+            Iterator iter = cardlistList.iterator();
+            return (Cardlist) iter.next();
         }
 
 
 
-        /**
-         * Add a Cardlist at a specific index of the Cardlist
-         *    OBJ1    OBJ2
-         *  0       1      2
-         * these are the positions where a new Cardlist could be inserted, first being at the front
-         * @param index the element to add.
-         * Throws Index Out Of Bounds exception when the insetion at the provided
-         * index provided is not possible.
-         * Throws Runtime exception when l is null.
-         */
-        public void add(Cardlist l, int index) {
-            if(l == null)
-                throw new NullPointerException();
-            if(index == cardlistList.size()) {
-                cardlistList.add(l);
-                return;
-            }
-            if(this.getSize() < index || index < 0)
-                throw new IndexOutOfBoundsException();
-            for(int i = cardlistList.size(); i > index; i--)
-               cardlistList.set(i, cardlistList.get(i - 1));
-        }
 
 
         /**
@@ -105,7 +84,7 @@ public class Board {
      * Returns all cardlistList on the board
      * @return returns a Cardlist of type Cardlist
      */
-        public ArrayList<Cardlist> getAll(){
+        public Set<Cardlist> getAll(){
             return cardlistList;
         }
 
@@ -119,7 +98,10 @@ public class Board {
     public Cardlist getAtIndex(int index){
         if(index < 0 || index >= cardlistList.size())
             throw new IndexOutOfBoundsException();
-        return cardlistList.get(index);
+        Iterator iter = cardlistList.iterator();
+        for(int i = 1; i < index; i++)
+            iter.next();
+        return (Cardlist) iter.next();
     }
 
     /**
@@ -128,17 +110,7 @@ public class Board {
      */
         @Override
         public String toString() {
-            StringBuilder s = new StringBuilder("Board:" + '\n');
-            ArrayList<Cardlist> all = this.getAll();
-            int i = 1;
-            for(Cardlist card : all) {
-                s.append("List on position ");
-                s.append(i);
-                s.append(" :");
-                s.append(all.get(i++));
-                s.append('\n');
-            }
-            return s.toString();
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
         }
 
     /**
@@ -226,15 +198,16 @@ public class Board {
         Board board = (Board) o;
 
         if (id != board.id) return false;
-        if (getSize() != board.getSize()) return false;
         if (!Objects.equals(cardlistList, board.cardlistList)) return false;
         if (!Objects.equals(tagList, board.tagList)) return false;
         if (getDescription() != null ? !getDescription().equals(board.getDescription()) : board.getDescription() != null)
             return false;
-        if (getBoardName() != null ? !getBoardName().equals(board.getBoardName()) : board.getBoardName() != null) return false;
-        return getBoardBackgroundColour() != null ? getBoardBackgroundColour().equals(board.getBoardBackgroundColour()) : board.getBoardBackgroundColour() == null;
+        if (getBoardName() != null ? !getBoardName().equals(board.getBoardName()) : board.getBoardName() != null)
+            return false;
+        if (getBoardBackgroundColour() != null ? !getBoardBackgroundColour().equals(board.getBoardBackgroundColour()) : board.getBoardBackgroundColour() != null)
+            return false;
+        return Objects.equals(listsBackgroundColour, board.listsBackgroundColour);
     }
-
 
     /**
      * hashcode
@@ -248,7 +221,7 @@ public class Board {
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getBoardName() != null ? getBoardName().hashCode() : 0);
         result = 31 * result + (getBoardBackgroundColour() != null ? getBoardBackgroundColour().hashCode() : 0);
-        result = 31 * result + getSize();
+        result = 31 * result + (listsBackgroundColour != null ? listsBackgroundColour.hashCode() : 0);
         return result;
     }
 
@@ -259,19 +232,21 @@ public class Board {
      * Throws Runtime exception when the cardlistList.size()s do not match
      * Throws NPE when order is null or contains a null reference
      */
-    public void reorder(int[] order){
-        if(order.length != cardlistList.size())
+    public void reorder(int[] order) {
+        if (order.length != cardlistList.size())
             throw new RuntimeException("Unequal sized arrays, cannot reorder.");
-        if(order == null)
+        if (order == null)
             throw new NullPointerException();
 
-        ArrayList<Cardlist> copy = cardlistList;
-        for(int i = 0; i <= cardlistList.size(); i++){
-            cardlistList.set(i, copy.get(order[i]));
+        ArrayList<Cardlist> aux = new ArrayList<>(cardlistList);
+        cardlistList.clear();
+        int i = 0;
+        while(aux.size() != cardlistList.size()){
+            cardlistList.add(aux.get(order[i]));
+            aux.remove(order[i]);
+            i++;
         }
-
     }
-
 
 }
 
