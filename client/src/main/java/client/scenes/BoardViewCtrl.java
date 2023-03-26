@@ -1,7 +1,8 @@
 package client.scenes;
 
-import client.components.Cardlist;
+import client.components.CardList;
 import client.utils.ServerUtils;
+import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -116,6 +117,11 @@ public class BoardViewCtrl implements Initializable {
         mainCtrl.showAddList();
     }
 
+    public void sendEdit(CardList cardlist) {
+        Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
+        server.editCardList(edited);
+    }
+
     /**
      * Delete a card list by its id.
      *
@@ -131,10 +137,10 @@ public class BoardViewCtrl implements Initializable {
      * reset all the lists.
      */
     public void refreshBoard() {
-        var cardlists = server.getCardList();
+        var cardlists = server.getCardLists();
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
-            var v = new Cardlist(this);
+            var v = new CardList(this);
             v.setListname(cardlist.getCardlistName());
             v.setId(cardlist.getId());
             nodes.add(v);
@@ -145,7 +151,6 @@ public class BoardViewCtrl implements Initializable {
         board.getChildren().addAll(data);
         data.clear();
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 
-public class Cardlist extends AnchorPane {
+public class CardList extends AnchorPane {
     private long id;
     private final BoardViewCtrl boardViewCtrl;
     @FXML
@@ -34,12 +34,12 @@ public class Cardlist extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public Cardlist(BoardViewCtrl boardViewCtrl) {
+    public CardList(BoardViewCtrl boardViewCtrl) {
         this.boardViewCtrl = boardViewCtrl;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
-        fxmlLoader.setController(Cardlist.this);
+        fxmlLoader.setController(CardList.this);
 
         try {
             fxmlLoader.load();
@@ -104,20 +104,29 @@ public class Cardlist extends AnchorPane {
         textField.requestFocus();
         textField.focusedProperty().addListener((prop, o , n) -> {
             if(!n){
-                listname.setGraphic(null);
-                listname.setText(textField.getText());
+                toLabel(textField);
+                sendEdit();
             }
         });
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
-                listname.setGraphic(null);
-                listname.setText(textField.getText());
+                toLabel(textField);
+                sendEdit();
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
-                listname.setGraphic(null);
-                listname.setText(textField.getText());
+                toLabel(textField);
+                sendEdit();
             }
         });
+    }
+
+    public void toLabel(TextField tf){
+        listname.setGraphic(null);
+        listname.setText(tf.getText());
+    }
+
+    public void sendEdit() {
+        boardViewCtrl.sendEdit(this);
     }
 
     // GETTERS AND SETTERS

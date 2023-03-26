@@ -13,7 +13,7 @@
       <DropShadow height="10.0" radius="4.5" width="10.0" />
    </effect>
    <children>
-      <Label fx:id="listname" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="31.0" maxHeight="-Infinity" prefHeight="20.0" prefWidth="164.0" style="-fx-alignment: center;" text="New List" textAlignment="CENTER" AnchorPane.topAnchor="3.0">
+      <Label fx:id="listname" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="4.0" maxHeight="-Infinity" prefHeight="24.0" prefWidth="154.0" style="-fx-alignment: center;" text="New List" textAlignment="CENTER" AnchorPane.topAnchor="4.0">
          <font>
             <Font size="17.0" />
          </font>

@@ -14,9 +14,9 @@ public class Cardlist{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  public long id;
+  private long id;
 
-  public String cardlistName;
+  private String cardlistName;
 
   @ManyToOne
   @JoinColumn(name = "board_id")
@@ -30,6 +30,11 @@ public class Cardlist{
   }
 
   public Cardlist(String cardlistName){
+    this.cardlistName = cardlistName;
+  }
+
+  public Cardlist(long id, String cardlistName){
+    this.id = id;
     this.cardlistName = cardlistName;
   }
 
