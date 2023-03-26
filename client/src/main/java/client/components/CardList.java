@@ -47,11 +47,12 @@ public class CardList extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
-        listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); });
+        listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         this.toAddCard.setOnAction(event -> addCard());
         this.toDelete.setOnAction(event -> deleteList());
         this.toAddCard.setText("Add a Card");
         this.toEdit.setOnAction(event -> editTitle());
+
         Image editIcon = new Image("edit.png");
         ImageView editIconView = new ImageView(editIcon);
         editIconView.setFitHeight(17);
@@ -91,23 +92,38 @@ public class CardList extends AnchorPane {
         }
     }
 
+    /**
+     * Allow the user to edit a list title by showing a TextField over the label
+     *  then taking the updated text and replacing it in the label.
+     */
     public void editTitle() {
-        String backup = new String(listname.getText());
+        String backup = new String(listname.getText()); // the initial title.
+
+        // Set up the TextField.
         TextField textField = new TextField(backup);
         textField.setFont(Font.font("System",17));
         textField.setLayoutX(listname.getLayoutX());
         textField.setLayoutY(listname.getLayoutY());
         textField.setTranslateY(listname.getTranslateY()-4);
-        listname.setText("");
         textField.setAlignment(Pos.CENTER);
+
+        // hide the label and cover it with the TextField.
+        listname.setText("");
         listname.setGraphic(textField);
+
+        // Make the TextField be the focus for keyboard inputs.
         textField.requestFocus();
+
+        // End the editing process if focus is changed.
         textField.focusedProperty().addListener((prop, o , n) -> {
             if(!n){
                 toLabel(textField);
                 sendEdit();
             }
         });
+
+        // On pressing ENTER -> submit changes
+        //             ESCAPE -> cancel changes.
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
@@ -120,11 +136,19 @@ public class CardList extends AnchorPane {
         });
     }
 
+    /**
+     * Restore the list name label and change the text to the updated text.
+     *
+     * @param tf The updated text.
+     */
     public void toLabel(TextField tf){
         listname.setGraphic(null);
         listname.setText(tf.getText());
     }
 
+    /**
+     * Pass this card list to the board view controller to send the update to the server.
+     */
     public void sendEdit() {
         boardViewCtrl.sendEdit(this);
     }

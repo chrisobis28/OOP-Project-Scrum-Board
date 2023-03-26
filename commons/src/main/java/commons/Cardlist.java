@@ -33,6 +33,12 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
+  /**
+   * Constructor for a card list with a given id and title.
+   *
+   * @param id The id for the list.
+   * @param cardlistName The title of the list.
+   */
   public Cardlist(long id, String cardlistName){
     this.id = id;
     this.cardlistName = cardlistName;

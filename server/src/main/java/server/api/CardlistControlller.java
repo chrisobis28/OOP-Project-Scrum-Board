@@ -67,6 +67,12 @@ public class CardlistControlller {
         return ResponseEntity.ok(deleted);
     }
 
+    /**
+     * Mapping for post requests looking to update an already existing list.
+     *
+     * @param cardlist The newest version of the list.
+     * @return Response status of the http request.
+     */
     @PostMapping(path = {"/edit", "/edit/"})
     public ResponseEntity<Cardlist> edit(@RequestBody Cardlist cardlist) {
         if (cardlist.getId() < 0 || !repo.existsById(cardlist.getId())) {

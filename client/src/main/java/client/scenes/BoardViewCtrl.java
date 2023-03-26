@@ -117,6 +117,10 @@ public class BoardViewCtrl implements Initializable {
         mainCtrl.showAddList();
     }
 
+    /**
+     * Creates a common type card list to send to the repository to update.
+     * @param cardlist the card list from the client.
+     */
     public void sendEdit(CardList cardlist) {
         Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
         server.editCardList(edited);
