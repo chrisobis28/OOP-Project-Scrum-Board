@@ -65,10 +65,6 @@ public class Board {
             return (Cardlist) iter.next();
         }
 
-
-
-
-
         /**
          * Add the Cardlist to the end of the board when a position is not specified
          * @param l Cardlist to be inserted
