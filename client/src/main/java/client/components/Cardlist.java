@@ -5,17 +5,16 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
+import java.util.Set;
 
 
 public class Cardlist extends AnchorPane {
@@ -26,9 +25,7 @@ public class Cardlist extends AnchorPane {
     @FXML
     private VBox cards;
     @FXML
-    private Button toAddCard;
-    @FXML
-    private Button toDelete;
+    private Button toAddCard, toDelete, toEdit;
 
     /**
      * Card list constructor.
@@ -48,9 +45,18 @@ public class Cardlist extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
+        listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); });
         this.toAddCard.setOnAction(event -> addCard());
         this.toDelete.setOnAction(event -> deleteList());
         this.toAddCard.setText("Add a Card");
+        this.toEdit.setOnAction(event -> editTitle());
+        Image editIcon = new Image("edit.png");
+        this.toEdit.setBackground(new Background(new BackgroundImage(editIcon,
+                                                    BackgroundRepeat.NO_REPEAT,
+                                                    BackgroundRepeat.NO_REPEAT,
+                                                    BackgroundPosition.CENTER,
+                                                    BackgroundSize.DEFAULT)));
+
     }
 
     /**
@@ -83,6 +89,29 @@ public class Cardlist extends AnchorPane {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             boardViewCtrl.deleteList(id);
         }
+    }
+
+    public void editTitle() {
+        String backup = new String(listname.getText());
+        TextField textField = new TextField(backup);
+        listname.setGraphic(textField);
+        textField.requestFocus();
+        textField.focusedProperty().addListener((prop, o , n) -> {
+            if(!n){
+                listname.setGraphic(null);
+                listname.setText(textField.getText());
+            }
+        });
+        textField.setOnKeyReleased(e -> {
+            if(e.getCode().equals(KeyCode.ENTER)){
+                listname.setGraphic(null);
+                listname.setText(textField.getText());
+            }else if(e.getCode().equals(KeyCode.ESCAPE)){
+                textField.setText(backup);
+                listname.setGraphic(null);
+                listname.setText(textField.getText());
+            }
+        });
     }
 
     // GETTERS AND SETTERS

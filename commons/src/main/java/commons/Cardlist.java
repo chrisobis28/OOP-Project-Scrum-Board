@@ -55,6 +55,15 @@ public class Cardlist{
     return id;
   }
 
+  /**
+   * Getter for the set of cards in the list.
+   *
+   * @return the set of cards.
+   */
+  public Set<Card> getCardSet() {
+    return cardSet;
+  }
+
   @Override
   public boolean equals(Object obj){
     return EqualsBuilder.reflectionEquals(this, obj);

@@ -29,5 +29,6 @@
             <Font name="Arial Black" size="17.0" />
          </font>
       </Button>
+      <Button fx:id="toEdit" layoutX="158.0" layoutY="5.0" mnemonicParsing="false" prefHeight="13.0" prefWidth="31.0" style="-fx-background-color: transparent;" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="5.0" />
    </children>
 </fx:root>
