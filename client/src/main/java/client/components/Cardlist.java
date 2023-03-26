@@ -4,17 +4,18 @@ import client.scenes.BoardViewCtrl;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
-import java.util.Set;
 
 
 public class Cardlist extends AnchorPane {
@@ -35,6 +36,7 @@ public class Cardlist extends AnchorPane {
     @Inject
     public Cardlist(BoardViewCtrl boardViewCtrl) {
         this.boardViewCtrl = boardViewCtrl;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(Cardlist.this);
@@ -51,12 +53,10 @@ public class Cardlist extends AnchorPane {
         this.toAddCard.setText("Add a Card");
         this.toEdit.setOnAction(event -> editTitle());
         Image editIcon = new Image("edit.png");
-        this.toEdit.setBackground(new Background(new BackgroundImage(editIcon,
-                                                    BackgroundRepeat.NO_REPEAT,
-                                                    BackgroundRepeat.NO_REPEAT,
-                                                    BackgroundPosition.CENTER,
-                                                    BackgroundSize.DEFAULT)));
-
+        ImageView editIconView = new ImageView(editIcon);
+        editIconView.setFitHeight(17);
+        editIconView.setPreserveRatio(true);
+        toEdit.setGraphic(editIconView);
     }
 
     /**
@@ -94,6 +94,12 @@ public class Cardlist extends AnchorPane {
     public void editTitle() {
         String backup = new String(listname.getText());
         TextField textField = new TextField(backup);
+        textField.setFont(Font.font("System",17));
+        textField.setLayoutX(listname.getLayoutX());
+        textField.setLayoutY(listname.getLayoutY());
+        textField.setTranslateY(listname.getTranslateY()-4);
+        listname.setText("");
+        textField.setAlignment(Pos.CENTER);
         listname.setGraphic(textField);
         textField.requestFocus();
         textField.focusedProperty().addListener((prop, o , n) -> {

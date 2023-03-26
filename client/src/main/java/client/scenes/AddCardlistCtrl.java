@@ -44,7 +44,7 @@ public class AddCardlistCtrl {
     public void ok() {
         stage = (Stage) cancel.getScene().getWindow();
         String name;
-        if(listName.getText().isEmpty()) name = "New Board";
+        if(listName.getText().isEmpty()) name = "New List";
         else name = listName.getText();
 
         try {
