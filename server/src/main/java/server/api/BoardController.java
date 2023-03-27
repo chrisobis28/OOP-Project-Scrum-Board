@@ -1,19 +1,17 @@
 package server.api;
 
 import commons.Board;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    public final BoardRepository repo;
+    private final BoardRepository repo;
 
     /**
      * Constructor for the controller.
@@ -23,6 +21,7 @@ public class BoardController {
     public BoardController(BoardRepository repo) {
         this.repo = repo;
     }
+
     /**
      * Mapping for GET requests that return a board with a given id.
      *
@@ -42,7 +41,7 @@ public class BoardController {
      *
      * @return List of currently created boards.
      */
-    @GetMapping(path = {"","/"})
+    @GetMapping(path = {"", "/"})
     public List<Board> getAll() {
         return repo.findAll();
     }
