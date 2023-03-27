@@ -5,8 +5,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -17,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" snapToPixel="false" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardViewCtrl">
     <AnchorPane fx:id="sideMenuClosed" maxWidth="-Infinity" prefHeight="600.0" prefWidth="36.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -73,7 +72,7 @@
          </content>
       </ScrollPane>
     </VBox>
-    <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="249.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
         <effect>
             <DropShadow radius="9.2675" width="18.07" />
         </effect>
@@ -82,11 +81,15 @@
                 <Image url="@/burger-bar.png" />
             </image>
         </ImageView>
-        <TableView fx:id="table" blendMode="DARKEN" layoutY="40.0" prefHeight="465.0" prefWidth="249.0" style="-fx-background-color: #80808020;" AnchorPane.bottomAnchor="95.0" AnchorPane.topAnchor="40.0">
-            <columns>
-                <TableColumn fx:id="colTable" maxWidth="247.0" minWidth="-1.0" prefWidth="247.0" sortable="false" text="Boards" />
-            </columns>
-        </TableView>
+        <VBox layoutX="22.0" layoutY="33.0" prefHeight="483.0" prefWidth="230.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create/Join new board:" wrappingWidth="170.13671875" />
+            <TextField fx:id="boardName" />
+            <ScrollPane prefHeight="435.0" prefWidth="230.0">
+                <content>
+                    <FlowPane fx:id="workspace" minWidth="220.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="220.0" />
+                </content>
+            </ScrollPane>
+        </VBox>
         <VBox alignment="CENTER" layoutX="72.0" layoutY="501.0" prefHeight="64.0" prefWidth="105.0" spacing="10.0" AnchorPane.bottomAnchor="20.0">
             <opaqueInsets>
                 <Insets top="5.0" />
