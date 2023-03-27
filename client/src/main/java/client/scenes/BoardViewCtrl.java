@@ -20,7 +20,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.util.Duration;
-import org.checkerframework.checker.units.qual.A;
 
 import javax.inject.Inject;
 import java.net.URL;
