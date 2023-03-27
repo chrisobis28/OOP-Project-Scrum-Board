@@ -12,7 +12,6 @@ import java.util.*;
 @Entity
 public class Board {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
@@ -34,6 +33,13 @@ public class Board {
      * Constructor for the board with String parameter
      */
     public Board(String boardName) {
+        cardlistList = new HashSet<>();
+        this.boardName = boardName;
+        tagList = new HashSet<>();
+    }
+
+    public Board(Long id, String boardName) {
+        this.id = id;
         cardlistList = new HashSet<>();
         this.boardName = boardName;
         tagList = new HashSet<>();
@@ -66,6 +72,9 @@ public class Board {
         }
 
 
+    public long getId() {
+        return id;
+    }
 
 
 

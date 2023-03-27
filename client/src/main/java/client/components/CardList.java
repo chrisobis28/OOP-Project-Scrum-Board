@@ -1,6 +1,7 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
+import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,7 @@ public class CardList extends AnchorPane {
     private VBox cards;
     @FXML
     private Button toAddCard, toDelete, toEdit;
+    private ServerUtils server;
 
     /**
      * Card list constructor.
@@ -34,8 +36,9 @@ public class CardList extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public CardList(BoardViewCtrl boardViewCtrl) {
+    public CardList(BoardViewCtrl boardViewCtrl, ServerUtils server) {
         this.boardViewCtrl = boardViewCtrl;
+        this.server = server;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
@@ -67,10 +70,19 @@ public class CardList extends AnchorPane {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
         try {
             Node node = fxmlLoader.load();
+            Card card = fxmlLoader.getController();
+            card.setCard("Name", "Description");
+            server.addCard(card.getCard());
+            card.getCardDeleteButton().setOnAction(event -> deleteCard(card));
             cards.getChildren().add(node);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteCard(Card card){
+        cards.getChildren().remove(card);
+        server.deleteCard(card.getCard().getId());
     }
 
     /**

@@ -3,19 +3,22 @@ package server.api;
 import commons.Board;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import server.database.BoardRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("boards")
+@RequestMapping("/api/boards")
 public class BoardController {
 
+    private final BoardRepository repo;
     public final List<Board> boards = new ArrayList<>();
+
+    public BoardController(BoardRepository repo) {
+        this.repo = repo;
+    }
 
     /**
      * Finds and returns the board with the id specified as the parameter
@@ -46,6 +49,28 @@ public class BoardController {
         }
             return new ResponseEntity(HttpStatus.NOT_FOUND);
 
+    }
+
+    @PostMapping(path = {"/edit", "/edit/"})
+    public ResponseEntity<Board> edit(@RequestBody Board board) {
+        if (board.getId() < 0 || !repo.existsById(board.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.save(board);
+        return ResponseEntity.ok(board);
+    }
+
+    @PostMapping(path = { "", "/" })
+    public ResponseEntity<Board> add(@RequestBody Board board) {
+
+        if (board.getBoardName() == null || board.getBoardName().equals("")){
+            return ResponseEntity.badRequest().build();
+        }
+
+        boards.add(board);
+        Board saved = repo.save(board);
+        return ResponseEntity.ok(saved);
     }
 
 }
