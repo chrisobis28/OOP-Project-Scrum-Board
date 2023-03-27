@@ -128,7 +128,7 @@ public class ServerUtils {
    *
    * @return The list containing all the card lists in the repository.
    */
-  public List<Cardlist> getCardList() {
+  public List<Cardlist> getCardLists() {
     return ClientBuilder.newClient(new ClientConfig()) //
             .target(server).path("api/cardlist") //
             .request(APPLICATION_JSON) //
@@ -151,6 +151,19 @@ public class ServerUtils {
               .request(APPLICATION_JSON) //
               .accept(APPLICATION_JSON) //
               .delete();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editCardList(Cardlist edit) {
+    try {
+      String path = "api/cardlist/edit";
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .post(Entity.entity(edit, APPLICATION_JSON), Cardlist.class);
     } catch (Exception e) {
       e.printStackTrace();
     }

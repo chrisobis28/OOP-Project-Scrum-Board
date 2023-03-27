@@ -13,9 +13,9 @@
       <DropShadow height="10.0" radius="4.5" width="10.0" />
    </effect>
    <children>
-      <Label fx:id="listname" contentDisplay="CENTER" maxHeight="-Infinity" prefHeight="30.0" prefWidth="203.0" style="-fx-alignment: center;" text="New List" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label fx:id="listname" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="4.0" maxHeight="-Infinity" prefHeight="24.0" prefWidth="154.0" style="-fx-alignment: center;" text="New List" textAlignment="CENTER" AnchorPane.topAnchor="4.0">
          <font>
-            <Font size="20.0" />
+            <Font size="17.0" />
          </font>
       </Label>
       <ScrollPane layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
@@ -24,10 +24,11 @@
          </content>
       </ScrollPane>
       <Button fx:id="toAddCard" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
-      <Button fx:id="toDelete" layoutX="191.0" layoutY="-3.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="13.0" prefWidth="31.0" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="-3.0">
+      <Button fx:id="toDelete" layoutX="-3.0" layoutY="-5.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-5.0">
          <font>
             <Font name="Arial Black" size="17.0" />
          </font>
       </Button>
+      <Button fx:id="toEdit" layoutX="192.0" layoutY="3.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: transparent;" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="3.0" />
    </children>
 </fx:root>
