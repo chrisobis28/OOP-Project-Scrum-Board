@@ -4,21 +4,21 @@ import client.scenes.BoardViewCtrl;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Optional;
 
 
-public class Cardlist extends AnchorPane {
+public class CardList extends AnchorPane {
     private long id;
     private final BoardViewCtrl boardViewCtrl;
     @FXML
@@ -26,9 +26,7 @@ public class Cardlist extends AnchorPane {
     @FXML
     private VBox cards;
     @FXML
-    private Button toAddCard;
-    @FXML
-    private Button toDelete;
+    private Button toAddCard, toDelete, toEdit;
 
     /**
      * Card list constructor.
@@ -36,11 +34,12 @@ public class Cardlist extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public Cardlist(BoardViewCtrl boardViewCtrl) {
+    public CardList(BoardViewCtrl boardViewCtrl) {
         this.boardViewCtrl = boardViewCtrl;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
-        fxmlLoader.setController(Cardlist.this);
+        fxmlLoader.setController(CardList.this);
 
         try {
             fxmlLoader.load();
@@ -48,9 +47,17 @@ public class Cardlist extends AnchorPane {
             throw new RuntimeException(exception);
         }
 
+        listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         this.toAddCard.setOnAction(event -> addCard());
         this.toDelete.setOnAction(event -> deleteList());
         this.toAddCard.setText("Add a Card");
+        this.toEdit.setOnAction(event -> editTitle());
+
+        Image editIcon = new Image("edit.png");
+        ImageView editIconView = new ImageView(editIcon);
+        editIconView.setFitHeight(17);
+        editIconView.setPreserveRatio(true);
+        toEdit.setGraphic(editIconView);
     }
 
     /**
@@ -83,6 +90,67 @@ public class Cardlist extends AnchorPane {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             boardViewCtrl.deleteList(id);
         }
+    }
+
+    /**
+     * Allow the user to edit a list title by showing a TextField over the label
+     *  then taking the updated text and replacing it in the label.
+     */
+    public void editTitle() {
+        String backup = new String(listname.getText()); // the initial title.
+
+        // Set up the TextField.
+        TextField textField = new TextField(backup);
+        textField.setFont(Font.font("System",17));
+        textField.setLayoutX(listname.getLayoutX());
+        textField.setLayoutY(listname.getLayoutY());
+        textField.setTranslateY(listname.getTranslateY()-4);
+        textField.setAlignment(Pos.CENTER);
+
+        // hide the label and cover it with the TextField.
+        listname.setText("");
+        listname.setGraphic(textField);
+
+        // Make the TextField be the focus for keyboard inputs.
+        textField.requestFocus();
+
+        // End the editing process if focus is changed.
+        textField.focusedProperty().addListener((prop, o , n) -> {
+            if(!n){
+                toLabel(textField);
+                sendEdit();
+            }
+        });
+
+        // On pressing ENTER -> submit changes
+        //             ESCAPE -> cancel changes.
+        textField.setOnKeyReleased(e -> {
+            if(e.getCode().equals(KeyCode.ENTER)){
+                toLabel(textField);
+                sendEdit();
+            }else if(e.getCode().equals(KeyCode.ESCAPE)){
+                textField.setText(backup);
+                toLabel(textField);
+                sendEdit();
+            }
+        });
+    }
+
+    /**
+     * Restore the list name label and change the text to the updated text.
+     *
+     * @param tf The updated text.
+     */
+    public void toLabel(TextField tf){
+        listname.setGraphic(null);
+        listname.setText(tf.getText());
+    }
+
+    /**
+     * Pass this card list to the board view controller to send the update to the server.
+     */
+    public void sendEdit() {
+        boardViewCtrl.sendEdit(this);
     }
 
     // GETTERS AND SETTERS

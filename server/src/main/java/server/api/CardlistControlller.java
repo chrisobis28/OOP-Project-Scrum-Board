@@ -41,7 +41,7 @@ public class CardlistControlller {
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Cardlist> add(@RequestBody Cardlist cardlist) {
 
-        if (isNullOrEmpty(cardlist.cardlistName)) {
+        if (isNullOrEmpty(cardlist.getCardlistName())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -65,6 +65,22 @@ public class CardlistControlller {
         Cardlist deleted = repo.getById(id);
         repo.delete(deleted);
         return ResponseEntity.ok(deleted);
+    }
+
+    /**
+     * Mapping for post requests looking to update an already existing list.
+     *
+     * @param cardlist The newest version of the list.
+     * @return Response status of the http request.
+     */
+    @PostMapping(path = {"/edit", "/edit/"})
+    public ResponseEntity<Cardlist> edit(@RequestBody Cardlist cardlist) {
+        if (cardlist.getId() < 0 || !repo.existsById(cardlist.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.save(cardlist);
+        return ResponseEntity.ok(cardlist);
     }
 
     /**
