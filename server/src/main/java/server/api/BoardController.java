@@ -13,10 +13,6 @@ public class BoardController {
 
     private final BoardRepository repo;
 
-    public BoardController(BoardRepository repo) {
-        this.repo = repo;
-    }
-
     /**
      * Constructor for the controller.
      *
@@ -105,18 +101,6 @@ public class BoardController {
 
         repo.save(board);
         return ResponseEntity.ok(board);
-    }
-
-    @PostMapping(path = { "", "/" })
-    public ResponseEntity<Board> add(@RequestBody Board board) {
-
-        if (board.getBoardName() == null || board.getBoardName().equals("")){
-            return ResponseEntity.badRequest().build();
-        }
-
-        boards.add(board);
-        Board saved = repo.save(board);
-        return ResponseEntity.ok(saved);
     }
 
 }
