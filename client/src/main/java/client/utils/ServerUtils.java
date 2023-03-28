@@ -240,7 +240,12 @@ public class ServerUtils {
       e.printStackTrace();
       } 
   }
-  
+
+  /**
+   * Editing a specific CardList by posting the newer version
+   *
+   * @param edit CardList with the same id to be replaced
+   */
   public void editCardList(Cardlist edit) {
     try {
       String path = "api/cardlist/edit";
@@ -254,6 +259,11 @@ public class ServerUtils {
     }
   }
 
+  /**
+   * Editing a specific Board by posting the newer version
+   *
+   * @param edit Board with the same id to be replaced
+   */
   public void editBoard(Board edit) {
     try {
       String path = "api/boards/edit";
@@ -267,6 +277,11 @@ public class ServerUtils {
     }
   }
 
+  /**
+   * Delete a card with a specific id by sending a DELETE request
+   *
+   * @param id Id of the card to be deleted
+   */
   public void deleteCard(long id) {
     try {
       String path = "api/cards/" + id;
