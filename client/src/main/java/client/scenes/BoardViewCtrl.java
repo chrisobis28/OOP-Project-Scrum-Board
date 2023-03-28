@@ -1,7 +1,9 @@
 package client.scenes;
 
 import client.components.CardList;
+import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
+import commons.Board;
 import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -11,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -29,6 +32,8 @@ import java.util.ResourceBundle;
 
 public class BoardViewCtrl implements Initializable {
     public ObservableList<Node> data;
+
+    private ArrayList<String> boardsInWorkspace;
     private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
@@ -37,12 +42,15 @@ public class BoardViewCtrl implements Initializable {
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
 
     @FXML
-    private FlowPane board;
+    private FlowPane board, workspace;
 
     @FXML
     private Button newListButton;
     @FXML
     private ScrollPane scrollpane;
+
+    @FXML
+    private TextField boardName;
 
     private final MainCtrl mainCtrl;
 
@@ -55,6 +63,7 @@ public class BoardViewCtrl implements Initializable {
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.boardsInWorkspace = new ArrayList<>();
 //        for(int i = 0; i < 5; i++){
 //            String s = "Board "+i;
 //            boards.add(s);
@@ -82,7 +91,10 @@ public class BoardViewCtrl implements Initializable {
             } else {
                 hideMenu();
             }
-
+        // If ENTER is pressed while the side menu is open and the text field is not empty, try adding the board
+        else if (sideMenuClosed.getOpacity() != 1 && Objects.requireNonNull(e.getCode()) == KeyCode.ENTER && !boardName.getText().isEmpty()) {
+            addNewBoard(boardName.getText());
+        }
         e.consume();
     }
 
@@ -138,7 +150,50 @@ public class BoardViewCtrl implements Initializable {
     }
 
     /**
-     * reset all the lists.
+     * Add a board with a given name to the repo and to the workspace.
+     * @param name The name of the new Board
+     */
+    public void addNewBoard(String name) {
+        long boardID = boardInRepo(name);
+        if (boardID == -1) {
+            Board newBoard = new Board(name);
+            server.addBoard(newBoard);
+
+            var b = new WorkspaceBoard(this);
+            b.setBoardName(name);
+            b.setId(newBoard.getId());
+            workspace.getChildren().add(b);
+            boardsInWorkspace.add(name);
+        }
+        else {
+            if (!boardsInWorkspace.contains(name)) {
+                var b = new WorkspaceBoard(this);
+                b.setBoardName(name);
+                b.setId(boardID);
+                workspace.getChildren().add(b);
+                boardsInWorkspace.add(name);
+            }
+        }
+    }
+
+    /**
+     * Function that checks whether a board with a given name is in the database.
+     *
+     * @param name The name of the board to be checked
+     * @return the board's id if the board is present in the repo, -1 otherwise
+     */
+    public long boardInRepo(String name) {
+        if (server.getBoardList().isEmpty())
+            return -1;
+        for (Board board : server.getBoardList()) {
+            if (board.getBoardName().equals(name))
+                return board.getId();
+        }
+        return -1;
+    }
+
+    /**
+     * Reset all the lists.
      */
     public void refreshBoard() {
         var cardlists = server.getCardLists();
