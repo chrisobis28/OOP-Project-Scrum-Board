@@ -123,7 +123,7 @@ public class ServerUtils {
    */
   public Card addCard(Card card){
     return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/card")
+            .target(server).path("api/cards")
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(card, APPLICATION_JSON), Card.class);
@@ -249,6 +249,40 @@ public class ServerUtils {
               .request(APPLICATION_JSON) //
               .accept(APPLICATION_JSON) //
               .post(Entity.entity(edit, APPLICATION_JSON), Cardlist.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editBoard(Board edit) {
+    try {
+      String path = "api/boards/edit";
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .post(Entity.entity(edit, APPLICATION_JSON), Board.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public Board addBoard(Board board){
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/boards")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(board, APPLICATION_JSON), Board.class);
+  }
+
+  public void deleteCard(long id) {
+    try {
+      String path = "api/cards/" + id;
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .delete();
     } catch (Exception e) {
       e.printStackTrace();
     }

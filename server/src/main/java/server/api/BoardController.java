@@ -13,6 +13,10 @@ public class BoardController {
 
     private final BoardRepository repo;
 
+    public BoardController(BoardRepository repo) {
+        this.repo = repo;
+    }
+
     /**
      * Constructor for the controller.
      *
@@ -91,6 +95,28 @@ public class BoardController {
         Board deleted = repo.findById(id).get();
         repo.delete(deleted);
         return ResponseEntity.ok(deleted);
+    }
+
+    @PostMapping(path = {"/edit", "/edit/"})
+    public ResponseEntity<Board> edit(@RequestBody Board board) {
+        if (board.getId() < 0 || !repo.existsById(board.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.save(board);
+        return ResponseEntity.ok(board);
+    }
+
+    @PostMapping(path = { "", "/" })
+    public ResponseEntity<Board> add(@RequestBody Board board) {
+
+        if (board.getBoardName() == null || board.getBoardName().equals("")){
+            return ResponseEntity.badRequest().build();
+        }
+
+        boards.add(board);
+        Board saved = repo.save(board);
+        return ResponseEntity.ok(saved);
     }
 
 }

@@ -40,8 +40,16 @@ public class Card {
     taskList = new ArrayList<>();
   }
 
+  public String getCardName() {
+    return cardName;
+  }
+
   public void setCardName(String cardName) {
     this.cardName = cardName;
+  }
+
+  public long getId() {
+    return id;
   }
 
   public void setCardDescription(String cardDescription) {

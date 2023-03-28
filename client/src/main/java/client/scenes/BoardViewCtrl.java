@@ -10,8 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -20,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -31,6 +34,8 @@ import java.util.ResourceBundle;
 
 
 public class BoardViewCtrl implements Initializable {
+
+    private long id;
     public ObservableList<Node> data;
 
     private ArrayList<String> boardsInWorkspace;
@@ -46,6 +51,9 @@ public class BoardViewCtrl implements Initializable {
 
     @FXML
     private Button newListButton;
+
+    @FXML
+    private Label boardTitle;
     @FXML
     private ScrollPane scrollpane;
 
@@ -199,7 +207,7 @@ public class BoardViewCtrl implements Initializable {
         var cardlists = server.getCardLists();
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
-            var v = new CardList(this);
+            var v = new CardList(this, server);
             v.setListname(cardlist.getCardlistName());
             v.setId(cardlist.getId());
             nodes.add(v);
@@ -213,6 +221,8 @@ public class BoardViewCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
 
         // place the side menu off scene
         TranslateTransition translate = new TranslateTransition();
@@ -241,5 +251,55 @@ public class BoardViewCtrl implements Initializable {
             mainCtrl.showOverview();
             event.consume();
         });
+
+//        boardTitle.setText("Board Name");
+//        Board board = new Board(boardTitle.getText());
+//        this.id = board.getId();
+//        server.addBoard(board);
     }
+
+    public void editBoardTitle(){
+
+        // Saving label's text
+        String labelBackup = boardTitle.getText();
+
+        // Preparing the TextField
+        TextField textField = new TextField();
+        textField.setFont(Font.font("System",17));
+        textField.setLayoutX(boardTitle.getLayoutX());
+        textField.setLayoutY(boardTitle.getLayoutY());
+        textField.setAlignment(Pos.CENTER);
+
+        textField.setText(labelBackup);
+        boardTitle.setText("");
+        boardTitle.setGraphic(textField);
+
+        // Keyboard focused on textField
+        textField.requestFocus();
+
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue){
+                boardTitle.setText(textField.getText());
+                boardTitle.setGraphic(null);
+//                sendBoardToServer(boardTitle.getText());
+            }
+        });
+
+        textField.setOnKeyReleased(e -> {
+            if(e.getCode().equals(KeyCode.ENTER)){
+                boardTitle.setText(textField.getText());
+                boardTitle.setGraphic(null);
+//                sendBoardToServer(boardTitle.getText());
+            }
+            else if(e.getCode().equals(KeyCode.ESCAPE)){
+                boardTitle.setText(labelBackup);
+                boardTitle.setGraphic(null);
+            }
+        });
+    }
+
+//    public void sendBoardToServer(String text){
+//        Board board = new Board(id, text);
+//        server.editBoard(board);
+//    }
 }
