@@ -3,6 +3,7 @@
 package commons;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -150,6 +151,10 @@ public class Board {
     this.boardName = boardName;
   }
 
+  @JsonManagedReference
+  public Set<Cardlist> getCardlistList() {
+    return cardlistList;
+  }
 
   /**
    * Updates the background colour of the board.

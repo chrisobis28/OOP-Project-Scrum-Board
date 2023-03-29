@@ -56,12 +56,11 @@ public class AddCardlistCtrl {
         else name = listName.getText();
 
         try {
-            Cardlist cardlist = new Cardlist(name);
             Board board = server.getBoardById(boardViewCtrl.getId());
+            Cardlist cardlist = new Cardlist(name, board);
             board.add(cardlist);
             System.out.println(board);
             server.editBoard(board);
-            server.addCardList(cardlist);
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);

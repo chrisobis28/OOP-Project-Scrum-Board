@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -45,6 +46,11 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
+  public Cardlist(String cardlistName, Board board){
+    this.board = board;
+    this.cardlistName = cardlistName;
+  }
+
   public void setCardlistName(String cardlistName) {
     this.cardlistName = cardlistName;
   }
@@ -76,6 +82,9 @@ public class Cardlist{
   public Set<Card> getCardSet() {
     return cardSet;
   }
+
+  @JsonBackReference
+  public Board getBoard() { return board; }
 
   public void removeCard(Card card){
     cardSet.remove(card);

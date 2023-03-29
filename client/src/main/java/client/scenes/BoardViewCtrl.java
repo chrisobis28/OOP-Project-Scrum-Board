@@ -41,16 +41,14 @@ public class BoardViewCtrl implements Initializable {
     private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
-
     @FXML
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
-
     @FXML
     private FlowPane board, workspace;
-
     @FXML
     private Button newListButton;
-
+    @FXML
+    private Button refreshButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -174,6 +172,7 @@ public class BoardViewCtrl implements Initializable {
     public void showBoard(WorkspaceBoard boardToShow) {
         this.id = boardToShow.getBoardId();
         this.boardTitle.setText(boardToShow.getBoardName().getText());
+        refreshBoard();
     }
 
     /**
@@ -245,7 +244,7 @@ public class BoardViewCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
-
+        refreshButton.setOnAction(e -> refreshBoard());
         // place the side menu off scene
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(sideMenu);
@@ -292,6 +291,7 @@ public class BoardViewCtrl implements Initializable {
 
 
         initializeWorkspace();
+        refreshBoard();
     }
 
     public void editBoardTitle(){
