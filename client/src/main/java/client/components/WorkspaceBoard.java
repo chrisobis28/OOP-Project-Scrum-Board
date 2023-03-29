@@ -3,8 +3,13 @@ package client.components;
 import client.scenes.BoardViewCtrl;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -38,6 +43,8 @@ public class WorkspaceBoard extends HBox {
       throw new RuntimeException(exception);
     }
 
+    this.setOnMouseEntered(e -> highlight());
+    this.setOnMouseExited(e -> dehighlight());
     this.open.setOnAction(event -> openBoard());
   }
 
@@ -46,6 +53,22 @@ public class WorkspaceBoard extends HBox {
    */
   public void openBoard() {
     //TO-DO : function that opens this board on the BoardView scene
+  }
+
+  /**
+   * Make the board card white.
+   */
+  public void highlight() {
+    this.setBackground(new Background(new BackgroundFill(
+            Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+  }
+
+  /**
+   * Make the board card the same color as the background.
+   */
+  public void dehighlight() {
+    this.setBackground(new Background(new BackgroundFill(
+            Color.rgb(210,210,210), CornerRadii.EMPTY, Insets.EMPTY)));
   }
 
   //GETTERS AND SETTERS

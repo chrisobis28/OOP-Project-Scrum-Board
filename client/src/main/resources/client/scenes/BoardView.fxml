@@ -84,9 +84,9 @@
         <VBox layoutX="22.0" layoutY="33.0" prefHeight="483.0" prefWidth="230.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create/Join new board:" wrappingWidth="170.13671875" />
             <TextField fx:id="boardName" />
-            <ScrollPane prefHeight="435.0" prefWidth="230.0">
+            <ScrollPane hbarPolicy="NEVER" prefHeight="435.0" prefWidth="230.0">
                 <content>
-                    <FlowPane fx:id="workspace" minWidth="220.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="220.0" />
+                    <FlowPane fx:id="workspace" minWidth="220.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="220.0" style="-fx-background-color: rgb(210,210,210);" />
                 </content>
             </ScrollPane>
         </VBox>

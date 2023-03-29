@@ -18,7 +18,7 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <ScrollPane layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
+      <ScrollPane hbarPolicy="NEVER" layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
          <content>
             <VBox fx:id="cards" prefHeight="340.0" prefWidth="215.0" spacing="5.0" />
          </content>
