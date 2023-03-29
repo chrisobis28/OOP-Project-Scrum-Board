@@ -115,7 +115,13 @@ public class Board {
    * Returns true if this Board is in the workspace, false otherwise.
    * @return Boolean value describing whether the board is in the workspace
    */
-  public Boolean getIsInWorkspace() { return this.isInWorkspace; }
+  public Boolean getIsInWorkspace() {
+    //Adding a check in case the board was created before this mr
+    if (this.isInWorkspace == null) {
+      this.isInWorkspace = false;
+    }
+    return this.isInWorkspace;
+  }
 
   /**
    * Changes state of the board being in the workspace.
