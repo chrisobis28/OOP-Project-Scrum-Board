@@ -23,10 +23,10 @@ public class Cardlist {
   public Board board;
 
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
-  public Set<Card> cardSet = new HashSet<>();
+  public Set<Card> cardSet;
 
   public Cardlist(){
-
+      cardSet = new HashSet<>();
   }
 
   public Cardlist(String cardlistName){
@@ -50,5 +50,10 @@ public class Cardlist {
   @Override
   public String toString(){
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
+
+
+  public boolean contains(Card card) {
+    return cardSet.contains(card);
   }
 }

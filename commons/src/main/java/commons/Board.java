@@ -272,6 +272,17 @@ public class Board {
 
     }
 
+    public boolean contains(Cardlist cardlist){
+        return cardlistList.contains(cardlist);
+    }
+
+   public boolean contains(Card card){
+        for(Cardlist cardlist : cardlistList)
+            if(cardlist.contains(card))
+                return true;
+        return false;
+    }
+
 
 }
 
