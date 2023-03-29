@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,12 +19,10 @@ public class Cardlist{
 
   private String cardlistName;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "board_id")
   public Board board;
 
-  @Column(name = "boardid")
-  public long boardid;
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
   public Set<Card> cardSet = new HashSet<>();
 
@@ -50,16 +49,11 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
-  public void setBoardid(long id) {
-    this.boardid = id;
-  }
-
   /**
    * Getter for the card list title.
    *
    * @return the card list title.
    */
-  @Lob
   public String getCardlistName() {
     return cardlistName;
   }
@@ -69,7 +63,6 @@ public class Cardlist{
    *
    * @return Card list Id.
    */
-  @Lob
   public long getId() {
     return id;
   }
@@ -79,7 +72,7 @@ public class Cardlist{
    *
    * @return the set of cards.
    */
-  @Lob
+  @JsonManagedReference
   public Set<Card> getCardSet() {
     return cardSet;
   }
@@ -99,7 +92,7 @@ public class Cardlist{
 
   @Override
   public int hashCode(){
-    return HashCodeBuilder.reflectionHashCode(this, "board");
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
   @Override
