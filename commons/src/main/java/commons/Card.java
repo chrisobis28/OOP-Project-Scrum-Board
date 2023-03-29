@@ -30,7 +30,7 @@ public class Card {
   public Cardlist cardlist;
 
   public Card(){
-
+      // nothing really
   }
 
   public Card(String cardName, String cardDescription){

@@ -4,11 +4,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="112.0" prefWidth="188.0" style="-fx-border-color: #73877a; -fx-border-radius: 40px; -fx-border-width: 4px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.components.Card">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="112.0" prefWidth="188.0" style="-fx-border-color: #73877a; -fx-border-radius: 40px; -fx-border-width: 4px;" type="Pane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="60.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SOMETHING" />
       <Button fx:id="cardDeleteButton" layoutX="68.0" layoutY="73.0" mnemonicParsing="false" text="Delete">
 
       </Button>
    </children>
-</Pane>
+</fx:root>

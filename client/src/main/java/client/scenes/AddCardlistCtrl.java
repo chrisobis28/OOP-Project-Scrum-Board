@@ -22,6 +22,8 @@ public class AddCardlistCtrl {
     @FXML
     private TextField listName;
 
+    private BoardViewCtrl boardViewCtrl;
+
 
     @Inject
     public AddCardlistCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -48,7 +50,8 @@ public class AddCardlistCtrl {
         else name = listName.getText();
 
         try {
-            server.addCardList(new Cardlist(name));
+            Cardlist cardlist = new Cardlist(name);
+            server.addCardList(cardlist);
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);
