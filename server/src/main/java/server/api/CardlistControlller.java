@@ -107,6 +107,10 @@ public class CardlistControlller {
         return s == null || s.isEmpty();
     }
 
+    /**
+     * An endpoint for clearing all of the boards in the repo
+     * (can only be done manually)
+     */
     @GetMapping(path = {"/clear"})
     public void clear() {
         repo.deleteAll();

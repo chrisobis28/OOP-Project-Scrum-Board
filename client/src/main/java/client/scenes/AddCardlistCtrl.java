@@ -33,6 +33,11 @@ public class AddCardlistCtrl {
         this.boardViewCtrl = boardViewCtrl;
     }
 
+    /**
+     * Set the board to which this list is added.
+     *
+     * @param boardViewCtrl the board to which the list is added.
+     */
     public void setBoard(BoardViewCtrl boardViewCtrl) {
         this.boardViewCtrl = boardViewCtrl;
     }
@@ -59,7 +64,6 @@ public class AddCardlistCtrl {
             Board board = server.getBoardById(boardViewCtrl.getId());
             Cardlist cardlist = new Cardlist(name, board);
             board.add(cardlist);
-            System.out.println(board);
             server.editBoard(board);
         } catch (WebApplicationException e) {
 

@@ -131,9 +131,9 @@ public class ServerUtils {
 
   /**
    * A function to send a GET request to the server for the card lists
-   *  arranged in a list.
+   *  for a given board id, arranged in a list.
    *
-   * @return The list containing all the card lists in the repository.
+   * @return The list containing all the card lists for a board.
    */
   public List<Cardlist> getCardLists(long id) {
     String path = new String("api/cardlist/"+id);

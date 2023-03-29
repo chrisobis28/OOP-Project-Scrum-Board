@@ -151,6 +151,11 @@ public class Board {
     this.boardName = boardName;
   }
 
+  /**
+   * Getter for the list of cardlists in the board.
+   *
+   * @return list of all the cardlists.
+   */
   @JsonManagedReference
   public Set<Cardlist> getCardlistList() {
     return cardlistList;

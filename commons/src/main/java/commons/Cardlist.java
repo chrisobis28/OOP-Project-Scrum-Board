@@ -46,6 +46,12 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
+  /**
+   * Constructor for a card list attached to a board.
+   *
+   * @param cardlistName
+   * @param board
+   */
   public Cardlist(String cardlistName, Board board){
     this.board = board;
     this.cardlistName = cardlistName;
@@ -83,6 +89,11 @@ public class Cardlist{
     return cardSet;
   }
 
+  /**
+   * Getter for the board of the card list.
+   *
+   * @return board in which the card list resides.
+   */
   @JsonBackReference
   public Board getBoard() { return board; }
 

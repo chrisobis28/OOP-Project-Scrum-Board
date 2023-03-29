@@ -169,6 +169,11 @@ public class BoardViewCtrl implements Initializable {
         }
     }
 
+    /**
+     * Displays the elements of the new board on the view.
+     *
+     * @param boardToShow The board to be displayed.
+     */
     public void showBoard(WorkspaceBoard boardToShow) {
         this.id = boardToShow.getBoardId();
         this.boardTitle.setText(boardToShow.getBoardName().getText());
@@ -273,13 +278,18 @@ public class BoardViewCtrl implements Initializable {
             event.consume();
         });
 
+        //Display first board when opening the app
         if(server.getBoardList().isEmpty()) {
+            //Case where there are no boards created.
+            //Creates a new board.
             boardTitle.setText("Board Name");
             Board board = new Board(boardTitle.getText());
             this.id = board.getId();
             board.changeWorkspaceState();
             server.addBoard(board);
         } else {
+            //Case where boards already exist.
+            //Gets first board in the workspace.
             for(Board b : server.getBoardList()) {
                 if(b.isInWorkspace) {
                     boardTitle.setText(b.boardName);

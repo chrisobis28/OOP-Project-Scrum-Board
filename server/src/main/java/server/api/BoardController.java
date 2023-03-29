@@ -92,6 +92,7 @@ public class BoardController {
         repo.delete(deleted);
         return ResponseEntity.ok(deleted);
     }
+
     @PostMapping(path = {"/edit", "/edit/"})
     public ResponseEntity<Board> edit(@RequestBody Board board) {
         if (board.getId() < 0 || !repo.existsById(board.getId())) {
@@ -99,10 +100,13 @@ public class BoardController {
         }
 
         Board saved = repo.save(board);
-        System.out.println("Board saved with respone: " + ResponseEntity.ok(saved));
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok(saved);
     }
 
+    /**
+     * An endpoint for clearing all of the boards in the repo
+     * (can only be done manually)
+     */
     @GetMapping(path = {"/clear"})
     public void clear() {
         repo.deleteAll();
