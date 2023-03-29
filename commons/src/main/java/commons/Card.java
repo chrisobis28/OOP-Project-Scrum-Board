@@ -43,6 +43,13 @@ public class Card {
     taskList = new ArrayList<>();
   }
 
+  public Card(String cardName, String cardDescription){
+    this.cardName = cardName;
+    this.cardDescription = cardDescription;
+    tagList = new ArrayList<>();
+    taskList = new ArrayList<>();
+  }
+
   public String getCardName() {
     return cardName;
   }
