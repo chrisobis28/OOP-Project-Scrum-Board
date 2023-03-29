@@ -171,6 +171,11 @@ public class BoardViewCtrl implements Initializable {
         }
     }
 
+    public void showBoard(WorkspaceBoard boardToShow) {
+        this.id = boardToShow.getBoardId();
+        this.boardTitle.setText(boardToShow.getBoardName().getText());
+    }
+
     /**
      * Function that checks whether a board with a given name is in the database.
      *
@@ -191,7 +196,7 @@ public class BoardViewCtrl implements Initializable {
      * Reset all the lists.
      */
     public void refreshBoard() {
-        var cardlists = server.getCardLists();
+        var cardlists = server.getCardLists(this.getId());
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
             var v = new CardList(this, server, cardlist);
@@ -216,6 +221,24 @@ public class BoardViewCtrl implements Initializable {
                 workspace.getChildren().add(b);
             }
         }
+    }
+
+    /**
+     * Getter for the board id.
+     *
+     * @return the id of the board.
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Setter for the id.
+     *
+     * @param id the id to be set.
+     */
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
@@ -251,10 +274,23 @@ public class BoardViewCtrl implements Initializable {
             event.consume();
         });
 
-//        boardTitle.setText("Board Name");
-//        Board board = new Board(boardTitle.getText());
-//        this.id = board.getId();
-//        server.addBoard(board);
+        if(server.getBoardList().isEmpty()) {
+            boardTitle.setText("Board Name");
+            Board board = new Board(boardTitle.getText());
+            this.id = board.getId();
+            board.changeWorkspaceState();
+            server.addBoard(board);
+        } else {
+            for(Board b : server.getBoardList()) {
+                if(b.isInWorkspace) {
+                    boardTitle.setText(b.boardName);
+                    this.id = b.getId();
+                    break;
+                }
+            }
+        }
+
+
         initializeWorkspace();
     }
 

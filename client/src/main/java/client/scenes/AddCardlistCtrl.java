@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
 import commons.Cardlist;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
@@ -26,9 +27,14 @@ public class AddCardlistCtrl {
 
 
     @Inject
-    public AddCardlistCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddCardlistCtrl(ServerUtils server, MainCtrl mainCtrl, BoardViewCtrl boardViewCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.boardViewCtrl = boardViewCtrl;
+    }
+
+    public void setBoard(BoardViewCtrl boardViewCtrl) {
+        this.boardViewCtrl = boardViewCtrl;
     }
 
     /**
@@ -51,6 +57,11 @@ public class AddCardlistCtrl {
 
         try {
             Cardlist cardlist = new Cardlist(name);
+            System.out.println(boardViewCtrl.getId());
+            Board board = server.getBoardById(boardViewCtrl.getId());
+            board.add(cardlist);
+            server.editBoard(board);
+            System.out.println("bad req");
             server.addCardList(cardlist);
         } catch (WebApplicationException e) {
 
