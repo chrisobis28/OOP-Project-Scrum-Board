@@ -118,6 +118,10 @@ public class BoardViewCtrl implements Initializable {
         translate.play();
     }
 
+    public FlowPane getBoard() {
+        return board;
+    }
+
     /**
      * Hide the side menu and bring the placeholder one back
      */
@@ -134,7 +138,7 @@ public class BoardViewCtrl implements Initializable {
      * Start the process for adding a list.
      */
     public void addNewList() {
-        mainCtrl.showAddList();
+        mainCtrl.showAddList(this);
     }
 
     /**
@@ -144,17 +148,6 @@ public class BoardViewCtrl implements Initializable {
     public void sendEdit(CardList cardlist) {
         Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
         server.editCardList(edited);
-    }
-
-    /**
-     * Delete a card list by its id.
-     *
-     * @param id the id of the card list to be deleted.
-     */
-    public void deleteList(long id) {
-        server.deleteCardList(id);
-
-        refreshBoard();
     }
 
     /**
@@ -207,9 +200,7 @@ public class BoardViewCtrl implements Initializable {
         var cardlists = server.getCardLists();
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
-            var v = new CardList(this, server);
-            v.setListname(cardlist.getCardlistName());
-            v.setId(cardlist.getId());
+            var v = new CardList(this, server, cardlist);
             nodes.add(v);
         }
 

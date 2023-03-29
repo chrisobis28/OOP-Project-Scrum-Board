@@ -2,35 +2,50 @@ package client.components;
 
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Pane;
 
-public class Card extends Node {
+import java.io.IOException;
+
+public class Card extends Pane {
 
     @FXML
     private String title = "NEW CARD";
 
+    @FXML
+    private Button cardDeleteButton;
 
     private ServerUtils server;
-    private client.scenes.MainCtrl mainCtrl;
     private commons.Card card;
 
-    @FXML
-    public Button cardDeleteButton;
+    private CardList cardList;
 
-    public Card(){
+    public Card(ServerUtils server, commons.Card card, CardList cardList){
+        this.server = server;
+        this.card = card;
+        this.cardList = cardList;
 
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+
+        try{
+            fxmlLoader.load();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+        cardDeleteButton.setOnAction(event -> deleteCard());
     }
-
-    public void setCard(String text1, String text2){
-        card = new commons.Card(text1, text2);
-    }
-
-    public commons.Card getCard() {
-        return card;
+    public void deleteCard(){
+        cardList.getCardList().removeCard(card);
+        cardList.getCards().getChildren().remove(this);
+        server.deleteCard(card.getId());
     }
 
     public void initDrag(){
@@ -42,10 +57,6 @@ public class Card extends Node {
             db.setContent(content);
             event.consume();
         });
-    }
-
-    public Button getCardDeleteButton() {
-        return cardDeleteButton;
     }
 
     public String getTitle(){

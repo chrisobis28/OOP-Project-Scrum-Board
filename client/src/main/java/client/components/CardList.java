@@ -3,10 +3,10 @@ package client.components;
 import client.scenes.BoardViewCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Cardlist;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,8 +27,14 @@ public class CardList extends AnchorPane {
     @FXML
     private VBox cards;
     @FXML
-    private Button toAddCard, toDelete, toEdit;
+    private Button toAddCard;
+    @FXML
+    private Button toDelete;
+    @FXML
+    private Button toEdit;
     private ServerUtils server;
+
+    private Cardlist cardList;
 
     /**
      * Card list constructor.
@@ -36,9 +42,10 @@ public class CardList extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public CardList(BoardViewCtrl boardViewCtrl, ServerUtils server) {
+    public CardList(BoardViewCtrl boardViewCtrl, ServerUtils server, Cardlist cardList) {
         this.boardViewCtrl = boardViewCtrl;
         this.server = server;
+        this.cardList = cardList;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
@@ -49,6 +56,10 @@ public class CardList extends AnchorPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+//        constructVBox();
+
+        this.listname.setText(cardList.getCardlistName());
 
         listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         this.toAddCard.setOnAction(event -> addCard());
@@ -63,26 +74,20 @@ public class CardList extends AnchorPane {
         toEdit.setGraphic(editIconView);
     }
 
+    public void constructVBox(){
+        for(commons.Card card : cardList.getCardSet()){
+            cards.getChildren().add(new Card(server, card, this));
+        }
+    }
+
     /**
      * Add a card to this list.
      */
     public void addCard(){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
-        try {
-            Node node = fxmlLoader.load();
-            Card card = fxmlLoader.getController();
-            card.setCard("Name", "Description");
-            server.addCard(card.getCard());
-            card.getCardDeleteButton().setOnAction(event -> deleteCard(card));
-            cards.getChildren().add(node);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void deleteCard(Card card){
-        cards.getChildren().remove(card);
-        server.deleteCard(card.getCard().getId());
+        commons.Card commonCard = server.addCard(new commons.Card("Name", "Description"));
+        cardList.addCard(commonCard);
+        Card card = new Card(server, commonCard, this);
+        cards.getChildren().add(card);
     }
 
     /**
@@ -100,7 +105,11 @@ public class CardList extends AnchorPane {
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            boardViewCtrl.deleteList(id);
+            server.deleteCardList(cardList.getId());
+            for(commons.Card card : cardList.getCardSet()){
+                server.deleteCard(card.getId());
+            }
+            boardViewCtrl.getBoard().getChildren().remove(this);
         }
     }
 
@@ -130,7 +139,7 @@ public class CardList extends AnchorPane {
         textField.focusedProperty().addListener((prop, o , n) -> {
             if(!n){
                 toLabel(textField);
-                sendEdit();
+                cardList.setCardlistName(textField.getText());
             }
         });
 
@@ -139,11 +148,11 @@ public class CardList extends AnchorPane {
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
-                sendEdit();
+                cardList.setCardlistName(textField.getText());
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
                 toLabel(textField);
-                sendEdit();
+                cardList.setCardlistName(textField.getText());
             }
         });
     }
@@ -174,6 +183,10 @@ public class CardList extends AnchorPane {
      */
     public Label getListname() {
         return listname;
+    }
+
+    public Cardlist getCardList() {
+        return cardList;
     }
 
     /**

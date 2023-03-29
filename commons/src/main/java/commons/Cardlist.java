@@ -75,6 +75,14 @@ public class Cardlist{
     return cardSet;
   }
 
+  public void removeCard(Card card){
+    cardSet.remove(card);
+  }
+
+  public void addCard(Card card){
+    cardSet.add(card);
+  }
+
   @Override
   public boolean equals(Object obj){
     return EqualsBuilder.reflectionEquals(this, obj);
