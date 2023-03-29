@@ -41,6 +41,7 @@ public class CardlistControlller {
      */
     @GetMapping(path = {"/{id}"})
     public List<Cardlist> getAllByBoardId(@PathVariable("id") long id) {
+        System.out.println(repo.findByBoardId(id));
         return repo.findByBoardId(id);
     }
 
@@ -104,5 +105,10 @@ public class CardlistControlller {
      */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    @GetMapping(path = {"/clear"})
+    public void clear() {
+        repo.deleteAll();
     }
 }

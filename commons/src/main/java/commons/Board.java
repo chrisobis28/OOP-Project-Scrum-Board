@@ -80,6 +80,7 @@ public class Board {
    *
    * @return Long integer representing the id of the board
    */
+  @Lob
   public long getId() {
     return this.id;
   }
@@ -89,6 +90,7 @@ public class Board {
    *
    * @return the description of the board.
    */
+  @Lob
   public String getDescription() {
     return description;
   }
@@ -98,6 +100,7 @@ public class Board {
    *
    * @return the boardName of the board.
    */
+  @Lob
   public String getBoardName() {
     return boardName;
   }
@@ -107,6 +110,7 @@ public class Board {
    *
    * @return the colour of the board.
    */
+  @Lob
   public String getBoardBackgroundColour() {
     return boardBackgroundColour;
   }

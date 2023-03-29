@@ -98,7 +98,8 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
-        repo.save(board);
+        Board saved = repo.save(board);
+        System.out.println("Board saved with respone: " + ResponseEntity.ok(saved));
         return ResponseEntity.ok(board);
     }
 

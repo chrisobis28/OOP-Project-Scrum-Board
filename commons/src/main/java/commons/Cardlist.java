@@ -18,10 +18,12 @@ public class Cardlist{
 
   private String cardlistName;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "board_id")
   public Board board;
 
+  @Column(name = "boardid")
+  public long boardid;
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
   public Set<Card> cardSet = new HashSet<>();
 
@@ -48,11 +50,16 @@ public class Cardlist{
     this.cardlistName = cardlistName;
   }
 
+  public void setBoardid(long id) {
+    this.boardid = id;
+  }
+
   /**
    * Getter for the card list title.
    *
    * @return the card list title.
    */
+  @Lob
   public String getCardlistName() {
     return cardlistName;
   }
@@ -62,6 +69,7 @@ public class Cardlist{
    *
    * @return Card list Id.
    */
+  @Lob
   public long getId() {
     return id;
   }
@@ -71,6 +79,7 @@ public class Cardlist{
    *
    * @return the set of cards.
    */
+  @Lob
   public Set<Card> getCardSet() {
     return cardSet;
   }
@@ -90,7 +99,7 @@ public class Cardlist{
 
   @Override
   public int hashCode(){
-    return HashCodeBuilder.reflectionHashCode(this);
+    return HashCodeBuilder.reflectionHashCode(this, "board");
   }
 
   @Override

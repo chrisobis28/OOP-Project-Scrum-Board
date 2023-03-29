@@ -57,11 +57,11 @@ public class AddCardlistCtrl {
 
         try {
             Cardlist cardlist = new Cardlist(name);
-            System.out.println(boardViewCtrl.getId());
+            cardlist.setBoardid(boardViewCtrl.getId());
             Board board = server.getBoardById(boardViewCtrl.getId());
             board.add(cardlist);
+            System.out.println(board);
             server.editBoard(board);
-            System.out.println("bad req");
             server.addCardList(cardlist);
         } catch (WebApplicationException e) {
 
