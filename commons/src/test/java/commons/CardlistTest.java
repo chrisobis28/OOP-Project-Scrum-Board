@@ -10,14 +10,14 @@ public class CardlistTest {
     @Test
     public void checkConstructor(){
         var p = new Cardlist("example-name");
-        assertEquals("example-name", p.cardlistName);
+        assertEquals("example-name", p.getCardlistName());
     }
 
     @Test
     public void cardlistNameSetter(){
         var a = new Cardlist("name");
         a.setCardlistName("something-else");
-        assertEquals("something-else", a.cardlistName);
+        assertEquals("something-else", a.getCardlistName());
     }
 
     @Test

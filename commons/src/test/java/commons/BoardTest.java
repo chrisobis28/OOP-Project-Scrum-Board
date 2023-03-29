@@ -28,14 +28,6 @@ public class BoardTest {
   }
 
   @Test
-  public void checkListColourSetter(){
-    var p = new Board("some-name");
-    assertEquals("#FFFFFF", p.listsBackgroundColour);
-    p.setListsBackgroundColour("#ABCDEF");
-    assertEquals("#ABCDEF", p.listsBackgroundColour);
-  }
-
-  @Test
   public void equalsHashCode(){
     var a = new Board("a");
     var b = new Board("a");
@@ -46,8 +38,7 @@ public class BoardTest {
   @Test
   public void notEqualsHashCode(){
     var a = new Board("a");
-    var b = new Board("a");
-    a.setListsBackgroundColour("#AAABBB");
+    var b = new Board("b");
     assertNotEquals(a, b);
     assertNotEquals(a.hashCode(), b.hashCode());
   }

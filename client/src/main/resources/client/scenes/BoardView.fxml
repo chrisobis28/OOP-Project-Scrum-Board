@@ -4,17 +4,18 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" snapToPixel="false" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardViewCtrl">
     <AnchorPane fx:id="sideMenuClosed" maxWidth="-Infinity" prefHeight="600.0" prefWidth="36.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -29,31 +30,23 @@
             <Image url="@/burger-bar.png" />
         </ImageView>
     </AnchorPane>
-    <VBox alignment="CENTER" layoutX="41.0" prefHeight="600.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+    <VBox alignment="CENTER" layoutX="41.0" prefHeight="600.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
         <padding>
             <Insets left="10.0" />
         </padding>
-        <HBox alignment="CENTER_LEFT" spacing="5.0">
+        <HBox alignment="CENTER" prefHeight="36.0" prefWidth="442.0" spacing="5.0">
             <padding>
                 <Insets top="10.0" />
             </padding>
             <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="140.0" prefHeight="26.0" prefWidth="281.0" promptText="Search for a board..." style="-fx-background-color: #80808020;">
             <HBox.margin>
-               <Insets left="208.0" />
+               <Insets />
             </HBox.margin></TextField>
             <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#search" prefHeight="25.0" prefWidth="33.0" text="OK">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-         <ImageView fx:id="closeButton" fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <HBox.margin>
-               <Insets left="175.0" />
-            </HBox.margin>
-            <image>
-               <Image url="@/closeButton.png" />
-            </image>
-         </ImageView>
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -66,23 +59,20 @@
                 <Insets bottom="10.0" top="10.0" />
             </padding>
         </Label>
-        <HBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="746.0" spacing="15.0" VBox.vgrow="ALWAYS">
-            <padding>
-                <Insets bottom="20.0" />
-            </padding>
-            <TableView>
-                <columns>
-                    <TableColumn fx:id="listTItle" maxWidth="256.0" minWidth="-1.0" prefWidth="256.0" sortable="false" text="List1 Title" />
-                </columns>
-            </TableView>
-            <TableView>
-                <columns>
-                    <TableColumn fx:id="listTitle" maxWidth="265.0" minWidth="-1.0" prefWidth="265.0" sortable="false" text="List2 Title" />
-                </columns>
-            </TableView>
-        </HBox>
+      <ScrollPane fx:id="scrollpane" pannable="true" prefHeight="455.0" prefWidth="734.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="38.0" />
+         </VBox.margin>
+         <content>
+            <FlowPane fx:id="board" hgap="18.0" prefHeight="452.0" prefWidth="731.0" vgap="14.0">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="5.0" />
+               </padding>
+            </FlowPane>
+         </content>
+      </ScrollPane>
     </VBox>
-    <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="249.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="sideMenu" maxWidth="-Infinity" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
         <effect>
             <DropShadow radius="9.2675" width="18.07" />
         </effect>
@@ -91,11 +81,15 @@
                 <Image url="@/burger-bar.png" />
             </image>
         </ImageView>
-        <TableView fx:id="table" blendMode="DARKEN" layoutY="40.0" prefHeight="465.0" prefWidth="249.0" style="-fx-background-color: #80808020;" AnchorPane.bottomAnchor="95.0" AnchorPane.topAnchor="40.0">
-            <columns>
-                <TableColumn fx:id="colTable" maxWidth="247.0" minWidth="-1.0" prefWidth="247.0" sortable="false" text="Boards" />
-            </columns>
-        </TableView>
+        <VBox layoutX="22.0" layoutY="33.0" prefHeight="483.0" prefWidth="230.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create/Join new board:" wrappingWidth="170.13671875" />
+            <TextField fx:id="boardName" />
+            <ScrollPane hbarPolicy="NEVER" prefHeight="435.0" prefWidth="230.0">
+                <content>
+                    <FlowPane fx:id="workspace" minWidth="220.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="220.0" style="-fx-background-color: rgb(210,210,210);" />
+                </content>
+            </ScrollPane>
+        </VBox>
         <VBox alignment="CENTER" layoutX="72.0" layoutY="501.0" prefHeight="64.0" prefWidth="105.0" spacing="10.0" AnchorPane.bottomAnchor="20.0">
             <opaqueInsets>
                 <Insets top="5.0" />
@@ -115,4 +109,10 @@
             </Button>
         </VBox>
     </AnchorPane>
+   <Button fx:id="newListButton" layoutX="760.0" layoutY="574.0" mnemonicParsing="false" onAction="#addNewList" text="New list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" />
+   <ImageView fx:id="closeButton" fitHeight="26.0" fitWidth="26.0" layoutX="800.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <image>
+         <Image url="@/closeButton.png" />
+      </image>
+   </ImageView>
 </AnchorPane>

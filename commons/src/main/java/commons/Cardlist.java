@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Cardlist {
+public class Cardlist{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  public long id;
+  private long id;
 
-  public String cardlistName;
+  private String cardlistName;
 
   @ManyToOne
   @JoinColumn(name = "board_id")
@@ -33,8 +33,46 @@ public class Cardlist {
     this.cardlistName = cardlistName;
   }
 
+  /**
+   * Constructor for a card list with a given id and title.
+   *
+   * @param id The id for the list.
+   * @param cardlistName The title of the list.
+   */
+  public Cardlist(long id, String cardlistName){
+    this.id = id;
+    this.cardlistName = cardlistName;
+  }
+
   public void setCardlistName(String cardlistName) {
     this.cardlistName = cardlistName;
+  }
+
+  /**
+   * Getter for the card list title.
+   *
+   * @return the card list title.
+   */
+  public String getCardlistName() {
+    return cardlistName;
+  }
+
+  /**
+   * Getter for the Id of the card list.
+   *
+   * @return Card list Id.
+   */
+  public long getId() {
+    return id;
+  }
+
+  /**
+   * Getter for the set of cards in the list.
+   *
+   * @return the set of cards.
+   */
+  public Set<Card> getCardSet() {
+    return cardSet;
   }
 
   @Override

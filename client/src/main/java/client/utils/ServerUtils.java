@@ -18,6 +18,9 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.Board;
+import commons.Card;
+import commons.Cardlist;
 import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -39,7 +43,6 @@ public class ServerUtils {
   /**
    * Constructor with no parameters for ServerUtils.
    */
-
   public ServerUtils() {}
 
   /**
@@ -94,6 +97,201 @@ public class ServerUtils {
               .get(String.class).equals("Hello world!");
     } catch (Exception e) {
       return false;
+    }
+  }
+
+  /**
+   * Add a card list to the repository by sending a POST request with the card list
+   *  to the server following the path "api/cardlist".
+   *
+   * @param cardlist The card list to be added to the repository.
+   * @return Response entity for the Cardlist.
+   */
+  public Cardlist addCardList(Cardlist cardlist) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/cardlist") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .post(Entity.entity(cardlist, APPLICATION_JSON), Cardlist.class);
+  }
+
+  /**
+   * Add as card to the repo by sending a post request to the server to the path 'api/card'.
+   *
+   * @param card The card to be added to the repository
+   * @return Response entity for the Card
+   */
+  public Card addCard(Card card){
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/cards")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(card, APPLICATION_JSON), Card.class);
+  }
+
+  /**
+   * A function to send a GET request to the server for the card lists
+   *  arranged in a list.
+   *
+   * @return The list containing all the card lists in the repository.
+   */
+  public List<Cardlist> getCardLists() {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/cardlist") //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .get(new GenericType<List<Cardlist>>() {
+            });
+  }
+
+  /**
+   * A function that sends a DELETE request to the server, targeting
+   *  a specific card list by its id.
+   *
+   * @param id The id of the card list to be deleted.
+   */
+  public void deleteCardList(long id) {
+    try {
+      String path = "api/cardlist/" + id;
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .delete();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Add a Board to the repo by sending a POST request to the path 'api/board'.
+   *
+   * @param board The Board to be added to the repo
+   * @return Response Entity for the Board
+   */
+  public Board addBoard(Board board) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/boards")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(board, APPLICATION_JSON), Board.class);
+  }
+
+  /**
+   * Get a list of all the boards inside the repository by sending a GET request.
+   *
+   * @return A list of all the boards in the repository
+   */
+  public List<Board> getBoardList() {
+    return ClientBuilder.newClient(new ClientConfig())
+            .target(server).path("api/boards")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<List<Board>>() {
+            });
+  }
+
+  /**
+   * Get the board with the requested id by sending a GET request.
+   *
+   * @param id Id of the Board to be returned
+   * @return A board with that respective id
+   */
+  public Board getBoardById(long id) {
+    String path = "api/boards/" + id;
+    return ClientBuilder.newClient(new ClientConfig())
+            .target(server).path(path)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Board>() {
+            });
+  }
+
+  /**
+   * Get the board with the requested name by sending a GET request.
+   *
+   * @param name Name of the board to be returned
+   * @return A board with the given name
+   */
+  public Board getBoardbyName(String name) {
+    String path = "api/boards/" + name;
+    return ClientBuilder.newClient(new ClientConfig())
+            .target(server).path(path)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Board>() {
+            });
+  }
+
+  /**
+   * Delete a board with a specific id by sending a DELETE request
+   *
+   * @param id Id of the board to be deleted
+   */
+  public void deleteBoard(long id) {
+    try {
+      String path = "api/boards/" + id;
+      ClientBuilder.newClient(new ClientConfig())
+              .target(server).path(path)
+              .request(APPLICATION_JSON)
+              .accept(APPLICATION_JSON)
+              .delete();
+      } catch (Exception e) {
+      e.printStackTrace();
+      } 
+  }
+
+  /**
+   * Editing a specific CardList by posting the newer version
+   *
+   * @param edit CardList with the same id to be replaced
+   */
+  public void editCardList(Cardlist edit) {
+    try {
+      String path = "api/cardlist/edit";
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .post(Entity.entity(edit, APPLICATION_JSON), Cardlist.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Editing a specific Board by posting the newer version
+   *
+   * @param edit Board with the same id to be replaced
+   */
+  public void editBoard(Board edit) {
+    try {
+      String path = "api/boards/edit";
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .post(Entity.entity(edit, APPLICATION_JSON), Board.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Delete a card with a specific id by sending a DELETE request
+   *
+   * @param id Id of the card to be deleted
+   */
+  public void deleteCard(long id) {
+    try {
+      String path = "api/cards/" + id;
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .delete();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }
