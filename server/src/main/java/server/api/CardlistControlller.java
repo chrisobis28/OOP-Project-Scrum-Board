@@ -41,7 +41,6 @@ public class CardlistControlller {
      */
     @GetMapping(path = {"/{id}"})
     public List<Cardlist> getAllByBoardId(@PathVariable("id") long id) {
-        System.out.println(repo.findByBoardId(id));
         return repo.findByBoardId(id);
     }
 
