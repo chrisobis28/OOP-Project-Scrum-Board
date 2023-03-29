@@ -46,7 +46,7 @@ public class BoardViewCtrl implements Initializable {
     @FXML
     private FlowPane board, workspace;
     @FXML
-    private Button newListButton;
+    private Button newListButton, adminLogin;
     @FXML
     private Button refreshButton;
     @FXML
@@ -243,6 +243,10 @@ public class BoardViewCtrl implements Initializable {
      */
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void adminLogin() {
+        this.mainCtrl.showAdminLogin(this);
     }
 
     @Override

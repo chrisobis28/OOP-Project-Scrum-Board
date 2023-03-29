@@ -39,6 +39,8 @@ import org.glassfish.jersey.client.ClientConfig;
 public class ServerUtils {
 
   private String server = "http://localhost:8080/";
+  //password is currently hard coded, not mandatory but we might want to change it in the future
+  private final String adminPassword = "oopp51";
 
   /**
    * Constructor with no parameters for ServerUtils.
@@ -52,6 +54,14 @@ public class ServerUtils {
    */
   public ServerUtils(String address) {
     this.server = address;
+  }
+
+  /**
+   * Getter for the admin password.
+   * @return String representing the admin login password
+   */
+  public String getAdminPassword() {
+    return adminPassword;
   }
 
   public void getQuotesTheHardWay() throws IOException {

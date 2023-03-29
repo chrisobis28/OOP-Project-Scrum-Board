@@ -34,6 +34,10 @@ public class MainCtrl {
 
     private AddCardlistCtrl addCardlistCtrl;
     private Scene addList;
+
+    private AdminLoginCtrl adminLoginCtrl;
+    private Scene adminLogin;
+
     private Image icon;
 
     /**
@@ -44,7 +48,8 @@ public class MainCtrl {
      * @param board the board view scene
      */
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
-                           Pair<BoardViewCtrl, Parent> board, Pair<AddCardlistCtrl, Parent> addList) {
+                           Pair<BoardViewCtrl, Parent> board, Pair<AddCardlistCtrl, Parent> addList,
+                           Pair<AdminLoginCtrl, Parent> admin) {
         this.primaryStage = primaryStage;
 
         this.overviewCtrl = overview.getKey();
@@ -55,6 +60,9 @@ public class MainCtrl {
 
         this.addCardlistCtrl = addList.getKey();
         this.addList = new Scene(addList.getValue());
+
+        this.adminLoginCtrl = admin.getKey();
+        this.adminLogin = new Scene(admin.getValue());
 
         icon = new Image("icon.png");
 
@@ -104,5 +112,18 @@ public class MainCtrl {
         stage.showAndWait();
 
         boardViewCtrl.refreshBoard();
+    }
+
+    public void showAdminLogin(BoardViewCtrl boardViewCtrl) {
+        Stage stage = new Stage();
+        stage.setTitle("Admin Login");
+        stage.getIcons().add(icon);
+        stage.setScene(adminLogin);
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.WINDOW_MODAL);
+        adminLogin.setOnKeyPressed(e -> adminLoginCtrl.keyPressed(e));
+        adminLoginCtrl.setStage(stage);
+        adminLoginCtrl.setBoardCtrl(boardViewCtrl);
+        stage.showAndWait();
     }
 }

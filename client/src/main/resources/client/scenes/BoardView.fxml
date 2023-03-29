@@ -102,7 +102,7 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Admin Login">
+            <Button fx:id="adminLogin" onAction="#adminLogin" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Admin Login">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
