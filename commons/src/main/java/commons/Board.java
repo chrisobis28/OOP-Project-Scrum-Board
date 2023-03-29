@@ -23,6 +23,7 @@ public class Board {
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
   public Set<Tag> tagList;
   public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF";
+  public Boolean isInWorkspace;
 
   /**
    * Constructor for the board.
@@ -30,6 +31,7 @@ public class Board {
   public Board() {
     cardlistList = new HashSet<>();
     tagList = new HashSet<>();
+    isInWorkspace = false;
   }
 
   /**
@@ -39,6 +41,7 @@ public class Board {
     cardlistList = new HashSet<>();
     this.boardName = boardName;
     tagList = new HashSet<>();
+    isInWorkspace = false;
   }
 
   /**
@@ -107,6 +110,17 @@ public class Board {
   public String getBoardBackgroundColour() {
     return boardBackgroundColour;
   }
+
+  /**
+   * Returns true if this Board is in the workspace, false otherwise.
+   * @return Boolean value describing whether the board is in the workspace
+   */
+  public Boolean getIsInWorkspace() { return this.isInWorkspace; }
+
+  /**
+   * Changes state of the board being in the workspace.
+   */
+  public void changeWorkspaceState() {isInWorkspace = !isInWorkspace; }
 
   /**
    * Updates the description with the provided string.

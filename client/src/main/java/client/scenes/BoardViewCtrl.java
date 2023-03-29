@@ -38,7 +38,6 @@ public class BoardViewCtrl implements Initializable {
     private long id;
     public ObservableList<Node> data;
 
-    private ArrayList<String> boardsInWorkspace;
     private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
@@ -71,11 +70,6 @@ public class BoardViewCtrl implements Initializable {
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
-        this.boardsInWorkspace = new ArrayList<>();
-//        for(int i = 0; i < 5; i++){
-//            String s = "Board "+i;
-//            boards.add(s);
-//        }
     }
 
     /**
@@ -165,21 +159,21 @@ public class BoardViewCtrl implements Initializable {
         long boardID = boardInRepo(name);
         if (boardID == -1) {
             Board newBoard = new Board(name);
+            newBoard.changeWorkspaceState();
             server.addBoard(newBoard);
 
             var b = new WorkspaceBoard(this);
             b.setBoardName(name);
             b.setId(newBoard.getId());
             workspace.getChildren().add(b);
-            boardsInWorkspace.add(name);
         }
         else {
-            if (!boardsInWorkspace.contains(name)) {
+            if (!server.getBoardById(boardID).getIsInWorkspace()) {
                 var b = new WorkspaceBoard(this);
                 b.setBoardName(name);
                 b.setId(boardID);
                 workspace.getChildren().add(b);
-                boardsInWorkspace.add(name);
+                server.getBoardById(boardID).changeWorkspaceState();
             }
         }
     }
@@ -219,6 +213,20 @@ public class BoardViewCtrl implements Initializable {
         data.clear();
     }
 
+    /**
+     * Restoring workspace.
+     */
+    public void initializeWorkspace() {
+        for (Board board : server.getBoardList()) {
+            if (board.getIsInWorkspace()) {
+                var b = new WorkspaceBoard(this);
+                b.setBoardName(board.getBoardName());
+                b.setId(board.getId());
+                workspace.getChildren().add(b);
+            }
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -256,6 +264,7 @@ public class BoardViewCtrl implements Initializable {
 //        Board board = new Board(boardTitle.getText());
 //        this.id = board.getId();
 //        server.addBoard(board);
+        initializeWorkspace();
     }
 
     public void editBoardTitle(){
