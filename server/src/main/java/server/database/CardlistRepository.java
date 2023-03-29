@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CardlistRepository extends JpaRepository<Cardlist, Long> {
 
-    @Query(value = "SELECT * FROM cardlist WHERE boardid = :boardId", nativeQuery = true)
+    @Query(value = "SELECT * FROM cardlist WHERE board_id = :boardId", nativeQuery = true)
     List<Cardlist> findByBoardId(@Param("boardId") long boardId);
     void deleteByBoardId(long boardId);
 }

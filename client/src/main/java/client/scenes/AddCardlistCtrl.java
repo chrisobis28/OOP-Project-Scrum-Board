@@ -57,7 +57,6 @@ public class AddCardlistCtrl {
 
         try {
             Cardlist cardlist = new Cardlist(name);
-            cardlist.setBoardid(boardViewCtrl.getId());
             Board board = server.getBoardById(boardViewCtrl.getId());
             board.add(cardlist);
             System.out.println(board);
