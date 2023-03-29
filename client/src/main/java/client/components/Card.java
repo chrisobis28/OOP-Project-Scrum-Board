@@ -41,6 +41,7 @@ public class Card extends Pane {
         }
 
         cardDeleteButton.setOnAction(event -> deleteCard());
+        initDrag();
     }
     public void deleteCard(){
         cardList.getCardList().removeCard(card);
@@ -57,6 +58,18 @@ public class Card extends Pane {
             db.setContent(content);
             event.consume();
         });
+
+        setOnDragDone(event -> {
+            if(event.getTransferMode() == TransferMode.MOVE){
+                cardList.getCardList().removeCard(card);
+                cardList.getCards().getChildren().remove(this);
+            }
+            event.consume();
+        });
+    }
+
+    public CardList getCardList() {
+        return cardList;
     }
 
     public String getTitle(){

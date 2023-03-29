@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Board;
 import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,23 @@ public class CardController {
 
         Card saved = repo.save(card);
         return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping(path = {"/edit", "/edit/"})
+    public ResponseEntity<Card> edit(@RequestBody Card card) {
+        if (card.getId() < 0 || !repo.existsById(card.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        repo.save(card);
+        return ResponseEntity.ok(card);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Card> getCardById(@PathVariable("id") long id) {
+        if (id < 0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(repo.findById(id).get());
     }
 }

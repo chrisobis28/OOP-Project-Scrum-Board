@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 public class Card {
@@ -33,9 +35,10 @@ public class Card {
       // nothing really
   }
 
-  public Card(String cardName, String cardDescription){
+  public Card(String cardName, String cardDescription, Cardlist cardlist){
     this.cardName = cardName;
     this.cardDescription = cardDescription;
+    this.cardlist = cardlist;
     tagList = new ArrayList<>();
     taskList = new ArrayList<>();
   }
@@ -44,12 +47,21 @@ public class Card {
     return cardName;
   }
 
+  @JsonBackReference
+  public Cardlist getCardlist() {
+    return cardlist;
+  }
+
   public void setCardName(String cardName) {
     this.cardName = cardName;
   }
 
   public long getId() {
     return id;
+  }
+
+  public void setCardList(Cardlist cardlist){
+    this.cardlist = cardlist;
   }
 
   public void setCardDescription(String cardDescription) {

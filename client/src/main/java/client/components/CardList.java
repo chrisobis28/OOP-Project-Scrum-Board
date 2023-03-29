@@ -10,7 +10,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -72,6 +74,44 @@ public class CardList extends AnchorPane {
         editIconView.setFitHeight(17);
         editIconView.setPreserveRatio(true);
         toEdit.setGraphic(editIconView);
+
+        initDrop();
+    }
+
+    public void initDrop(){
+        setOnDragOver(event -> {
+            if (event.getGestureSource() instanceof Card) {
+                Card sourceCard = (Card) event.getGestureSource();
+                if (sourceCard.getCardList() != this) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+            }
+            event.consume();
+        });
+
+        setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if(db.hasString()){
+                try{
+                    long cardId = Long.parseLong(db.getString());
+                    System.out.println(cardId);
+                    commons.Card commonCard = server.getCardById(cardId);
+                    commonCard.setCardList(cardList);
+                    server.editCard(commonCard);
+                    cardList.addCard(commonCard);
+                    Card card = new Card(server, commonCard, this);
+                    cards.getChildren().add(card);
+                    success = true;
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
     }
 
     public void constructVBox(){
@@ -84,7 +124,7 @@ public class CardList extends AnchorPane {
      * Add a card to this list.
      */
     public void addCard(){
-        commons.Card commonCard = server.addCard(new commons.Card("Name", "Description"));
+        commons.Card commonCard = server.addCard(new commons.Card("Name", "Description", cardList));
         cardList.addCard(commonCard);
         Card card = new Card(server, commonCard, this);
         cards.getChildren().add(card);
