@@ -99,8 +99,16 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
-        repo.save(board);
-        return ResponseEntity.ok(board);
+        Board saved = repo.save(board);
+        return ResponseEntity.ok(saved);
     }
 
+    /**
+     * An endpoint for clearing all of the boards in the repo
+     * (can only be done manually)
+     */
+    @GetMapping(path = {"/clear"})
+    public void clear() {
+        repo.deleteAll();
+    }
 }

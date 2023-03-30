@@ -3,7 +3,7 @@
 package commons;
 
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -80,6 +80,7 @@ public class Board {
    *
    * @return Long integer representing the id of the board
    */
+  @Lob
   public long getId() {
     return this.id;
   }
@@ -89,6 +90,7 @@ public class Board {
    *
    * @return the description of the board.
    */
+  @Lob
   public String getDescription() {
     return description;
   }
@@ -98,6 +100,7 @@ public class Board {
    *
    * @return the boardName of the board.
    */
+  @Lob
   public String getBoardName() {
     return boardName;
   }
@@ -107,6 +110,7 @@ public class Board {
    *
    * @return the colour of the board.
    */
+  @Lob
   public String getBoardBackgroundColour() {
     return boardBackgroundColour;
   }
@@ -146,6 +150,15 @@ public class Board {
     this.boardName = boardName;
   }
 
+  /**
+   * Getter for the list of cardlists in the board.
+   *
+   * @return list of all the cardlists.
+   */
+  @JsonManagedReference
+  public Set<Cardlist> getCardlistList() {
+    return cardlistList;
+  }
 
   /**
    * Updates the background colour of the board.
@@ -180,16 +193,16 @@ public class Board {
       return false;
     return true;
   }
-
-  /**
-   * Hashcode function
-   *
-   * @return hashcode
-   */
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+//
+//  /**
+//   * Hashcode function
+//   *
+//   * @return hashcode
+//   */
+//  @Override
+//  public int hashCode() {
+//    return HashCodeBuilder.reflectionHashCode(this);
+//  }
 
   /**
    * Reorders the list based on a specified arraylist

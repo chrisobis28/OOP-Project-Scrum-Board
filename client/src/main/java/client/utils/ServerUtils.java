@@ -131,13 +131,14 @@ public class ServerUtils {
 
   /**
    * A function to send a GET request to the server for the card lists
-   *  arranged in a list.
+   *  for a given board id, arranged in a list.
    *
-   * @return The list containing all the card lists in the repository.
+   * @return The list containing all the card lists for a board.
    */
-  public List<Cardlist> getCardLists() {
+  public List<Cardlist> getCardLists(long id) {
+    String path = new String("api/cardlist/"+id);
     return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/cardlist") //
+            .target(server).path(path) //
             .request(APPLICATION_JSON) //
             .accept(APPLICATION_JSON) //
             .get(new GenericType<List<Cardlist>>() {
@@ -207,21 +208,21 @@ public class ServerUtils {
             });
   }
 
-  /**
-   * Get the board with the requested name by sending a GET request.
-   *
-   * @param name Name of the board to be returned
-   * @return A board with the given name
-   */
-  public Board getBoardbyName(String name) {
-    String path = "api/boards/" + name;
-    return ClientBuilder.newClient(new ClientConfig())
-            .target(server).path(path)
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .get(new GenericType<Board>() {
-            });
-  }
+//  /**
+//   * Get the board with the requested name by sending a GET request.
+//   *
+//   * @param name Name of the board to be returned
+//   * @return A board with the given name
+//   */
+//  public Board getBoardbyName(String name) {
+//    String path = "api/boards/" + name;
+//    return ClientBuilder.newClient(new ClientConfig())
+//            .target(server).path(path)
+//            .request(APPLICATION_JSON)
+//            .accept(APPLICATION_JSON)
+//            .get(new GenericType<Board>() {
+//            });
+//  }
 
   /**
    * Delete a board with a specific id by sending a DELETE request
