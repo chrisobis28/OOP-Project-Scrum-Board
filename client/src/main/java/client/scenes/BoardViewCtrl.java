@@ -63,6 +63,8 @@ public class BoardViewCtrl implements Initializable {
     @FXML
     private VBox workspace;
 
+    private Boolean adminLoggedIn;
+
     private final MainCtrl mainCtrl;
 
     /**
@@ -74,6 +76,7 @@ public class BoardViewCtrl implements Initializable {
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        adminLoggedIn = false;
     }
 
     /**
@@ -231,6 +234,17 @@ public class BoardViewCtrl implements Initializable {
                 workspace.getChildren().add(b);
             }
         }
+        //add boards not in the workspace if the user is logged in as an admin
+        if (this.adminLoggedIn) {
+            for (Board board : server.getBoardList()) {
+                if (!board.getIsInWorkspace()) {
+                    var b = new WorkspaceBoard(this);
+                    b.setBoardName(board.getBoardName());
+                    b.setId(board.getId());
+                    workspace.getChildren().add(b);
+                }
+            }
+        }
     }
 
     /**
@@ -251,6 +265,9 @@ public class BoardViewCtrl implements Initializable {
         this.id = id;
     }
 
+    /**
+     * Show the Admin Login stage.
+     */
     public void adminLogin() {
         this.mainCtrl.showAdminLogin(this);
     }
@@ -264,15 +281,9 @@ public class BoardViewCtrl implements Initializable {
         adminLogin.setVisible(false);
         adminLogin.setDisable(true);
         loggedAdmin.setVisible(true);
+        adminLoggedIn = true;
         //Add all the boards that were not already there to the workspace
-        for (Board board : server.getBoardList()) {
-            if (!board.getIsInWorkspace()) {
-                var b = new WorkspaceBoard(this);
-                b.setBoardName(board.getBoardName());
-                b.setId(board.getId());
-                workspace.getChildren().add(b);
-            }
-        }
+        initializeWorkspace();
     }
 
     /**
@@ -281,17 +292,53 @@ public class BoardViewCtrl implements Initializable {
      * says that the user is logged in as an admin.
      */
     public void resetAdminElements() {
+        adminLoggedIn = false;
         adminLogin.setVisible(true);
         adminLogin.setDisable(false);
         loggedAdmin.setVisible(false);
     }
 
+    /**
+     * "Leaves" a board, removing it from the workspace.
+     */
     public void leaveBoard() {
-
+        //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
+        Board board = server.getBoardById(this.getId());
+        if (board.getIsInWorkspace()) {
+            board.changeWorkspaceState();
+            server.editBoard(board);
+            //deletes the board with this name from the workspace, not showing it anymore,
+            //so we can find a new board to show
+            for (Node node : workspace.getChildren()) {
+                WorkspaceBoard wboard = (WorkspaceBoard) node;
+                if (wboard.getBoardId()==this.getId()) {
+                    workspace.getChildren().remove(node);
+                    break;
+                }
+            }
+            //always show the first board from the updated workspace
+            WorkspaceBoard firstWBoard = (WorkspaceBoard) workspace.getChildren().get(0);
+            showBoard(firstWBoard);
+        }
+        //refresh workspace
+        initializeWorkspace();
     }
 
+    /**
+     * Deletes a board from the database as well as from the workspace.
+     */
     public void deleteBoard() {
-
+        WorkspaceBoard boardToShow = null;
+        for (Node node : workspace.getChildren()) {
+            WorkspaceBoard wboard = (WorkspaceBoard) node;
+            if (wboard.getBoardId() != this.getId()) {
+                boardToShow = wboard;
+                break;
+            }
+        }
+        server.deleteBoard(this.id);
+        showBoard(boardToShow);
+        initializeWorkspace();
     }
 
     @Override
@@ -348,7 +395,6 @@ public class BoardViewCtrl implements Initializable {
                 }
             }
         }
-
 
         initializeWorkspace();
         refreshBoard();

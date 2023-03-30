@@ -116,6 +116,6 @@
          <Image url="@/closeButton.png" />
       </image>
    </ImageView>
-   <Button fx:id="deleteBoardButton" mnemonicParsing="false" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" />
-   <Button fx:id="leaveBoardButton" mnemonicParsing="false" text="Leave Board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="215.0" />
+   <Button fx:id="deleteBoardButton" onAction="#deleteBoard" mnemonicParsing="false" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" />
+   <Button fx:id="leaveBoardButton" onAction="#leaveBoard" mnemonicParsing="false" text="Leave Board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="215.0" />
 </AnchorPane>
