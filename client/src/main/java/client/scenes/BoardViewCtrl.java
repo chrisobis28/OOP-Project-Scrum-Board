@@ -22,7 +22,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -44,11 +46,11 @@ public class BoardViewCtrl implements Initializable {
     @FXML
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
     @FXML
-    private FlowPane board, workspace;
+    private FlowPane board;
     @FXML
-    private Button newListButton;
+    private Button newListButton, adminLogin;
     @FXML
-    private Button refreshButton;
+    private Button refreshButton, leaveBoardButton, deleteBoardButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -56,6 +58,12 @@ public class BoardViewCtrl implements Initializable {
 
     @FXML
     private TextField boardName;
+    @FXML
+    private Text loggedAdmin;
+    @FXML
+    private VBox workspace;
+
+    private Boolean adminLoggedIn;
 
     private final MainCtrl mainCtrl;
 
@@ -68,6 +76,7 @@ public class BoardViewCtrl implements Initializable {
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        adminLoggedIn = false;
     }
 
     /**
@@ -151,11 +160,10 @@ public class BoardViewCtrl implements Initializable {
         if (boardID == -1) {
             Board newBoard = new Board(name);
             newBoard.changeWorkspaceState();
-            server.addBoard(newBoard);
-
+            Board saved = server.addBoard(newBoard);
             var b = new WorkspaceBoard(this);
             b.setBoardName(name);
-            b.setId(newBoard.getId());
+            b.setId(saved.getId());
             workspace.getChildren().add(b);
         }
         else {
@@ -217,12 +225,24 @@ public class BoardViewCtrl implements Initializable {
      * Restoring workspace.
      */
     public void initializeWorkspace() {
+        workspace.getChildren().clear();
         for (Board board : server.getBoardList()) {
             if (board.getIsInWorkspace()) {
                 var b = new WorkspaceBoard(this);
                 b.setBoardName(board.getBoardName());
                 b.setId(board.getId());
                 workspace.getChildren().add(b);
+            }
+        }
+        //add boards not in the workspace if the user is logged in as an admin
+        if (this.adminLoggedIn) {
+            for (Board board : server.getBoardList()) {
+                if (!board.getIsInWorkspace()) {
+                    var b = new WorkspaceBoard(this);
+                    b.setBoardName(board.getBoardName());
+                    b.setId(board.getId());
+                    workspace.getChildren().add(b);
+                }
             }
         }
     }
@@ -243,6 +263,82 @@ public class BoardViewCtrl implements Initializable {
      */
     public void setId(long id) {
         this.id = id;
+    }
+
+    /**
+     * Show the Admin Login stage.
+     */
+    public void adminLogin() {
+        this.mainCtrl.showAdminLogin(this);
+    }
+
+    /**
+     * After logging in as an admin, show all the boards ever created in the
+     * workspace and show text that confirms the login instead of the login button.
+     */
+    public void showOverview() {
+        //Show "Logged in as admin text and hide login button"
+        adminLogin.setVisible(false);
+        adminLogin.setDisable(true);
+        loggedAdmin.setVisible(true);
+        adminLoggedIn = true;
+        //Add all the boards that were not already there to the workspace
+        initializeWorkspace();
+    }
+
+    /**
+     * Method called at the start of showing the board view that
+     * enables the admin login button again and hides the text that
+     * says that the user is logged in as an admin.
+     */
+    public void resetAdminElements() {
+        adminLoggedIn = false;
+        adminLogin.setVisible(true);
+        adminLogin.setDisable(false);
+        loggedAdmin.setVisible(false);
+    }
+
+    /**
+     * "Leaves" a board, removing it from the workspace.
+     */
+    public void leaveBoard() {
+        //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
+        Board board = server.getBoardById(this.getId());
+        if (board.getIsInWorkspace()) {
+            board.changeWorkspaceState();
+            server.editBoard(board);
+            //deletes the board with this name from the workspace, not showing it anymore,
+            //so we can find a new board to show
+            for (Node node : workspace.getChildren()) {
+                WorkspaceBoard wboard = (WorkspaceBoard) node;
+                if (wboard.getBoardId()==this.getId()) {
+                    workspace.getChildren().remove(node);
+                    break;
+                }
+            }
+            //always show the first board from the updated workspace
+            WorkspaceBoard firstWBoard = (WorkspaceBoard) workspace.getChildren().get(0);
+            showBoard(firstWBoard);
+        }
+        //refresh workspace
+        initializeWorkspace();
+    }
+
+    /**
+     * Deletes a board from the database as well as from the workspace.
+     */
+    public void deleteBoard() {
+        WorkspaceBoard boardToShow = null;
+        for (Node node : workspace.getChildren()) {
+            WorkspaceBoard wboard = (WorkspaceBoard) node;
+            if (wboard.getBoardId() != this.getId()) {
+                boardToShow = wboard;
+                break;
+            }
+        }
+        server.deleteBoard(this.id);
+        showBoard(boardToShow);
+        initializeWorkspace();
     }
 
     @Override
@@ -275,6 +371,7 @@ public class BoardViewCtrl implements Initializable {
         // Event for the close button image so that it acts as a button that switches to the welcome screen
         closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             mainCtrl.showOverview();
+            hideMenu();
             event.consume();
         });
 
@@ -284,21 +381,20 @@ public class BoardViewCtrl implements Initializable {
             //Creates a new board.
             boardTitle.setText("Board Name");
             Board board = new Board(boardTitle.getText());
-            this.id = board.getId();
             board.changeWorkspaceState();
-            server.addBoard(board);
+            Board saved = server.addBoard(board);
+            this.id = saved.getId();
         } else {
             //Case where boards already exist.
             //Gets first board in the workspace.
             for(Board b : server.getBoardList()) {
-                if(b.isInWorkspace) {
+                if(b.getIsInWorkspace()) {
                     boardTitle.setText(b.boardName);
                     this.id = b.getId();
                     break;
                 }
             }
         }
-
 
         initializeWorkspace();
         refreshBoard();
