@@ -4,7 +4,6 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -194,16 +193,16 @@ public class Board {
       return false;
     return true;
   }
-
-  /**
-   * Hashcode function
-   *
-   * @return hashcode
-   */
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+//
+//  /**
+//   * Hashcode function
+//   *
+//   * @return hashcode
+//   */
+//  @Override
+//  public int hashCode() {
+//    return HashCodeBuilder.reflectionHashCode(this);
+//  }
 
   /**
    * Reorders the list based on a specified arraylist

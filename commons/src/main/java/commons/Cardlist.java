@@ -3,7 +3,6 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -110,10 +109,10 @@ public class Cardlist{
     return EqualsBuilder.reflectionEquals(this, obj);
   }
 
-  @Override
-  public int hashCode(){
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+//  @Override
+//  public int hashCode(){
+//    return HashCodeBuilder.reflectionHashCode(this);
+//  }
 
   @Override
   public String toString(){
