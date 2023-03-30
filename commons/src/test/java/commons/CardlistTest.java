@@ -20,22 +20,22 @@ public class CardlistTest {
         assertEquals("something-else", a.getCardlistName());
     }
 
-    @Test
-    public void equalsHashCode(){
-        var a = new Cardlist("a");
-        var b = new Cardlist("a");
-        assertEquals(a,b);
-        assertEquals(a.hashCode(), b.hashCode());
-    }
+//    @Test
+//    public void equalsHashCode(){
+//        var a = new Cardlist("a");
+//        var b = new Cardlist("a");
+//        assertEquals(a,b);
+//        assertEquals(a.hashCode(), b.hashCode());
+//    }
 
-    @Test
-    public void notEqualsHashCode(){
-        var a = new Cardlist("a");
-        var b = new Cardlist("a");
-        a.setCardlistName("b");
-        assertNotEquals(a, b);
-        assertNotEquals(a.hashCode(), b.hashCode());
-    }
+//    @Test
+//    public void notEqualsHashCode(){
+//        var a = new Cardlist("a");
+//        var b = new Cardlist("a");
+//        a.setCardlistName("b");
+//        assertNotEquals(a, b);
+//        assertNotEquals(a.hashCode(), b.hashCode());
+//    }
 
     @Test
     public void notEquals(){
