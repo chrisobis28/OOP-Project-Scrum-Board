@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -56,6 +57,8 @@ public class BoardViewCtrl implements Initializable {
 
     @FXML
     private TextField boardName;
+    @FXML
+    private Text loggedAdmin;
 
     private final MainCtrl mainCtrl;
 
@@ -151,11 +154,10 @@ public class BoardViewCtrl implements Initializable {
         if (boardID == -1) {
             Board newBoard = new Board(name);
             newBoard.changeWorkspaceState();
-            server.addBoard(newBoard);
-
+            Board saved = server.addBoard(newBoard);
             var b = new WorkspaceBoard(this);
             b.setBoardName(name);
-            b.setId(newBoard.getId());
+            b.setId(saved.getId());
             workspace.getChildren().add(b);
         }
         else {
@@ -217,6 +219,7 @@ public class BoardViewCtrl implements Initializable {
      * Restoring workspace.
      */
     public void initializeWorkspace() {
+        workspace.getChildren().clear();
         for (Board board : server.getBoardList()) {
             if (board.getIsInWorkspace()) {
                 var b = new WorkspaceBoard(this);
@@ -249,6 +252,39 @@ public class BoardViewCtrl implements Initializable {
         this.mainCtrl.showAdminLogin(this);
     }
 
+    /**
+     * After logging in as an admin, show all the boards ever created in the
+     * workspace and show text that confirms the login instead of the login button.
+     */
+    public void showOverview() {
+        //Show "Logged in as admin text and hide login button"
+        adminLogin.setVisible(false);
+        adminLogin.setDisable(true);
+        loggedAdmin.setVisible(true);
+        //Show delete button
+
+        //Add all the boards that were not already there to the workspace
+        for (Board board : server.getBoardList()) {
+            if (!board.getIsInWorkspace()) {
+                var b = new WorkspaceBoard(this);
+                b.setBoardName(board.getBoardName());
+                b.setId(board.getId());
+                workspace.getChildren().add(b);
+            }
+        }
+    }
+
+    /**
+     * Method called at the start of showing the board view that
+     * enables the admin login button again and hides the text that
+     * says that the user is logged in as an admin.
+     */
+    public void resetAdminElements() {
+        adminLogin.setVisible(true);
+        adminLogin.setDisable(false);
+        loggedAdmin.setVisible(false);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -279,6 +315,7 @@ public class BoardViewCtrl implements Initializable {
         // Event for the close button image so that it acts as a button that switches to the welcome screen
         closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             mainCtrl.showOverview();
+            hideMenu();
             event.consume();
         });
 
@@ -288,14 +325,14 @@ public class BoardViewCtrl implements Initializable {
             //Creates a new board.
             boardTitle.setText("Board Name");
             Board board = new Board(boardTitle.getText());
-            this.id = board.getId();
             board.changeWorkspaceState();
-            server.addBoard(board);
+            Board saved = server.addBoard(board);
+            this.id = saved.getId();
         } else {
             //Case where boards already exist.
             //Gets first board in the workspace.
             for(Board b : server.getBoardList()) {
-                if(b.isInWorkspace) {
+                if(b.getIsInWorkspace()) {
                     boardTitle.setText(b.boardName);
                     this.id = b.getId();
                     break;

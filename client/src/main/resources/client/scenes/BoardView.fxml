@@ -76,6 +76,7 @@
         <effect>
             <DropShadow radius="9.2675" width="18.07" />
         </effect>
+      <Text fx:id="loggedAdmin" layoutX="69.0" layoutY="573.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logged in as admin" wrappingWidth="112.13671875" />
         <ImageView fx:id="menuHamburger" fitHeight="36.0" fitWidth="39.0" layoutX="205.0" layoutY="1.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@/burger-bar.png" />
@@ -90,7 +91,7 @@
                 </content>
             </ScrollPane>
         </VBox>
-        <VBox alignment="CENTER" layoutX="72.0" layoutY="501.0" prefHeight="64.0" prefWidth="105.0" spacing="10.0" AnchorPane.bottomAnchor="20.0">
+        <VBox alignment="CENTER" layoutX="73.0" layoutY="516.0" prefHeight="64.0" prefWidth="105.0" spacing="10.0" AnchorPane.bottomAnchor="14.0">
             <opaqueInsets>
                 <Insets top="5.0" />
             </opaqueInsets>
@@ -102,7 +103,7 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="adminLogin" onAction="#adminLogin" alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Admin Login">
+            <Button fx:id="adminLogin" alignment="CENTER" mnemonicParsing="false" onAction="#adminLogin" prefHeight="25.0" prefWidth="105.0" text="Admin Login">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

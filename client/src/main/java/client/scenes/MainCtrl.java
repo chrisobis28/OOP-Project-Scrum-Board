@@ -92,6 +92,10 @@ public class MainCtrl {
     public void showBoard() {
         primaryStage.setTitle("Your Board");
         primaryStage.setScene(boardView);
+        //before showing the board view, make sure the admin elements are as they should
+        //be at the beginning of the app, as well as initialize the workspace
+        boardViewCtrl.resetAdminElements();
+        boardViewCtrl.initializeWorkspace();
 
         //for key presses:
         boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));
@@ -124,6 +128,7 @@ public class MainCtrl {
         adminLogin.setOnKeyPressed(e -> adminLoginCtrl.keyPressed(e));
         adminLoginCtrl.setStage(stage);
         adminLoginCtrl.setBoardCtrl(boardViewCtrl);
+        adminLoginCtrl.setErrorText();
         stage.showAndWait();
     }
 }
