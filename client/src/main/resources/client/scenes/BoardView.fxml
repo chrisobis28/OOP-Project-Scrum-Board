@@ -76,18 +76,18 @@
         <effect>
             <DropShadow radius="9.2675" width="18.07" />
         </effect>
-      <Text fx:id="loggedAdmin" layoutX="69.0" layoutY="573.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logged in as admin" wrappingWidth="112.13671875" />
+      <Text fx:id="loggedAdmin" layoutX="69.0" layoutY="573.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logged in as admin" wrappingWidth="112.13671875" AnchorPane.bottomAnchor="23.98828125" />
         <ImageView fx:id="menuHamburger" fitHeight="36.0" fitWidth="39.0" layoutX="205.0" layoutY="1.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@/burger-bar.png" />
             </image>
         </ImageView>
-        <VBox layoutX="22.0" layoutY="33.0" prefHeight="483.0" prefWidth="230.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <VBox layoutX="22.0" layoutY="33.0" prefHeight="483.0" prefWidth="230.0" spacing="5.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create/Join new board:" wrappingWidth="170.13671875" />
             <TextField fx:id="boardName" />
-            <ScrollPane hbarPolicy="NEVER" prefHeight="435.0" prefWidth="230.0">
+            <ScrollPane fitToHeight="true" hbarPolicy="NEVER" minHeight="435.0" prefWidth="230.0">
                 <content>
-                    <FlowPane fx:id="workspace" minWidth="220.0" orientation="VERTICAL" prefHeight="428.0" prefWidth="220.0" style="-fx-background-color: rgb(210,210,210);" />
+                    <VBox fx:id="workspace" minWidth="220.0" prefWidth="220.0" style="-fx-background-color: rgb(210,210,210);" />
                 </content>
             </ScrollPane>
         </VBox>
@@ -116,4 +116,6 @@
          <Image url="@/closeButton.png" />
       </image>
    </ImageView>
+   <Button fx:id="deleteBoardButton" mnemonicParsing="false" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" />
+   <Button fx:id="leaveBoardButton" mnemonicParsing="false" text="Leave Board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="215.0" />
 </AnchorPane>

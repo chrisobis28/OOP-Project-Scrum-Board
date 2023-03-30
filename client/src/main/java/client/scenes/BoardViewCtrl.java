@@ -22,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -45,11 +46,11 @@ public class BoardViewCtrl implements Initializable {
     @FXML
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
     @FXML
-    private FlowPane board, workspace;
+    private FlowPane board;
     @FXML
     private Button newListButton, adminLogin;
     @FXML
-    private Button refreshButton;
+    private Button refreshButton, leaveBoardButton, deleteBoardButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -59,6 +60,8 @@ public class BoardViewCtrl implements Initializable {
     private TextField boardName;
     @FXML
     private Text loggedAdmin;
+    @FXML
+    private VBox workspace;
 
     private final MainCtrl mainCtrl;
 
@@ -261,8 +264,6 @@ public class BoardViewCtrl implements Initializable {
         adminLogin.setVisible(false);
         adminLogin.setDisable(true);
         loggedAdmin.setVisible(true);
-        //Show delete button
-
         //Add all the boards that were not already there to the workspace
         for (Board board : server.getBoardList()) {
             if (!board.getIsInWorkspace()) {
@@ -283,6 +284,14 @@ public class BoardViewCtrl implements Initializable {
         adminLogin.setVisible(true);
         adminLogin.setDisable(false);
         loggedAdmin.setVisible(false);
+    }
+
+    public void leaveBoard() {
+
+    }
+
+    public void deleteBoard() {
+
     }
 
     @Override
