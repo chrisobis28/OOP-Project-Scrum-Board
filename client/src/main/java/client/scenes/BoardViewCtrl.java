@@ -41,16 +41,14 @@ public class BoardViewCtrl implements Initializable {
     private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
-
     @FXML
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
-
     @FXML
     private FlowPane board, workspace;
-
     @FXML
     private Button newListButton;
-
+    @FXML
+    private Button refreshButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -172,6 +170,17 @@ public class BoardViewCtrl implements Initializable {
     }
 
     /**
+     * Displays the elements of the new board on the view.
+     *
+     * @param boardToShow The board to be displayed.
+     */
+    public void showBoard(WorkspaceBoard boardToShow) {
+        this.id = boardToShow.getBoardId();
+        this.boardTitle.setText(boardToShow.getBoardName().getText());
+        refreshBoard();
+    }
+
+    /**
      * Function that checks whether a board with a given name is in the database.
      *
      * @param name The name of the board to be checked
@@ -191,7 +200,7 @@ public class BoardViewCtrl implements Initializable {
      * Reset all the lists.
      */
     public void refreshBoard() {
-        var cardlists = server.getCardLists();
+        var cardlists = server.getCardLists(this.getId());
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
             var v = new CardList(this, server, cardlist);
@@ -218,11 +227,29 @@ public class BoardViewCtrl implements Initializable {
         }
     }
 
+    /**
+     * Getter for the board id.
+     *
+     * @return the id of the board.
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Setter for the id.
+     *
+     * @param id the id to be set.
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
-
+        refreshButton.setOnAction(e -> refreshBoard());
         // place the side menu off scene
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(sideMenu);
@@ -251,11 +278,30 @@ public class BoardViewCtrl implements Initializable {
             event.consume();
         });
 
-//        boardTitle.setText("Board Name");
-//        Board board = new Board(boardTitle.getText());
-//        this.id = board.getId();
-//        server.addBoard(board);
+        //Display first board when opening the app
+        if(server.getBoardList().isEmpty()) {
+            //Case where there are no boards created.
+            //Creates a new board.
+            boardTitle.setText("Board Name");
+            Board board = new Board(boardTitle.getText());
+            this.id = board.getId();
+            board.changeWorkspaceState();
+            server.addBoard(board);
+        } else {
+            //Case where boards already exist.
+            //Gets first board in the workspace.
+            for(Board b : server.getBoardList()) {
+                if(b.isInWorkspace) {
+                    boardTitle.setText(b.boardName);
+                    this.id = b.getId();
+                    break;
+                }
+            }
+        }
+
+
         initializeWorkspace();
+        refreshBoard();
     }
 
     public void editBoardTitle(){

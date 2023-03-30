@@ -97,7 +97,7 @@
             <padding>
                 <Insets top="10.0" />
             </padding>
-            <Button alignment="CENTER" mnemonicParsing="false" text="Refresh">
+            <Button fx:id="refreshButton" alignment="CENTER" mnemonicParsing="false" text="Refresh">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

@@ -100,6 +100,7 @@ public class MainCtrl {
         stage.initOwner(primaryStage);
         stage.initModality(Modality.WINDOW_MODAL);
         addList.setOnKeyPressed(e -> addCardlistCtrl.keyPressed(e));
+        addCardlistCtrl.setBoard(boardViewCtrl);
         stage.showAndWait();
 
         boardViewCtrl.refreshBoard();

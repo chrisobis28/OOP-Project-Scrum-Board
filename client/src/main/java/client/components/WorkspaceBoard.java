@@ -52,7 +52,7 @@ public class WorkspaceBoard extends HBox {
    * Open a board and show it to the user.
    */
   public void openBoard() {
-    //TO-DO : function that opens this board on the BoardView scene
+    boardViewCtrl.showBoard(this);
   }
 
   /**
