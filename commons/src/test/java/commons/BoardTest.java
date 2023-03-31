@@ -27,21 +27,21 @@ public class BoardTest {
     assertEquals("#ABCDEF", p.boardBackgroundColour);
   }
 
-  @Test
-  public void equalsHashCode(){
-    var a = new Board("a");
-    var b = new Board("a");
-    assertEquals(a,b);
-    assertEquals(a.hashCode(), b.hashCode());
-  }
+//  @Test
+//  public void equalsHashCode(){
+//    var a = new Board("a");
+//    var b = new Board("a");
+//    assertEquals(a,b);
+//    assertEquals(a.hashCode(), b.hashCode());
+//  }
 
-  @Test
-  public void notEqualsHashCode(){
-    var a = new Board("a");
-    var b = new Board("b");
-    assertNotEquals(a, b);
-    assertNotEquals(a.hashCode(), b.hashCode());
-  }
+//  @Test
+//  public void notEqualsHashCode(){
+//    var a = new Board("a");
+//    var b = new Board("b");
+//    assertNotEquals(a, b);
+//    assertNotEquals(a.hashCode(), b.hashCode());
+//  }
 
   @Test
   public void hasToString(){

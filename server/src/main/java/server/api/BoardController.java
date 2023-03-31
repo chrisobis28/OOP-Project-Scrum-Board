@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/boards")
+@RequestMapping("/api/boards")
 public class BoardController {
 
     public final List<Board> boards = new ArrayList<>();

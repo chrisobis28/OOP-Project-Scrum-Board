@@ -1,7 +1,8 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,7 +19,7 @@ public class Cardlist{
 
   private String cardlistName;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "board_id")
   public Board board;
 
@@ -41,6 +42,17 @@ public class Cardlist{
    */
   public Cardlist(long id, String cardlistName){
     this.id = id;
+    this.cardlistName = cardlistName;
+  }
+
+  /**
+   * Constructor for a card list attached to a board.
+   *
+   * @param cardlistName
+   * @param board
+   */
+  public Cardlist(String cardlistName, Board board){
+    this.board = board;
     this.cardlistName = cardlistName;
   }
 
@@ -71,8 +83,25 @@ public class Cardlist{
    *
    * @return the set of cards.
    */
+  @JsonManagedReference
   public Set<Card> getCardSet() {
     return cardSet;
+  }
+
+  /**
+   * Getter for the board of the card list.
+   *
+   * @return board in which the card list resides.
+   */
+  @JsonBackReference
+  public Board getBoard() { return board; }
+
+  public void removeCard(Card card){
+    cardSet.remove(card);
+  }
+
+  public void addCard(Card card){
+    cardSet.add(card);
   }
 
   @Override
@@ -80,10 +109,10 @@ public class Cardlist{
     return EqualsBuilder.reflectionEquals(this, obj);
   }
 
-  @Override
-  public int hashCode(){
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+//  @Override
+//  public int hashCode(){
+//    return HashCodeBuilder.reflectionHashCode(this);
+//  }
 
   @Override
   public String toString(){

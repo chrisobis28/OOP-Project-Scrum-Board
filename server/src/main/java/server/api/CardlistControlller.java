@@ -33,6 +33,18 @@ public class CardlistControlller {
     }
 
     /**
+     * Mapping for GET requests targeted at card lists with a
+     *  certain board id that returns the card lists
+     *  of that board in the repository.
+     *
+     * @return List of all card lists in the repository for a board.
+     */
+    @GetMapping(path = {"/{id}"})
+    public List<Cardlist> getAllByBoardId(@PathVariable("id") long id) {
+        return repo.findByBoardId(id);
+    }
+
+    /**
      * Mapping for POST requests targeted at card lists that adds a specific card list.
      *
      * @param cardlist Card list to be added to the repository.
@@ -92,5 +104,14 @@ public class CardlistControlller {
      */
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    /**
+     * An endpoint for clearing all of the boards in the repo
+     * (can only be done manually)
+     */
+    @GetMapping(path = {"/clear"})
+    public void clear() {
+        repo.deleteAll();
     }
 }

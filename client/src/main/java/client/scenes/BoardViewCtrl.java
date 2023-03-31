@@ -22,7 +22,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -41,16 +43,14 @@ public class BoardViewCtrl implements Initializable {
     private final ServerUtils server;
     @FXML
     AnchorPane sideMenu, sideMenuClosed;
-
     @FXML
     ImageView menuHamburger, menuHamburgerClosed, closeButton;
-
     @FXML
-    private FlowPane board, workspace;
-
+    private FlowPane board;
     @FXML
-    private Button newListButton;
-
+    private Button newListButton, adminLogin;
+    @FXML
+    private Button refreshButton, leaveBoardButton, deleteBoardButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -58,6 +58,12 @@ public class BoardViewCtrl implements Initializable {
 
     @FXML
     private TextField boardName;
+    @FXML
+    private Text loggedAdmin;
+    @FXML
+    private VBox workspace;
+
+    private Boolean adminLoggedIn;
 
     private final MainCtrl mainCtrl;
 
@@ -70,6 +76,7 @@ public class BoardViewCtrl implements Initializable {
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        adminLoggedIn = false;
     }
 
     /**
@@ -112,6 +119,10 @@ public class BoardViewCtrl implements Initializable {
         translate.play();
     }
 
+    public FlowPane getBoard() {
+        return board;
+    }
+
     /**
      * Hide the side menu and bring the placeholder one back
      */
@@ -128,7 +139,7 @@ public class BoardViewCtrl implements Initializable {
      * Start the process for adding a list.
      */
     public void addNewList() {
-        mainCtrl.showAddList();
+        mainCtrl.showAddList(this);
     }
 
     /**
@@ -141,17 +152,6 @@ public class BoardViewCtrl implements Initializable {
     }
 
     /**
-     * Delete a card list by its id.
-     *
-     * @param id the id of the card list to be deleted.
-     */
-    public void deleteList(long id) {
-        server.deleteCardList(id);
-
-        refreshBoard();
-    }
-
-    /**
      * Add a board with a given name to the repo and to the workspace.
      * @param name The name of the new Board
      */
@@ -160,11 +160,10 @@ public class BoardViewCtrl implements Initializable {
         if (boardID == -1) {
             Board newBoard = new Board(name);
             newBoard.changeWorkspaceState();
-            server.addBoard(newBoard);
-
+            Board saved = server.addBoard(newBoard);
             var b = new WorkspaceBoard(this);
             b.setBoardName(name);
-            b.setId(newBoard.getId());
+            b.setId(saved.getId());
             workspace.getChildren().add(b);
         }
         else {
@@ -176,6 +175,17 @@ public class BoardViewCtrl implements Initializable {
                 server.getBoardById(boardID).changeWorkspaceState();
             }
         }
+    }
+
+    /**
+     * Displays the elements of the new board on the view.
+     *
+     * @param boardToShow The board to be displayed.
+     */
+    public void showBoard(WorkspaceBoard boardToShow) {
+        this.id = boardToShow.getBoardId();
+        this.boardTitle.setText(boardToShow.getBoardName().getText());
+        refreshBoard();
     }
 
     /**
@@ -198,12 +208,10 @@ public class BoardViewCtrl implements Initializable {
      * Reset all the lists.
      */
     public void refreshBoard() {
-        var cardlists = server.getCardLists();
+        var cardlists = server.getCardLists(this.getId());
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
-            var v = new CardList(this, server);
-            v.setListname(cardlist.getCardlistName());
-            v.setId(cardlist.getId());
+            var v = new CardList(this, server, cardlist);
             nodes.add(v);
         }
 
@@ -217,6 +225,7 @@ public class BoardViewCtrl implements Initializable {
      * Restoring workspace.
      */
     public void initializeWorkspace() {
+        workspace.getChildren().clear();
         for (Board board : server.getBoardList()) {
             if (board.getIsInWorkspace()) {
                 var b = new WorkspaceBoard(this);
@@ -225,13 +234,118 @@ public class BoardViewCtrl implements Initializable {
                 workspace.getChildren().add(b);
             }
         }
+        //add boards not in the workspace if the user is logged in as an admin
+        if (this.adminLoggedIn) {
+            for (Board board : server.getBoardList()) {
+                if (!board.getIsInWorkspace()) {
+                    var b = new WorkspaceBoard(this);
+                    b.setBoardName(board.getBoardName());
+                    b.setId(board.getId());
+                    workspace.getChildren().add(b);
+                }
+            }
+        }
+    }
+
+    /**
+     * Getter for the board id.
+     *
+     * @return the id of the board.
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Setter for the id.
+     *
+     * @param id the id to be set.
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
+     * Show the Admin Login stage.
+     */
+    public void adminLogin() {
+        this.mainCtrl.showAdminLogin(this);
+    }
+
+    /**
+     * After logging in as an admin, show all the boards ever created in the
+     * workspace and show text that confirms the login instead of the login button.
+     */
+    public void showOverview() {
+        //Show "Logged in as admin text and hide login button"
+        adminLogin.setVisible(false);
+        adminLogin.setDisable(true);
+        loggedAdmin.setVisible(true);
+        adminLoggedIn = true;
+        //Add all the boards that were not already there to the workspace
+        initializeWorkspace();
+    }
+
+    /**
+     * Method called at the start of showing the board view that
+     * enables the admin login button again and hides the text that
+     * says that the user is logged in as an admin.
+     */
+    public void resetAdminElements() {
+        adminLoggedIn = false;
+        adminLogin.setVisible(true);
+        adminLogin.setDisable(false);
+        loggedAdmin.setVisible(false);
+    }
+
+    /**
+     * "Leaves" a board, removing it from the workspace.
+     */
+    public void leaveBoard() {
+        //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
+        Board board = server.getBoardById(this.getId());
+        if (board.getIsInWorkspace()) {
+            board.changeWorkspaceState();
+            server.editBoard(board);
+            //deletes the board with this name from the workspace, not showing it anymore,
+            //so we can find a new board to show
+            for (Node node : workspace.getChildren()) {
+                WorkspaceBoard wboard = (WorkspaceBoard) node;
+                if (wboard.getBoardId()==this.getId()) {
+                    workspace.getChildren().remove(node);
+                    break;
+                }
+            }
+            //always show the first board from the updated workspace
+            WorkspaceBoard firstWBoard = (WorkspaceBoard) workspace.getChildren().get(0);
+            showBoard(firstWBoard);
+        }
+        //refresh workspace
+        initializeWorkspace();
+    }
+
+    /**
+     * Deletes a board from the database as well as from the workspace.
+     */
+    public void deleteBoard() {
+        WorkspaceBoard boardToShow = null;
+        for (Node node : workspace.getChildren()) {
+            WorkspaceBoard wboard = (WorkspaceBoard) node;
+            if (wboard.getBoardId() != this.getId()) {
+                boardToShow = wboard;
+                break;
+            }
+        }
+        server.deleteBoard(this.id);
+        showBoard(boardToShow);
+        initializeWorkspace();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
-
+        refreshButton.setOnAction(e -> refreshBoard());
         // place the side menu off scene
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(sideMenu);
@@ -257,14 +371,33 @@ public class BoardViewCtrl implements Initializable {
         // Event for the close button image so that it acts as a button that switches to the welcome screen
         closeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             mainCtrl.showOverview();
+            hideMenu();
             event.consume();
         });
 
-//        boardTitle.setText("Board Name");
-//        Board board = new Board(boardTitle.getText());
-//        this.id = board.getId();
-//        server.addBoard(board);
+        //Display first board when opening the app
+        if(server.getBoardList().isEmpty()) {
+            //Case where there are no boards created.
+            //Creates a new board.
+            boardTitle.setText("Board Name");
+            Board board = new Board(boardTitle.getText());
+            board.changeWorkspaceState();
+            Board saved = server.addBoard(board);
+            this.id = saved.getId();
+        } else {
+            //Case where boards already exist.
+            //Gets first board in the workspace.
+            for(Board b : server.getBoardList()) {
+                if(b.getIsInWorkspace()) {
+                    boardTitle.setText(b.boardName);
+                    this.id = b.getId();
+                    break;
+                }
+            }
+        }
+
         initializeWorkspace();
+        refreshBoard();
     }
 
     public void editBoardTitle(){

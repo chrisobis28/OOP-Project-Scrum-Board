@@ -32,8 +32,12 @@ public class MainCtrl {
     private BoardViewCtrl boardViewCtrl;
     private Scene boardView;
 
-    private AddCardlistCtrl addListCtrl;
+    private AddCardlistCtrl addCardlistCtrl;
     private Scene addList;
+
+    private AdminLoginCtrl adminLoginCtrl;
+    private Scene adminLogin;
+
     private Image icon;
 
     /**
@@ -44,7 +48,8 @@ public class MainCtrl {
      * @param board the board view scene
      */
     public void initialize(Stage primaryStage, Pair<WelcomeScreenCtrl, Parent> overview,
-                           Pair<BoardViewCtrl, Parent> board, Pair<AddCardlistCtrl, Parent> addList) {
+                           Pair<BoardViewCtrl, Parent> board, Pair<AddCardlistCtrl, Parent> addList,
+                           Pair<AdminLoginCtrl, Parent> admin) {
         this.primaryStage = primaryStage;
 
         this.overviewCtrl = overview.getKey();
@@ -53,8 +58,11 @@ public class MainCtrl {
         this.boardViewCtrl = board.getKey();
         this.boardView = new Scene(board.getValue());
 
-        this.addListCtrl = addList.getKey();
+        this.addCardlistCtrl = addList.getKey();
         this.addList = new Scene(addList.getValue());
+
+        this.adminLoginCtrl = admin.getKey();
+        this.adminLogin = new Scene(admin.getValue());
 
         icon = new Image("icon.png");
 
@@ -84,6 +92,10 @@ public class MainCtrl {
     public void showBoard() {
         primaryStage.setTitle("Your Board");
         primaryStage.setScene(boardView);
+        //before showing the board view, make sure the admin elements are as they should
+        //be at the beginning of the app, as well as initialize the workspace
+        boardViewCtrl.resetAdminElements();
+        boardViewCtrl.initializeWorkspace();
 
         //for key presses:
         boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));
@@ -92,16 +104,31 @@ public class MainCtrl {
     /**
      * Show the new stage where you can add a new list to the board.
      */
-    public void showAddList() {
+    public void showAddList(BoardViewCtrl boardViewCtrl) {
         Stage stage = new Stage();
         stage.setTitle("New List");
         stage.getIcons().add(icon);
         stage.setScene(addList);
         stage.initOwner(primaryStage);
         stage.initModality(Modality.WINDOW_MODAL);
-        addList.setOnKeyPressed(e -> addListCtrl.keyPressed(e));
+        addList.setOnKeyPressed(e -> addCardlistCtrl.keyPressed(e));
+        addCardlistCtrl.setBoard(boardViewCtrl);
         stage.showAndWait();
 
         boardViewCtrl.refreshBoard();
+    }
+
+    public void showAdminLogin(BoardViewCtrl boardViewCtrl) {
+        Stage stage = new Stage();
+        stage.setTitle("Admin Login");
+        stage.getIcons().add(icon);
+        stage.setScene(adminLogin);
+        stage.initOwner(primaryStage);
+        stage.initModality(Modality.WINDOW_MODAL);
+        adminLogin.setOnKeyPressed(e -> adminLoginCtrl.keyPressed(e));
+        adminLoginCtrl.setStage(stage);
+        adminLoginCtrl.setBoardCtrl(boardViewCtrl);
+        adminLoginCtrl.setErrorText();
+        stage.showAndWait();
     }
 }
