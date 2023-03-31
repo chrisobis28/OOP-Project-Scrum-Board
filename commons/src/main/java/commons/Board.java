@@ -4,10 +4,7 @@ package commons;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Board {
@@ -17,7 +14,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    public ArrayList<Cardlist> cardlistList;
+    public List<Cardlist> cardlistList;
     @OneToMany(mappedBy = "board")
     public Set<Tag> tagList;
     public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF", listsBackgroundColour = "#FFFFFF";
@@ -105,7 +102,7 @@ public class Board {
      * Returns all cardlistList on the board
      * @return returns a Cardlist of type Cardlist
      */
-        public ArrayList<Cardlist> getAll(){
+        public List<Cardlist> getAll(){
             return cardlistList;
         }
 
@@ -129,7 +126,7 @@ public class Board {
         @Override
         public String toString() {
             StringBuilder s = new StringBuilder("Board:" + '\n');
-            ArrayList<Cardlist> all = this.getAll();
+            ArrayList<Cardlist> all = new ArrayList<>(this.getAll());
             int i = 1;
             for(Cardlist card : all) {
                 s.append("List on position ");
@@ -265,7 +262,7 @@ public class Board {
         if(order == null)
             throw new NullPointerException();
 
-        ArrayList<Cardlist> copy = cardlistList;
+        ArrayList<Cardlist> copy = new ArrayList<>(cardlistList);
         for(int i = 0; i <= cardlistList.size(); i++){
             cardlistList.set(i, copy.get(order[i]));
         }
