@@ -14,6 +14,37 @@ public class CardlistTest {
     }
 
     @Test
+    public void checkConstructor2() {
+        var p = new Cardlist(3, "name");
+        assertEquals(3, p.getId());
+        assertEquals("name", p.getCardlistName());
+    }
+
+    @Test
+    public void checkConstructor3() {
+        var b = new Board();
+        var p = new Cardlist("name", b);
+        assertEquals(b, p.getBoard());
+        assertEquals("name", p.getCardlistName());
+    }
+
+    @Test
+    public void checkIdGetter() {
+        var b = new Cardlist(3, "name");
+        assertEquals(3, b.getId());
+    }
+
+    @Test
+    public void checkCardAddRemoveGetter() {
+        var b = new Cardlist();
+        var c = new Card();
+        b.addCard(c);
+        assertEquals(1, b.getCardSet().size());
+        b.removeCard(c);
+        assertEquals(0, b.getCardSet().size());
+    }
+
+    @Test
     public void cardlistNameSetter(){
         var a = new Cardlist("name");
         a.setCardlistName("something-else");

@@ -26,9 +26,7 @@ public class Task {
   @JoinColumn(name = "card_id")
   public Card card;
 
-  public Task(){
-
-  }
+  public Task(){}
 
   public Task(String description){
     this.description = description;
