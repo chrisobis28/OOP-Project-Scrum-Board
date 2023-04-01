@@ -3,18 +3,24 @@ package client.components;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class Card extends Pane {
 
     @FXML
-    private String title = "NEW CARD";
+    private Label title;
 
     @FXML
     private Button cardDeleteButton;
@@ -29,6 +35,7 @@ public class Card extends Pane {
         this.card = card;
         this.cardList = cardList;
 
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -40,13 +47,25 @@ public class Card extends Pane {
             e.printStackTrace();
         }
 
+        this.title.setText(card.getCardName());
+        title.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         cardDeleteButton.setOnAction(event -> deleteCard());
         initDrag();
     }
     public void deleteCard(){
-        cardList.getCardList().removeCard(card);
-        cardList.getCards().getChildren().remove(this);
-        server.deleteCard(card.getId());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("You are about to delete \"" + this.title.getText() + "\"!");
+        alert.setTitle("Delete card");
+        alert.setContentText("Are you sure?");
+        var stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("icon.png"));
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            cardList.getCardList().removeCard(card);
+            cardList.getCards().getChildren().remove(this);
+            server.deleteCard(card.getId());
+        }
     }
 
     public void initDrag(){
@@ -73,10 +92,77 @@ public class Card extends Pane {
     }
 
     public String getTitle(){
-        return this.title;
+        return this.title.getText();
     }
 
+    /**
+     * Allow the user to edit a list title by showing a TextField over the label
+     *  then taking the updated text and replacing it in the label.
+     */
+    public void editTitle() {
+        String backup = new String(title.getText()); // the initial title.
+
+        // Set up the TextField.
+        TextField textField = new TextField(backup);
+        textField.setFont(Font.font("System",12));
+        textField.setLayoutX(title.getLayoutX());
+        textField.setLayoutY(title.getLayoutY());
+        textField.setTranslateY(title.getTranslateY()-4);
+        textField.setAlignment(Pos.CENTER);
+
+        // hide the label and cover it with the TextField.
+        title.setText("");
+        title.setGraphic(textField);
+
+        // Make the TextField be the focus for keyboard inputs.
+        textField.requestFocus();
+
+        // End the editing process if focus is changed.
+        textField.focusedProperty().addListener((prop, o , n) -> {
+            if(!n){
+                toLabel(textField);
+                card.setCardName(textField.getText());
+                sendEdit();
+            }
+        });
+
+        // On pressing ENTER -> submit changes
+        //             ESCAPE -> cancel changes.
+        textField.setOnKeyReleased(e -> {
+            if(e.getCode().equals(KeyCode.ENTER)){
+                toLabel(textField);
+                card.setCardName(textField.getText());
+                sendEdit();
+            }else if(e.getCode().equals(KeyCode.ESCAPE)){
+                textField.setText(backup);
+                toLabel(textField);
+                card.setCardName(textField.getText());
+                sendEdit();
+            }
+        });
+
+
+    }
+
+    /**
+     * Restore the card name label and change the text to the updated text.
+     *
+     * @param tf The updated text.
+     */
+    public void toLabel(TextField tf){
+        title.setGraphic(null);
+        title.setText(tf.getText());
+    }
+
+    /**
+     * Pass this card to the server to save the update.
+     */
+    public void sendEdit() {
+        server.editCard(card);
+    }
+
+
     public void setTitle(String title){
-        this.title = title;
+        this.title.setText(title);
     }
 }

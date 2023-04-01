@@ -32,9 +32,7 @@ public class Tag {
   @JoinColumn(name = "card_id")
   public Card card;
 
-  public Tag(){
-
-  }
+  public Tag(){}
 
   public Tag(String tagName){
     this.tagName = tagName;

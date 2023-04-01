@@ -4,7 +4,7 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,7 +29,7 @@ public class Board {
    * Constructor for the board.
    */
   public Board() {
-    cardlistList = new ArrayList<>();
+    cardlistList = new HashSet<>();
     tagList = new HashSet<>();
     isInWorkspace = false;
   }
@@ -41,7 +41,7 @@ public class Board {
     cardlistList = new ArrayList<>();
     this.boardName = boardName;
     tagList = new HashSet<>();
-      isInWorkspace = false;
+    isInWorkspace = false;
   }
 
   /**
@@ -50,32 +50,20 @@ public class Board {
    * @param l Cardlist to be inserted
    *          Throws Runtime exception when l is null
    */
-  public void add(Cardlist l) {
+  public void add(Cardlist l) throws  NullPointerException{
     if (l == null)
       throw new NullPointerException();
     cardlistList.add(l);
   }
 
-    /**
-     * Returns all cardlistList on the board
-     * @return returns a Cardlist of type Cardlist
-     */
-        public List<Cardlist> getAll(){
-            return cardlistList;
-        }
-
-    /**
-     * Returns the Cardlist of the specified index.
-     * @param index the index of the desired Cardlist on the board.
-     * @return returns the Cardlist at the desired location
-     * Throws index out of bounds exception when index is negative, 0 or
-     * out of bounds
-     */
-    public Cardlist getAtIndex(int index){
-        if(index < 0 || index >= cardlistList.size())
-            throw new IndexOutOfBoundsException();
-        return cardlistList.get(index);
-    }
+  public Cardlist getAtIndex(int index) {
+    if (index < 0 || index >= cardlistList.size())
+      throw new IndexOutOfBoundsException();
+    Iterator iter = cardlistList.iterator();
+    for (int i = 1; i < index; i++)
+      iter.next();
+    return (Cardlist) iter.next();
+  }
 
   /**
    * Returns a string formatted form of the board, containing all the cardlistList the board has.
@@ -92,6 +80,7 @@ public class Board {
    *
    * @return Long integer representing the id of the board
    */
+  @Lob
   public long getId() {
     return this.id;
   }
@@ -101,6 +90,7 @@ public class Board {
    *
    * @return the description of the board.
    */
+  @Lob
   public String getDescription() {
     return description;
   }
@@ -110,6 +100,7 @@ public class Board {
    *
    * @return the boardName of the board.
    */
+  @Lob
   public String getBoardName() {
     return boardName;
   }
@@ -119,6 +110,7 @@ public class Board {
    *
    * @return the colour of the board.
    */
+  @Lob
   public String getBoardBackgroundColour() {
     return boardBackgroundColour;
   }
@@ -157,38 +149,16 @@ public class Board {
         this.boardBackgroundColour = boardBackgroundColour;
     }
 
-    /**
-     * Updates the background colour of the lists the board contains.
-     * @param listsBackgroundColour String containing the hexadecimal code of the new color.
-     * Why do we keep this on the board? Shouldn't this be on the cardList class?
-     * What if the user wants different background colours for lists?
-     */
-    public void setListsBackgroundColour(String listsBackgroundColour) {
-        this.listsBackgroundColour = listsBackgroundColour;
-    }
-
-    /**
-     * Updates the background colour with the provided string.
-     * @param colour the new colour this board should have.
-     */
-    public void setBackgroundColour(String colour) {
-        if(colour.substring(0,1).equals("#"))
-            this.boardBackgroundColour = colour;
-        else
-        {
-            this.boardBackgroundColour = "#" + colour;
-        }
-    }
-
-    /**
-     * Boolean method that determines whether two boards are equal or not.
-     * @param o the object that we are comparing this to.
-     * @return a boolean with the truth value of the equality.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  /**
+   * Boolean method that determines whether two boards are equal or not.
+   *
+   * @param o the object that we are comparing this to.
+   * @return a boolean with the truth value of the equality.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
     Board board = (Board) o;
 
@@ -203,36 +173,40 @@ public class Board {
       return false;
     return true;
   }
+//
+//  /**
+//   * Hashcode function
+//   *
+//   * @return hashcode
+//   */
+//  @Override
+//  public int hashCode() {
+//    return HashCodeBuilder.reflectionHashCode(this);
+//  }
 
   /**
-   * Hashcode function
+   * Reorders the list based on a specified arraylist
    *
-   * @return hashcode
+   * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
+   *              new order of the list (where n is the cardlistList.size() of the list)
+   *              Throws Runtime exception when the cardlistList.size()s do not match
+   *              Throws NPE when order is null or contains a null reference
    */
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+  public void reorder(int[] order) {
+    if (order.length != cardlistList.size())
+      throw new RuntimeException("Unequal sized arrays, cannot reorder.");
+    if (order == null)
+      throw new NullPointerException();
 
-    /**
-     * Reorders the list based on a specified arraylist
-     * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
-     * new order of the list (where n is the cardlistList.size() of the list)
-     * Throws Runtime exception when the cardlistList.size()s do not match
-     * Throws NPE when order is null or contains a null reference
-     */
-    public void reorder(int[] order){
-        if(order.length != cardlistList.size())
-            throw new RuntimeException("Unequal sized arrays, cannot reorder.");
-        if(order == null)
-            throw new NullPointerException();
-
-        ArrayList<Cardlist> copy = new ArrayList<>(cardlistList);
-        for(int i = 0; i <= cardlistList.size(); i++){
-            cardlistList.set(i, copy.get(order[i]));
-        }
-
+    ArrayList<Cardlist> aux = new ArrayList<>(cardlistList);
+    cardlistList.clear();
+    int i = 0;
+    while (aux.size() != cardlistList.size()) {
+      cardlistList.add(aux.get(order[i]));
+      aux.remove(order[i]);
+      i++;
     }
+  }
 
     public boolean contains(Cardlist cardlist){
         return cardlistList.contains(cardlist);
@@ -245,6 +219,13 @@ public class Board {
         return false;
     }
 
+  /*/**
+   * Checks if the Cardlist is empty.
+   * @return true if it is empty, false if not.
+   */
+        /*public boolean isEmpty() {
+            return cardlistList.isEmpty();
+        }*/
 
     public void changeWorkspaceState() {
         isInWorkspace = !isInWorkspace;

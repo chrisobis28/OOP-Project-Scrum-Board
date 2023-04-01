@@ -15,6 +15,12 @@ public class TaskTest {
     }
 
     @Test
+    public void checkDefaultConstructor() {
+        var a = new Task();
+        assertSame(a.getClass(), (new Task()).getClass());
+    }
+
+    @Test
     public void checkStatus(){
         var a = new Task("description");
         a.complete();

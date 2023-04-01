@@ -16,6 +16,8 @@
 
 package client.utils;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import commons.Board;
 import commons.Card;
 import commons.Cardlist;
@@ -379,5 +381,39 @@ public class ServerUtils {
 
   public void  send(String destination, Object object){
     session.send(destination, object);
+  }
+
+  //A separate thread so that the data synchronization can run in parallel.
+  private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
+
+  /**
+   * Method for long-polling for updates to synchronize data between clients.
+   * @param consumer
+   */
+  public void registerForUpdates(Consumer<Board> consumer) {
+
+    EXEC.submit(() -> {
+      while(!Thread.interrupted()) {
+            var res = ClientBuilder.newClient(new ClientConfig()) //
+                    .target(server).path("api/boards/update") //
+                    .request(APPLICATION_JSON) //
+                    .accept(APPLICATION_JSON) //
+                    .get(Response.class);
+
+            if(res.getStatus() == 204) {
+              continue;
+            }
+
+            var board = res.readEntity(Board.class);
+            consumer.accept(board);
+      }
+    });
+  }
+
+  /**
+   * Method to stop the parallel thread.
+   */
+  public void stop() {
+    EXEC.shutdownNow();
   }
 }

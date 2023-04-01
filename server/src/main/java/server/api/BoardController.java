@@ -3,61 +3,150 @@ package server.api;
 import commons.Board;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+import server.database.BoardRepository;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    public final List<Board> boards = new ArrayList<>();
+    private final BoardRepository repo;
 
     /**
-     * Finds and returns the board with the id specified as the parameter
-     * @param id The id of the board the user wants to see
-     * @return returns the specified board
-     * Returns a not found error when the index is out of bounds.
+     * Constructor for the controller.
+     *
+     * @param repo Repository instance
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Board> getById(@PathVariable long id) {
-        if (id < 0 || boards.size() <= id) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        int i = Integer.parseInt(Long.toString(id));
-        return ResponseEntity.ok(boards.get(i));
+    public BoardController(BoardRepository repo) {
+        this.repo = repo;
     }
 
     /**
-     * Finds and returns the board with the name specified as the parameter
-     * @param name The name of the board the user wants to see
-     * @return returns the specified board
-     * Returns a not found error when the board cannot be found
+     * Mapping for GET requests that return a board with a given id.
+     *
+     * @param id The id of the board the user wants to see
+     * @return The response status of the request
      */
-    @GetMapping("/{name}")
+    @GetMapping("/{id}")
+    public ResponseEntity<Board> getById(@PathVariable("id") long id) {
+        if (id < 0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(repo.findById(id).get());
+    }
+
+    /**
+     * Mapping for GET requests that returns the list of all currently created boards.
+     *
+     * @return List of currently created boards.
+     */
+    @GetMapping(path = {"", "/"})
+    public List<Board> getAll() {
+        return repo.findAll();
+    }
+    /*/**
+     * Mapping for GET requests that returns a board with a given name.
+     *
+     * @param name The name of the board the user wants to see
+     * @return The response status of the request
+     */
+    /*@GetMapping("/{name}")
     public ResponseEntity<Board> getByName(@PathVariable("name") String name) {
-        for (Board board : boards) {
+        for (Board board : repo.findAll()) {
             if (board.getBoardName().equals(name))
                 return ResponseEntity.ok(board);
         }
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
 
+        return ResponseEntity.badRequest().build();
+    }*/
+
+    /**
+     * Mapping for POST requests that adds a Board to the repository.
+     *
+     * @param board The board to be added to the repository
+     * @return Response status of the request
+     */
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Board> add(@RequestBody Board board) {
+        if (board.getBoardName()==null||board.getBoardName().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        listeners.forEach((key, listener) -> listener.accept(board));
+
+        Board saved = repo.save(board);
+        return ResponseEntity.ok(saved);
     }
+
+    /**
+     * Mapping for delete requests that deletes a board with the given id
+     * @param id id of the board to be deleted
+     * @return Response status of the request
+     */
+    @DeleteMapping(path = {"/{id}"})
+    public ResponseEntity<Board> delete(@PathVariable("id") long id) {
+        if (id<0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Board deleted = repo.findById(id).get();
+        repo.delete(deleted);
+        return ResponseEntity.ok(deleted);
+    }
+
+    @PostMapping(path = {"/edit", "/edit/"})
+    public ResponseEntity<Board> edit(@RequestBody Board board) {
+        if (board.getId() < 0 || !repo.existsById(board.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
 
     @MessageMapping("/")
     @SendTo("/topic")
     public Board addBoard(Board board){
         addBoard(board);
         return board;
-    }
-   /* @PostMapping()
-    public ResponseEntity<Board> addBoard(){
+        listeners.forEach((key, listener) -> listener.accept(board));
 
-    }*/
+        Board saved = repo.save(board);
+        return ResponseEntity.ok(saved);
+    }
+
+    //Event listeners for other endpoints to trigger an update.
+    private Map<Object, Consumer<Board>> listeners = new HashMap<>();
+
+    /**
+     * Long-polling implementation for a cardlist.
+     * @return A Response which is either contains a cardlist or 204 no content status.
+     */
+    @GetMapping(path = {"/update"})
+    public DeferredResult<ResponseEntity<Board>> getUpdates() {
+        System.out.println("I have been called upon!");
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var res = new DeferredResult<ResponseEntity<Board>>(5000L, noContent);
+
+        var key = new Object();
+        listeners.put(key, board -> {
+            res.setResult(ResponseEntity.ok(board));
+        });
+
+        res.onCompletion(() -> {
+            listeners.remove(key);
+        });
+        return res;
+    }
+
+    /**
+     * An endpoint for clearing all of the boards in the repo
+     * (can only be done manually)
+     */
+    @GetMapping(path = {"/clear"})
+    public void clear() {
+        repo.deleteAll();
+    }
 }

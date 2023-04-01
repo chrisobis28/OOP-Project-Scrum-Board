@@ -24,7 +24,7 @@ public class Cardlist{
   public Board board;
 
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
-  public Set<Card> cardSet;
+  public Set<Card> cardSet = new HashSet<>();
 
   public Cardlist(){
       cardSet = new HashSet<>();

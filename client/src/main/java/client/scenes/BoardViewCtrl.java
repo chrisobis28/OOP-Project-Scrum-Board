@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import commons.Board;
 import commons.Cardlist;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -444,4 +445,12 @@ public class BoardViewCtrl implements Initializable {
         Board board = new Board(boardname);
         server.editBoard(board);
    }
+    /**
+     * Trigger the stop request on the server.
+     */
+    public void stop() {
+        server.stop();
+    }
+
+
 }
