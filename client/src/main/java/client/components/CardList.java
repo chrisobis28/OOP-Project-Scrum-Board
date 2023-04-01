@@ -81,10 +81,12 @@ public class CardList extends AnchorPane {
     public void initDrop(){
         setOnDragOver(event -> {
             if (event.getGestureSource() instanceof Card) {
-                Card sourceCard = (Card) event.getGestureSource();
-                if (sourceCard.getCardList() != this) {
-                    event.acceptTransferModes(TransferMode.MOVE);
-                }
+                event.acceptTransferModes(TransferMode.MOVE);
+
+//                Card sourceCard = (Card) event.getGestureSource();
+//                if (sourceCard.getCardList() != this) {
+//                    event.acceptTransferModes(TransferMode.MOVE);
+//                }
             }
             event.consume();
         });
@@ -99,10 +101,27 @@ public class CardList extends AnchorPane {
                     System.out.println(cardId);
                     commons.Card commonCard = server.getCardById(cardId);
                     commonCard.setCardList(cardList);
-                    server.editCard(commonCard);
                     cardList.addCard(commonCard);
+                    server.editCardList(cardList);
                     Card card = new Card(server, commonCard, this);
-                    cards.getChildren().add(card);
+
+                    int index = cards.getChildren().size();
+                    if(index!= 0 && event.getY() < cards.getChildren().get(0).getBoundsInParent().getMinY()){
+                        index = 0;
+                    }
+                    else if(index!= 0 && event.getY() > cards.getChildren().get(index - 1).getBoundsInParent().getMaxY()){
+                        index = cards.getChildren().size();
+                    }
+                    else{
+                        for(int i =0; i<cards.getChildren().size(); ++i){
+                            if(event.getY() < cards.getChildren().get(i).getBoundsInParent().getMaxY()){
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    cards.getChildren().add(index, card);
                     success = true;
                 }
                 catch(Exception e){
@@ -128,6 +147,7 @@ public class CardList extends AnchorPane {
         cardList.addCard(commonCard);
         Card card = new Card(server, commonCard, this);
         cards.getChildren().add(card);
+        server.editCardList(cardList);
     }
 
     /**
