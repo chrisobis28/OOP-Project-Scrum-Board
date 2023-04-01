@@ -16,8 +16,6 @@
 
 package client.utils;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import commons.Board;
 import commons.Card;
 import commons.Cardlist;
@@ -25,13 +23,25 @@ import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
-import org.glassfish.jersey.client.ClientConfig;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  *  Utilities class for the server.
@@ -332,5 +342,42 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .get(new GenericType<Card>() {
             });
+  }
+
+  private StompSession session = connect("ws://localhost:8080/");
+
+  private StompSession connect(String url) {
+    var client = new StandardWebSocketClient();
+    var stomp = new WebSocketStompClient(client);
+    stomp.setMessageConverter(new MappingJackson2MessageConverter());
+    try{
+      return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
+
+      }
+      catch(InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+      catch(ExecutionException e) {
+        throw new RuntimeException(e);
+      }
+    throw new IllegalStateException();
+    }
+
+    public void registerForMessages(String destination, Consumer<Board> boardconsumer){
+    session.subscribe(destination, new StompFrameHandler() {
+      @Override
+      public Type getPayloadType(StompHeaders headers) {
+        return Board.class;
+      }
+
+      @Override
+      public void handleFrame(StompHeaders headers, Object board) {
+        boardconsumer.accept((Board) board);
+      }
+    });
+  }
+
+  public void  send(String destination, Object object){
+    session.send(destination, object);
   }
 }

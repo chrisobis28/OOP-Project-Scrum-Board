@@ -4,6 +4,7 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -23,12 +24,12 @@ public class Board {
     @OneToMany(mappedBy = "board")
     public Set<Tag> tagList;
     public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF", listsBackgroundColour = "#FFFFFF";
-
+    private boolean isInWorkspace;
   /**
    * Constructor for the board.
    */
   public Board() {
-    cardlistList = new HashSet<>();
+    cardlistList = new ArrayList<>();
     tagList = new HashSet<>();
     isInWorkspace = false;
   }
@@ -37,10 +38,10 @@ public class Board {
    * Constructor for the board with String parameter
    */
   public Board(String boardName) {
-    cardlistList = new HashSet<>();
+    cardlistList = new ArrayList<>();
     this.boardName = boardName;
     tagList = new HashSet<>();
-    isInWorkspace = false;
+      isInWorkspace = false;
   }
 
   /**
@@ -144,7 +145,7 @@ public class Board {
    * @return list of all the cardlists.
    */
   @JsonManagedReference
-  public Set<Cardlist> getCardlistList() {
+  public List<Cardlist> getCardlistList() {
     return cardlistList;
   }
 
@@ -244,15 +245,13 @@ public class Board {
         return false;
     }
 
-  /*/**
-   * Returns the implicit head of the Cardlist.
-   *
-   * @return the first Cardlist of the board.
-   */
-       /* public Cardlist getFirst() {
-            Iterator iter = cardlistList.iterator();
-            return (Cardlist) iter.next();
-        }*/
 
+    public void changeWorkspaceState() {
+        isInWorkspace = !isInWorkspace;
+    }
+
+    public boolean getIsInWorkspace() {
+        return isInWorkspace;
+    }
 }
 

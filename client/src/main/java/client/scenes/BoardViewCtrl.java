@@ -440,8 +440,8 @@ public class BoardViewCtrl implements Initializable {
         });
     }
 
-//    public void sendBoardToServer(String text){
-//        Board board = new Board(id, text);
-//        server.editBoard(board);
-//    }
+   public void sendBoardToServer(String boardname){
+        Board board = new Board(boardname);
+        server.editBoard(board);
+   }
 }
