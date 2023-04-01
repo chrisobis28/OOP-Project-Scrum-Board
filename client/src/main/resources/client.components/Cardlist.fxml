@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="421.0" prefWidth="226.0" style="-fx-background-color: #73877a; -fx-border-radius: 20; -fx-border-color: black; -fx-border-image-width: 1; -fx-background-radius: 20;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="500.0" prefWidth="270.0" style="-fx-background-color: #73877a; -fx-border-radius: 20; -fx-border-color: black; -fx-border-image-width: 1; -fx-background-radius: 20;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <effect>
       <DropShadow height="10.0" radius="4.5" width="10.0" />
    </effect>
    <children>
-      <Label fx:id="listname" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="4.0" maxHeight="-Infinity" prefHeight="24.0" prefWidth="154.0" style="-fx-alignment: center;" text="New List" textAlignment="CENTER" AnchorPane.topAnchor="4.0">
+      <Label fx:id="listname" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="200.0" style="-fx-alignment: center; -fx-background-color: #c5d1c9; -fx-background-radius: 30;" text="New List" textAlignment="CENTER" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="4.0">
          <font>
             <Font size="17.0" />
          </font>
+         <effect>
+            <Blend mode="SOFT_LIGHT" />
+         </effect>
       </Label>
       <ScrollPane hbarPolicy="NEVER" layoutX="3.0" layoutY="33.0" prefHeight="344.0" prefWidth="222.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="32.0">
          <content>
-            <VBox fx:id="cards" prefHeight="340.0" prefWidth="215.0" spacing="5.0" />
+            <VBox fx:id="cards" alignment="TOP_CENTER" prefHeight="419.0" prefWidth="263.0" spacing="5.0">
+               <padding>
+                  <Insets top="5.0" />
+               </padding></VBox>
          </content>
       </ScrollPane>
-      <Button fx:id="toAddCard" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
+      <Button fx:id="toAddCard" layoutX="87.0" layoutY="381.0" mnemonicParsing="false" style="-fx-background-color: White; -fx-border-color: black; -fx-border-radius: 10; -fx-background-radius: 10;" text="Add new card" AnchorPane.bottomAnchor="14.666666666666668" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" />
       <Button fx:id="toDelete" layoutX="-3.0" layoutY="-5.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: transparent;" text="x" textAlignment="CENTER" AnchorPane.leftAnchor="-3.0" AnchorPane.topAnchor="-5.0">
          <font>
             <Font name="Arial Black" size="17.0" />

@@ -4,7 +4,6 @@ import client.components.CardList;
 import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
 import commons.Board;
-import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -140,14 +139,6 @@ public class BoardViewCtrl implements Initializable {
         mainCtrl.showAddList(this);
     }
 
-    /**
-     * Creates a common type card list to send to the repository to update.
-     * @param cardlist the card list from the client.
-     */
-    public void sendEdit(CardList cardlist) {
-        Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
-        server.editCardList(edited);
-    }
 
     /**
      * Add a board with a given name to the repo and to the workspace.
