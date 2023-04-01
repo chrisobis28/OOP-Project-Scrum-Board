@@ -149,7 +149,8 @@ public class CardList extends AnchorPane {
             for(commons.Card card : cardList.getCardSet()){
                 server.deleteCard(card.getId());
             }
-            boardViewCtrl.getBoard().getChildren().remove(this);
+            //trigger an edit on the board.
+            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
         }
     }
 

@@ -1,11 +1,17 @@
 package server.api;
 
 import commons.Board;
+import commons.Cardlist;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/api/boards")
@@ -73,6 +79,8 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        listeners.forEach((key, listener) -> listener.accept(board));
+
         Board saved = repo.save(board);
         return ResponseEntity.ok(saved);
     }
@@ -99,8 +107,34 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
+        listeners.forEach((key, listener) -> listener.accept(board));
+
         Board saved = repo.save(board);
         return ResponseEntity.ok(saved);
+    }
+
+    //Event listeners for other endpoints to trigger an update.
+    private Map<Object, Consumer<Board>> listeners = new HashMap<>();
+
+    /**
+     * Long-polling implementation for a cardlist.
+     * @return A Response which is either contains a cardlist or 204 no content status.
+     */
+    @GetMapping(path = {"/update"})
+    public DeferredResult<ResponseEntity<Board>> getUpdates() {
+        System.out.println("I have been called upon!");
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var res = new DeferredResult<ResponseEntity<Board>>(5000L, noContent);
+
+        var key = new Object();
+        listeners.put(key, board -> {
+            res.setResult(ResponseEntity.ok(board));
+        });
+
+        res.onCompletion(() -> {
+            listeners.remove(key);
+        });
+        return res;
     }
 
     /**

@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import commons.Board;
 import commons.Cardlist;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,10 +30,7 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class BoardViewCtrl implements Initializable {
@@ -396,6 +394,9 @@ public class BoardViewCtrl implements Initializable {
             }
         }
 
+        //When you update the board, run the refresh board method.
+        server.registerForUpdates(board -> Platform.runLater(this::refreshBoard));
+
         initializeWorkspace();
         refreshBoard();
     }
@@ -438,6 +439,13 @@ public class BoardViewCtrl implements Initializable {
                 boardTitle.setGraphic(null);
             }
         });
+    }
+
+    /**
+     * Trigger the stop request on the server.
+     */
+    public void stop() {
+        server.stop();
     }
 
 //    public void sendBoardToServer(String text){

@@ -1,11 +1,18 @@
 package server.api;
 
+import commons.Card;
 import commons.Cardlist;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.CardlistRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("/api/cardlist")
@@ -32,6 +39,29 @@ public class CardlistControlller {
         return repo.findAll();
     }
 
+    //Event listeners for other endpoints to trigger an update.
+    private Map<Object, Consumer<Cardlist>> listeners = new HashMap<>();
+
+    /**
+     * Long-polling implementation for a cardlist.
+     * @return A Response which is either contains a cardlist or 204 no content status.
+     */
+    @GetMapping(path = {"/update"})
+    public DeferredResult<ResponseEntity<Cardlist>> getUpdates() {
+        var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var res = new DeferredResult<ResponseEntity<Cardlist>>(1024L, noContent);
+
+        var key = new Object();
+        listeners.put(key, list -> {
+            res.setResult(ResponseEntity.ok(list));
+        });
+
+        res.onCompletion(() -> {
+            listeners.remove(key);
+        });
+        return res;
+    }
+
     /**
      * Mapping for GET requests targeted at card lists with a
      *  certain board id that returns the card lists
@@ -56,6 +86,8 @@ public class CardlistControlller {
         if (isNullOrEmpty(cardlist.getCardlistName())) {
             return ResponseEntity.badRequest().build();
         }
+
+        listeners.forEach((key, listener) -> listener.accept(cardlist));
 
         Cardlist saved = repo.save(cardlist);
         return ResponseEntity.ok(saved);
@@ -90,6 +122,8 @@ public class CardlistControlller {
         if (cardlist.getId() < 0 || !repo.existsById(cardlist.getId())) {
             return ResponseEntity.badRequest().build();
         }
+
+        listeners.forEach((key, listener) -> listener.accept(cardlist));
 
         repo.save(cardlist);
         return ResponseEntity.ok(cardlist);
