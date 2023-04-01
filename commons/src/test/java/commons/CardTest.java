@@ -18,10 +18,24 @@ public class CardTest {
   }
 
   @Test
+  public void checkConstructor2() {
+    var c = new Cardlist();
+    var a = new Card("name", "descr", c);
+    assertEquals("name", a.getCardName());
+    assertEquals(a.getCardlist(), c);
+  }
+
+  @Test
   public void cardNameSetter(){
     var a = new Card("card-name", "description");
     a.setCardName("card");
     assertEquals("card", a.cardName);
+  }
+
+  @Test
+  public void checkIdGetter() {
+    var a = new Card();
+    assertEquals(a.id, a.getId());
   }
 
   @Test
@@ -48,10 +62,20 @@ public class CardTest {
   }
 
   @Test
+  public void checkCardCardlistGetterSetter() {
+    var first = new Cardlist();
+    var second = new Cardlist();
+    var card = new Card("name","descr", first);
+    assertEquals(card.getCardlist(), first);
+    card.setCardList(second);
+    assertEquals(card.getCardlist(), second);
+  }
+
+  @Test
   public void hasToString(){
-    var actual = new Board("board-name").toString();
-    assertTrue(actual.contains(Board.class.getSimpleName()));
+    var actual = new Card("a","descr").toString();
+    assertTrue(actual.contains(Card.class.getSimpleName()));
     assertTrue(actual.contains("\n"));
-    assertTrue(actual.contains("boardName"));
+    assertTrue(actual.contains("a"));
   }
 }

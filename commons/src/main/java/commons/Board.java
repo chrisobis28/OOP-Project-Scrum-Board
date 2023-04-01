@@ -4,6 +4,7 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -50,19 +51,10 @@ public class Board {
    * @param l Cardlist to be inserted
    *          Throws Runtime exception when l is null
    */
-  public void add(Cardlist l) {
+  public void add(Cardlist l) throws  NullPointerException{
     if (l == null)
       throw new NullPointerException();
     cardlistList.add(l);
-  }
-
-  public Cardlist getAtIndex(int index) {
-    if (index < 0 || index >= cardlistList.size())
-      throw new IndexOutOfBoundsException();
-    Iterator iter = cardlistList.iterator();
-    for (int i = 1; i < index; i++)
-      iter.next();
-    return (Cardlist) iter.next();
   }
 
   /**
@@ -177,21 +169,7 @@ public class Board {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Board board = (Board) o;
-
-    if (id != board.id) return false;
-    if (!Objects.equals(cardlistList, board.cardlistList)) return false;
-    if (!Objects.equals(tagList, board.tagList)) return false;
-    if (getDescription() != null ? !getDescription().equals(board.getDescription()) : board.getDescription() != null)
-      return false;
-    if (getBoardName() != null ? !getBoardName().equals(board.getBoardName()) : board.getBoardName() != null)
-      return false;
-    if (getBoardBackgroundColour() != null ? !getBoardBackgroundColour().equals(board.getBoardBackgroundColour()) : board.getBoardBackgroundColour() != null)
-      return false;
-    return true;
+    return EqualsBuilder.reflectionEquals(this, o);
   }
 //
 //  /**
@@ -204,33 +182,10 @@ public class Board {
 //    return HashCodeBuilder.reflectionHashCode(this);
 //  }
 
-  /**
-   * Reorders the list based on a specified arraylist
-   *
-   * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
-   *              new order of the list (where n is the cardlistList.size() of the list)
-   *              Throws Runtime exception when the cardlistList.size()s do not match
-   *              Throws NPE when order is null or contains a null reference
-   */
-  public void reorder(int[] order) {
-    if (order.length != cardlistList.size())
-      throw new RuntimeException("Unequal sized arrays, cannot reorder.");
-    if (order == null)
-      throw new NullPointerException();
-
-    ArrayList<Cardlist> aux = new ArrayList<>(cardlistList);
-    cardlistList.clear();
-    int i = 0;
-    while (aux.size() != cardlistList.size()) {
-      cardlistList.add(aux.get(order[i]));
-      aux.remove(order[i]);
-      i++;
-    }
-  }
 
   //Moved these methods here because we may need them at some point
-  //but right now they are causing errors due to these getters not
-  //being linked to fields.
+  //but right now they are either causing errors due to these getters not
+  //being linked to fields, or not being used.
 
   /*/**
    * Gets the cardlistList.size() of the board.
@@ -258,5 +213,35 @@ public class Board {
             return (Cardlist) iter.next();
         }*/
 
+//  /**
+//   * Reorders the list based on a specified arraylist
+//   *
+//   * @param order The integer arraylist, containing the first n-1 integers uniquely, denoting the
+//   *              new order of the list (where n is the cardlistList.size() of the list)
+//   *              Throws Runtime exception when the cardlistList.size()s do not match
+//   *              Throws NPE when order is null or contains a null reference
+//   */
+//  public void reorder(int[] order) {
+//    if (order.length != cardlistList.size())
+//      throw new RuntimeException("Unequal sized arrays, cannot reorder.");
+//
+//    ArrayList<Cardlist> aux = new ArrayList<>(cardlistList);
+//    cardlistList.clear();
+//    int i = 0;
+//    while (aux.size() != cardlistList.size()) {
+//      cardlistList.add(aux.get(order[i]));
+//      aux.remove(order[i]);
+//      i++;
+//    }
+//  }
+
+//  public Cardlist getAtIndex(int index) {
+//    if (index < 0 || index >= cardlistList.size())
+//      throw new IndexOutOfBoundsException();
+//    Iterator iter = cardlistList.iterator();
+//    for (int i = 1; i < index; i++)
+//      iter.next();
+//    return (Cardlist) iter.next();
+//  }
 }
 

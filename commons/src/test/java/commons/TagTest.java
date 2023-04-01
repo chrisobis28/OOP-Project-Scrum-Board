@@ -8,6 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TagTest {
 
     @Test
+    public void checkDefaultConstructor() {
+        var t = new Tag();
+        assertTrue(t instanceof Tag);
+    }
+
+    @Test
     public void checkConstructor(){
         var a = new Tag("name");
         assertEquals("name", a.tagName);
