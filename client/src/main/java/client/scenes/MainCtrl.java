@@ -90,6 +90,7 @@ public class MainCtrl {
      * Show the Board View scene.
      */
     public void showBoard() {
+
         primaryStage.setTitle("Your Board");
         primaryStage.setScene(boardView);
         //before showing the board view, make sure the admin elements are as they should
@@ -97,6 +98,11 @@ public class MainCtrl {
         boardViewCtrl.myinitialize();
         boardViewCtrl.resetAdminElements();
         boardViewCtrl.initializeWorkspace();
+
+        //Once you close the app, close the separate thread as well.
+        primaryStage.setOnCloseRequest(e -> {
+            boardViewCtrl.stop();
+        });
 
         //for key presses:
         boardView.setOnKeyPressed(evt -> boardViewCtrl.keyPressed(evt));

@@ -81,10 +81,12 @@ public class CardList extends AnchorPane {
     public void initDrop(){
         setOnDragOver(event -> {
             if (event.getGestureSource() instanceof Card) {
-                Card sourceCard = (Card) event.getGestureSource();
-                if (sourceCard.getCardList() != this) {
-                    event.acceptTransferModes(TransferMode.MOVE);
-                }
+                event.acceptTransferModes(TransferMode.MOVE);
+
+//                Card sourceCard = (Card) event.getGestureSource();
+//                if (sourceCard.getCardList() != this) {
+//                    event.acceptTransferModes(TransferMode.MOVE);
+//                }
             }
             event.consume();
         });
@@ -99,10 +101,27 @@ public class CardList extends AnchorPane {
                     System.out.println(cardId);
                     commons.Card commonCard = server.getCardById(cardId);
                     commonCard.setCardList(cardList);
-                    server.editCard(commonCard);
                     cardList.addCard(commonCard);
+                    server.editCardList(cardList);
                     Card card = new Card(server, commonCard, this);
-                    cards.getChildren().add(card);
+
+                    int index = cards.getChildren().size();
+                    if(index!= 0 && event.getY() < cards.getChildren().get(0).getBoundsInParent().getMinY()){
+                        index = 0;
+                    }
+                    else if(index!= 0 && event.getY() > cards.getChildren().get(index - 1).getBoundsInParent().getMaxY()){
+                        index = cards.getChildren().size();
+                    }
+                    else{
+                        for(int i =0; i<cards.getChildren().size(); ++i){
+                            if(event.getY() < cards.getChildren().get(i).getBoundsInParent().getMaxY()){
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    cards.getChildren().add(index, card);
                     success = true;
                 }
                 catch(Exception e){
@@ -128,6 +147,7 @@ public class CardList extends AnchorPane {
         cardList.addCard(commonCard);
         Card card = new Card(server, commonCard, this);
         cards.getChildren().add(card);
+        server.editCardList(cardList);
     }
 
     /**
@@ -149,7 +169,8 @@ public class CardList extends AnchorPane {
             for(commons.Card card : cardList.getCardSet()){
                 server.deleteCard(card.getId());
             }
-            boardViewCtrl.getBoard().getChildren().remove(this);
+            //trigger an edit on the board.
+            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
         }
     }
 
@@ -158,7 +179,7 @@ public class CardList extends AnchorPane {
      *  then taking the updated text and replacing it in the label.
      */
     public void editTitle() {
-        String backup = new String(listname.getText()); // the initial title.
+        String backup = listname.getText(); // the initial title.
 
         // Set up the TextField.
         TextField textField = new TextField(backup);
@@ -180,6 +201,7 @@ public class CardList extends AnchorPane {
             if(!n){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }
         });
 
@@ -189,10 +211,12 @@ public class CardList extends AnchorPane {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }
         });
     }
@@ -211,7 +235,14 @@ public class CardList extends AnchorPane {
      * Pass this card list to the board view controller to send the update to the server.
      */
     public void sendEdit() {
-        boardViewCtrl.sendEdit(this);
+        var board = server.getBoardById(boardViewCtrl.getId());
+        for (var cardlist : board.getCardlistList()) {
+            if (cardlist.getId() == cardList.getId()) {
+                cardlist.setCardlistName(cardList.getCardlistName());
+            }
+        }
+        server.editCardList(cardList);
+        server.editBoard(board);
     }
 
     // GETTERS AND SETTERS

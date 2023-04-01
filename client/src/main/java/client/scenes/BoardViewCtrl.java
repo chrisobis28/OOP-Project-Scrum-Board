@@ -4,8 +4,8 @@ import client.components.CardList;
 import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
 import commons.Board;
-import commons.Cardlist;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,9 +27,8 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.net.URL;
+import java.util.*;
 
 
 public class BoardViewCtrl {
@@ -139,14 +138,6 @@ public class BoardViewCtrl {
         mainCtrl.showAddList(this);
     }
 
-    /**
-     * Creates a common type card list to send to the repository to update.
-     * @param cardlist the card list from the client.
-     */
-    public void sendEdit(CardList cardlist) {
-        Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
-        server.editCardList(edited);
-    }
 
     /**
      * Add a board with a given name to the repo and to the workspace.
@@ -395,6 +386,9 @@ public class BoardViewCtrl {
             }
         }
 
+        //When you update the board, run the refresh board method.
+        server.registerForUpdates(board -> Platform.runLater(this::refreshBoard));
+
         initializeWorkspace();
         refreshBoard();
     }
@@ -437,6 +431,13 @@ public class BoardViewCtrl {
                 boardTitle.setGraphic(null);
             }
         });
+    }
+
+    /**
+     * Trigger the stop request on the server.
+     */
+    public void stop() {
+        server.stop();
     }
 
 //    public void sendBoardToServer(String text){
