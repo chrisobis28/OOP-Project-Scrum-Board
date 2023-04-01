@@ -35,7 +35,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 
-public class BoardViewCtrl implements Initializable {
+public class BoardViewCtrl {
 
     private long id;
     public ObservableList<Node> data;
@@ -341,8 +341,7 @@ public class BoardViewCtrl implements Initializable {
         initializeWorkspace();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
         refreshButton.setOnAction(e -> refreshBoard());

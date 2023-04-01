@@ -44,6 +44,10 @@ public class AdminLoginCtrl {
     this.boardViewCtrl = boardViewCtrl;
   }
 
+  public BoardViewCtrl getBoardCtrl() {return this.boardViewCtrl;}
+
+  public Stage getStage() {return this.stage;}
+
   /**
    * Setter for the stage field.
    * @param stage the new stage of the controller
