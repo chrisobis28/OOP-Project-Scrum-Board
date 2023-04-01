@@ -9,7 +9,6 @@ import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -28,11 +27,9 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 
 public class BoardViewCtrl {
@@ -341,6 +338,9 @@ public class BoardViewCtrl {
         initializeWorkspace();
     }
 
+    /**
+     * Method that is always called at the beginning of showing the BoardView scene that sets up the scene.
+     */
     public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
