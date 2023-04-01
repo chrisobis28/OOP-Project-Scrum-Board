@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Card;
 import commons.Cardlist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import server.database.CardlistRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 @RestController
