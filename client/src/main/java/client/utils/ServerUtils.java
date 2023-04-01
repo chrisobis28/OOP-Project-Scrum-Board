@@ -30,7 +30,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -332,5 +336,39 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .get(new GenericType<Card>() {
             });
+  }
+
+  //A separate thread so that the data synchronization can run in parallel.
+  private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
+
+  /**
+   * Method for long-polling for updates to synchronize data between clients.
+   * @param consumer
+   */
+  public void registerForUpdates(Consumer<Board> consumer) {
+
+    EXEC.submit(() -> {
+      while(!Thread.interrupted()) {
+            var res = ClientBuilder.newClient(new ClientConfig()) //
+                    .target(server).path("api/boards/update") //
+                    .request(APPLICATION_JSON) //
+                    .accept(APPLICATION_JSON) //
+                    .get(Response.class);
+
+            if(res.getStatus() == 204) {
+              continue;
+            }
+
+            var board = res.readEntity(Board.class);
+            consumer.accept(board);
+      }
+    });
+  }
+
+  /**
+   * Method to stop the parallel thread.
+   */
+  public void stop() {
+    EXEC.shutdownNow();
   }
 }

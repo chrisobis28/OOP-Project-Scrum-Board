@@ -149,7 +149,8 @@ public class CardList extends AnchorPane {
             for(commons.Card card : cardList.getCardSet()){
                 server.deleteCard(card.getId());
             }
-            boardViewCtrl.getBoard().getChildren().remove(this);
+            //trigger an edit on the board.
+            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
         }
     }
 
@@ -158,7 +159,7 @@ public class CardList extends AnchorPane {
      *  then taking the updated text and replacing it in the label.
      */
     public void editTitle() {
-        String backup = new String(listname.getText()); // the initial title.
+        String backup = listname.getText(); // the initial title.
 
         // Set up the TextField.
         TextField textField = new TextField(backup);
@@ -180,6 +181,7 @@ public class CardList extends AnchorPane {
             if(!n){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }
         });
 
@@ -189,10 +191,12 @@ public class CardList extends AnchorPane {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
+                sendEdit();
             }
         });
     }
@@ -211,7 +215,14 @@ public class CardList extends AnchorPane {
      * Pass this card list to the board view controller to send the update to the server.
      */
     public void sendEdit() {
-        boardViewCtrl.sendEdit(this);
+        var board = server.getBoardById(boardViewCtrl.getId());
+        for (var cardlist : board.getCardlistList()) {
+            if (cardlist.getId() == cardList.getId()) {
+                cardlist.setCardlistName(cardList.getCardlistName());
+            }
+        }
+        server.editCardList(cardList);
+        server.editBoard(board);
     }
 
     // GETTERS AND SETTERS
