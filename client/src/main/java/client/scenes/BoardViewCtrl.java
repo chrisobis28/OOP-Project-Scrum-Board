@@ -338,7 +338,9 @@ public class BoardViewCtrl{
         initializeWorkspace();
     }
 
-
+    /**
+     * Method that is always called at the beginning of showing the BoardView scene that sets up the scene.
+     */
     public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.

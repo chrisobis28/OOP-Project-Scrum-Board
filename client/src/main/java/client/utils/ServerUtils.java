@@ -380,7 +380,6 @@ public class ServerUtils {
 
   private StompSession session = connect("ws://localhost:8080/websocket");
 
-  private StompSessionHandler sessionhandler = new StompSessionHandlerAdapter() {};
   private StompSession connect(String destination){
     var client = new StandardWebSocketClient();
     var stomp = new WebSocketStompClient(client);
