@@ -63,8 +63,20 @@ public class Card {
     this.cardName = cardName;
   }
 
+  public String getCardDescription() {
+    return cardDescription;
+  }
+
   public long getId() {
     return id;
+  }
+
+  public List<Task> getTaskList() {
+    return taskList;
+  }
+
+  public List<Tag> getTagList() {
+    return tagList;
   }
 
   public void setCardList(Cardlist cardlist){
