@@ -1,10 +1,7 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
-<<<<<<< client/src/main/java/client/components/Card.java
 import client.scenes.CardDetailedViewCtrl;
-=======
->>>>>>> client/src/main/java/client/components/Card.java
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,16 +34,12 @@ public class Card extends Pane {
     private commons.Card card;
 
     private CardList cardList;
-<<<<<<< client/src/main/java/client/components/Card.java
     private BoardViewCtrl boardViewCtrl;
 
     @FXML
     private ImageView edit;
 
-=======
-
     public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
->>>>>>> client/src/main/java/client/components/Card.java
         this.server = server;
         this.card = card;
         this.cardList = cardList;
