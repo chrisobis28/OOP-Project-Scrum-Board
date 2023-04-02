@@ -386,7 +386,7 @@ public class ServerUtils {
     var stomp = new WebSocketStompClient(client);
     stomp.setMessageConverter(new MappingJackson2MessageConverter());
     try{
-      return stomp.connect(destination, sessionhandler).get();
+      return stomp.connect(destination, new StompSessionHandlerAdapter() {}).get();
       }
     catch (InterruptedException e){
       Thread.currentThread().interrupt();
