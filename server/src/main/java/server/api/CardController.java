@@ -1,7 +1,9 @@
 package server.api;
 
 import commons.Card;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardRepository;
 
@@ -10,11 +12,16 @@ import server.database.CardRepository;
 public class CardController {
 
     private final CardRepository repo;
-
+    private SimpMessagingTemplate messages;
+    @Autowired
     public CardController(CardRepository repo){
         this.repo = repo;
     }
 
+    public CardController(CardRepository repo, SimpMessagingTemplate messages){
+        this.repo = repo;
+        this.messages = messages;
+    }
     @DeleteMapping(path = {"/{id}"})
     public ResponseEntity<Card> delete(@PathVariable("id") long id) {
         if (id < 0 || !repo.existsById(id)) {
@@ -34,6 +41,7 @@ public class CardController {
         }
 
         Card saved = repo.save(card);
+        messages.convertAndSend("/topic", card);
         return ResponseEntity.ok(saved);
     }
 
@@ -44,6 +52,7 @@ public class CardController {
         }
 
         repo.save(card);
+        messages.convertAndSend("/topic", card);
         return ResponseEntity.ok(card);
     }
 
@@ -54,4 +63,6 @@ public class CardController {
         }
         return ResponseEntity.ok(repo.findById(id).get());
     }
+
+
 }

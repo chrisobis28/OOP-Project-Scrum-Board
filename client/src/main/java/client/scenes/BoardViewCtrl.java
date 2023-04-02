@@ -198,6 +198,8 @@ public class BoardViewCtrl implements Initializable {
      */
     public void refreshBoard() {
         var cardlists = server.getCardLists(this.getId());
+
+        server.registerForCards("wscards", card -> { cardlists.get((int) card.getCardlist().getId()).addCard(card);});
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
             var v = new CardList(this, server, cardlist);
