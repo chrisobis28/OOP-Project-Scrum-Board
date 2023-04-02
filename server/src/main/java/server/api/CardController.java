@@ -1,7 +1,6 @@
 package server.api;
 
 import commons.Card;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,6 @@ public class CardController {
 
     private final CardRepository repo;
     private SimpMessagingTemplate messages;
-    @Autowired
-    public CardController(CardRepository repo){
-        this.repo = repo;
-    }
 
     public CardController(CardRepository repo, SimpMessagingTemplate messages){
         this.repo = repo;
@@ -35,13 +30,12 @@ public class CardController {
 
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Card> add(@RequestBody Card card) {
-
         if (card.getCardName() == null) {
             return ResponseEntity.badRequest().build();
         }
 
+        messages.convertAndSend("/topic/cards", card);
         Card saved = repo.save(card);
-        messages.convertAndSend("/topic", card);
         return ResponseEntity.ok(saved);
     }
 
@@ -63,6 +57,4 @@ public class CardController {
         }
         return ResponseEntity.ok(repo.findById(id).get());
     }
-
-
 }
