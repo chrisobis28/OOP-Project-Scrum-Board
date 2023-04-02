@@ -4,13 +4,11 @@ import client.components.CardList;
 import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
 import commons.Board;
-import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -29,14 +27,10 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
-public class BoardViewCtrl implements Initializable {
+public class BoardViewCtrl {
 
     private long id;
     public ObservableList<Node> data;
@@ -143,14 +137,6 @@ public class BoardViewCtrl implements Initializable {
         mainCtrl.showAddList(this);
     }
 
-    /**
-     * Creates a common type card list to send to the repository to update.
-     * @param cardlist the card list from the client.
-     */
-    public void sendEdit(CardList cardlist) {
-        Cardlist edited = new Cardlist(cardlist.getCardlistId(), cardlist.getListname().getText());
-        server.editCardList(edited);
-    }
 
     /**
      * Add a board with a given name to the repo and to the workspace.
@@ -342,8 +328,10 @@ public class BoardViewCtrl implements Initializable {
         initializeWorkspace();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    /**
+     * Method that is always called at the beginning of showing the BoardView scene that sets up the scene.
+     */
+    public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
         refreshButton.setOnAction(e -> refreshBoard());
@@ -397,6 +385,9 @@ public class BoardViewCtrl implements Initializable {
             }
         }
 
+        //When you update the board, run the refresh board method.
+        server.registerForUpdates(board -> Platform.runLater(this::refreshBoard));
+
         initializeWorkspace();
         refreshBoard();
     }
@@ -441,10 +432,6 @@ public class BoardViewCtrl implements Initializable {
         });
     }
 
-   public void sendBoardToServer(String boardname){
-        Board board = new Board(boardname);
-        server.editBoard(board);
-   }
     /**
      * Trigger the stop request on the server.
      */
@@ -452,5 +439,8 @@ public class BoardViewCtrl implements Initializable {
         server.stop();
     }
 
-
+//    public void sendBoardToServer(String text){
+//        Board board = new Board(id, text);
+//        server.editBoard(board);
+//    }
 }
