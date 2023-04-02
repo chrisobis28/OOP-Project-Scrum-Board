@@ -95,6 +95,7 @@ public class MainCtrl {
         primaryStage.setScene(boardView);
         //before showing the board view, make sure the admin elements are as they should
         //be at the beginning of the app, as well as initialize the workspace
+        boardViewCtrl.myinitialize();
         boardViewCtrl.resetAdminElements();
         boardViewCtrl.initializeWorkspace();
 
