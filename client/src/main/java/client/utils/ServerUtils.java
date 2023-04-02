@@ -380,13 +380,12 @@ public class ServerUtils {
 
   private StompSession session = connect("ws://localhost:8080/websocket");
 
-  private StompSessionHandler sessionhandler = new StompSessionHandlerAdapter() {};
   private StompSession connect(String destination){
     var client = new StandardWebSocketClient();
     var stomp = new WebSocketStompClient(client);
     stomp.setMessageConverter(new MappingJackson2MessageConverter());
     try{
-      return stomp.connect(destination, sessionhandler).get();
+      return stomp.connect(destination, new StompSessionHandlerAdapter() {}).get();
       }
     catch (InterruptedException e){
       Thread.currentThread().interrupt();
