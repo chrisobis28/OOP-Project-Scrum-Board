@@ -16,8 +16,6 @@
 
 package client.utils;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import commons.Board;
 import commons.Card;
 import commons.Cardlist;
@@ -25,6 +23,7 @@ import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -41,6 +40,8 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;

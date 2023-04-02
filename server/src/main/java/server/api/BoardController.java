@@ -106,11 +106,6 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
 
-    @MessageMapping("/")
-    @SendTo("/topic")
-    public Board addBoard(Board board){
-        addBoard(board);
-        return board;
         listeners.forEach((key, listener) -> listener.accept(board));
 
         Board saved = repo.save(board);
