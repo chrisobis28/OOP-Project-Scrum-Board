@@ -4,6 +4,7 @@ import client.components.CardList;
 import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
 import commons.Board;
+import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -28,6 +29,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
+import java.lang.reflect.InaccessibleObjectException;
 import java.net.URL;
 import java.util.*;
 
@@ -199,7 +201,18 @@ public class BoardViewCtrl implements Initializable {
     public void refreshBoard() {
         var cardlists = server.getCardLists(this.getId());
 
-        server.registerForCards("wscards", card -> { cardlists.get((int) card.getCardlist().getId()).addCard(card);});
+        server.registerForCards("wscards", card -> {
+            long cardlistid = card.getCardlist().getId();
+            Cardlist targetcardlist = null;
+            for(Cardlist cardlist : cardlists)
+                if(cardlist.getId() == cardlistid)
+                    targetcardlist = cardlist;
+            if(targetcardlist == null) {
+                throw new InaccessibleObjectException();
+            }
+            else targetcardlist.addCard(card);
+
+        });
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
             var v = new CardList(this, server, cardlist);
