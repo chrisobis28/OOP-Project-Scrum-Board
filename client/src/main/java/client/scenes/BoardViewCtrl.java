@@ -4,6 +4,7 @@ import client.components.CardList;
 import client.components.WorkspaceBoard;
 import client.utils.ServerUtils;
 import commons.Board;
+import commons.Card;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -29,8 +30,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.*;
 
-
-public class BoardViewCtrl {
+public class BoardViewCtrl{
 
     private long id;
     public ObservableList<Node> data;
@@ -196,12 +196,22 @@ public class BoardViewCtrl {
      */
     public void refreshBoard() {
         var cardlists = server.getCardLists(this.getId());
+
         List<Node> nodes = new ArrayList<>();
+        List<Node> cardnodes = new ArrayList<>();
+        ObservableList<Node> data2;
         for (var cardlist : cardlists) {
-            var v = new CardList(mainCtrl, this, server, cardlist);
+            var v = new CardList(this, server, cardlist);
+            for (Card card : cardlist.getCardSet()) {
+                client.components.Card compCard = new client.components.Card(this,server, card, v);
+                cardnodes.add(compCard);
+            }
+            data2 = FXCollections.observableList(cardnodes);
+            v.getCards().getChildren().clear();
+            v.getCards().getChildren().addAll(data2);
+            data2.clear();
             nodes.add(v);
         }
-
         data = FXCollections.observableList(nodes);
         board.getChildren().clear();
         board.getChildren().addAll(data);
@@ -341,6 +351,15 @@ public class BoardViewCtrl {
         translate.setToX(-300);
         translate.play();
         refreshBoard();
+        /*server.registerForCards("/topic/cards", card -> {
+            for (Node node : board.getChildren()) {
+                CardList clist = (CardList) node;
+                if (clist.getCardlistId()==card.getCardlist().getId()) {
+                    client.components.Card card1 = new client.components.Card(server, card, clist);
+                    clist.getChildren().add(card1);
+                }
+            }
+        });*/
 
         scrollpane.setFitToHeight(true);
         scrollpane.setFitToWidth(true);

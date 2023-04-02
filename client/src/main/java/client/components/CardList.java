@@ -106,7 +106,7 @@ public class CardList extends AnchorPane {
                     commonCard.setCardList(cardList);
                     cardList.addCard(commonCard);
                     server.editCardList(cardList);
-                    Card card = new Card(mainCtrl, boardViewCtrl, server, commonCard, this);
+                    Card card = new Card(boardViewCtrl, server, commonCard, this);
 
                     int index = cards.getChildren().size();
                     if(index!= 0 && event.getY() < cards.getChildren().get(0).getBoundsInParent().getMinY()){
@@ -138,7 +138,7 @@ public class CardList extends AnchorPane {
 
     public void constructVBox(){
         for(commons.Card card : cardList.getCardSet()){
-            cards.getChildren().add(new Card(mainCtrl, boardViewCtrl, server, card, this));
+            cards.getChildren().add(new Card(boardViewCtrl, server, card, this));
         }
     }
 
@@ -146,12 +146,11 @@ public class CardList extends AnchorPane {
      * Add a card to this list.
      */
     public void addCard(){
-        commons.Card commonCard = new commons.Card("Name", "Description");
+        commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
+        commons.Card commonCard = server.addCard(cardToAdd);
         cardList.addCard(commonCard);
-        commonCard.setCardList(cardList);
-        server.editCardList(cardList);
-        Card card = new Card(mainCtrl, boardViewCtrl, server, commonCard, this);
-        cards.getChildren().add(card);
+        sendEdit();
+        boardViewCtrl.refreshBoard();
     }
 
     /**

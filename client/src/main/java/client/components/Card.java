@@ -1,8 +1,10 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
+<<<<<<< client/src/main/java/client/components/Card.java
 import client.scenes.CardDetailedViewCtrl;
-import client.scenes.MainCtrl;
+=======
+>>>>>>> client/src/main/java/client/components/Card.java
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,18 +37,20 @@ public class Card extends Pane {
     private commons.Card card;
 
     private CardList cardList;
-    private MainCtrl mainCtrl;
+<<<<<<< client/src/main/java/client/components/Card.java
     private BoardViewCtrl boardViewCtrl;
 
     @FXML
     private ImageView edit;
 
-    public Card(MainCtrl mainCtrl, BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
-        this.mainCtrl = mainCtrl;
-        this.boardViewCtrl = boardViewCtrl;
+=======
+
+    public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
+>>>>>>> client/src/main/java/client/components/Card.java
         this.server = server;
         this.card = card;
         this.cardList = cardList;
+        this.boardViewCtrl = boardViewCtrl;
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
@@ -77,8 +81,8 @@ public class Card extends Pane {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
             cardList.getCardList().removeCard(card);
-            cardList.getCards().getChildren().remove(this);
             server.deleteCard(card.getId());
+            boardViewCtrl.refreshBoard();
         }
     }
 
@@ -134,7 +138,7 @@ public class Card extends Pane {
      *  then taking the updated text and replacing it in the label.
      */
     public void editTitle() {
-        String backup = new String(title.getText()); // the initial title.
+        String backup = title.getText(); // the initial title.
 
         // Set up the TextField.
         TextField textField = new TextField(backup);
@@ -193,6 +197,7 @@ public class Card extends Pane {
      */
     public void sendEdit() {
         server.editCard(card);
+        cardList.sendEdit();
     }
 
 
