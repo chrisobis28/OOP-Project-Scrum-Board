@@ -10,7 +10,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -30,11 +29,10 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import java.lang.reflect.InaccessibleObjectException;
-import java.net.URL;
 import java.util.*;
 
 
-public class BoardViewCtrl implements Initializable {
+public class BoardViewCtrl {
 
     private long id;
     public ObservableList<Node> data;
@@ -345,8 +343,10 @@ public class BoardViewCtrl implements Initializable {
         initializeWorkspace();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    /**
+     * Method that is always called at the beginning of showing the BoardView scene that sets up the scene.
+     */
+    public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
         refreshButton.setOnAction(e -> refreshBoard());
