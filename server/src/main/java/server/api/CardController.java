@@ -13,10 +13,6 @@ public class CardController {
 
     private final CardRepository repo;
     private SimpMessagingTemplate messages;
-    @Autowired
-    public CardController(CardRepository repo){
-        this.repo = repo;
-    }
 
     public CardController(CardRepository repo, SimpMessagingTemplate messages){
         this.repo = repo;
@@ -35,13 +31,12 @@ public class CardController {
 
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Card> add(@RequestBody Card card) {
-
         if (card.getCardName() == null) {
             return ResponseEntity.badRequest().build();
         }
 
+        messages.convertAndSend("/topic/cards", card);
         Card saved = repo.save(card);
-        messages.convertAndSend("/topic", card);
         return ResponseEntity.ok(saved);
     }
 
@@ -63,6 +58,4 @@ public class CardController {
         }
         return ResponseEntity.ok(repo.findById(id).get());
     }
-
-
 }
