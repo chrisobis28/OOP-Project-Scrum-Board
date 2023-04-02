@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardControllerTest {
     private BoardRepository repo;
-    private QuoteController sut;
+    private BoardController boardController;
 
     @BeforeEach
     public void setup() {
-        repo = new BoardRepository;
-        sut = new BoardController(repo);
+        repo = new BoardRepository();
+        boardController = new BoardController(repo);
     }
 @Test
 
