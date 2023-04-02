@@ -1,5 +1,6 @@
 package client.components;
 
+import client.scenes.BoardViewCtrl;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,11 +30,13 @@ public class Card extends Pane {
     private commons.Card card;
 
     private CardList cardList;
+    private BoardViewCtrl boardViewCtrl;
 
-    public Card(ServerUtils server, commons.Card card, CardList cardList){
+    public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
         this.server = server;
         this.card = card;
         this.cardList = cardList;
+        this.boardViewCtrl = boardViewCtrl;
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
@@ -63,8 +66,8 @@ public class Card extends Pane {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
             cardList.getCardList().removeCard(card);
-            cardList.getCards().getChildren().remove(this);
             server.deleteCard(card.getId());
+            boardViewCtrl.refreshBoard();
         }
     }
 
@@ -100,7 +103,7 @@ public class Card extends Pane {
      *  then taking the updated text and replacing it in the label.
      */
     public void editTitle() {
-        String backup = new String(title.getText()); // the initial title.
+        String backup = title.getText(); // the initial title.
 
         // Set up the TextField.
         TextField textField = new TextField(backup);
@@ -159,6 +162,7 @@ public class Card extends Pane {
      */
     public void sendEdit() {
         server.editCard(card);
+        cardList.sendEdit();
     }
 
 
