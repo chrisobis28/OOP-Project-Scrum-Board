@@ -1,11 +1,17 @@
 package client.components;
 
+import client.scenes.BoardViewCtrl;
+import client.scenes.CardDetailedViewCtrl;
+import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -29,8 +35,15 @@ public class Card extends Pane {
     private commons.Card card;
 
     private CardList cardList;
+    private MainCtrl mainCtrl;
+    private BoardViewCtrl boardViewCtrl;
 
-    public Card(ServerUtils server, commons.Card card, CardList cardList){
+    @FXML
+    private ImageView edit;
+
+    public Card(MainCtrl mainCtrl, BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
+        this.mainCtrl = mainCtrl;
+        this.boardViewCtrl = boardViewCtrl;
         this.server = server;
         this.card = card;
         this.cardList = cardList;
@@ -50,6 +63,7 @@ public class Card extends Pane {
         this.title.setText(card.getCardName());
         title.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         cardDeleteButton.setOnAction(event -> deleteCard());
+        edit.setOnMouseClicked(event -> editCard());
         initDrag();
     }
     public void deleteCard(){
@@ -66,6 +80,26 @@ public class Card extends Pane {
             cardList.getCards().getChildren().remove(this);
             server.deleteCard(card.getId());
         }
+    }
+
+    public void editCard(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/CardDetailedView.fxml"));
+        CardDetailedViewCtrl cardDetailedViewCtrl = new CardDetailedViewCtrl(boardViewCtrl, server);
+        fxmlLoader.setController(cardDetailedViewCtrl);
+        fxmlLoader.setRoot(cardDetailedViewCtrl);
+        try{
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("C:\\Users\\Chris\\oopp-team-51\\client\\src\\main\\resources\\icon.png"));
+            stage.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+        cardDetailedViewCtrl.load(card);
     }
 
     public void initDrag(){
