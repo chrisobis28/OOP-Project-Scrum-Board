@@ -198,7 +198,7 @@ public class BoardViewCtrl {
         var cardlists = server.getCardLists(this.getId());
         List<Node> nodes = new ArrayList<>();
         for (var cardlist : cardlists) {
-            var v = new CardList(this, server, cardlist);
+            var v = new CardList(mainCtrl, this, server, cardlist);
             nodes.add(v);
         }
 
