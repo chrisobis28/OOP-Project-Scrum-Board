@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.Cardlist;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -61,10 +62,10 @@ public class AddCardlistCtrl {
 
         try {
             Board board = server.getBoardById(boardViewCtrl.getId());
-            /*Cardlist cardlist = new Cardlist(name, board);
+            Cardlist cardlist = new Cardlist(name, board);
             board.add(cardlist);
-            server.editBoard(board);*/
-            server.send("/app", board);
+            server.editBoard(board);
+
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);

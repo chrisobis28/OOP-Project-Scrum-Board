@@ -407,6 +407,5 @@ public class ServerUtils {
   }
 
 
-  public void send(String s, Board board) {
-  }
+
 }
