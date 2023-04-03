@@ -33,6 +33,26 @@ public class CardTest {
   }
 
   @Test
+  public void checkDescriptionGetter() {
+    var a = new Card("name","desc");
+    assertEquals("desc", a.getCardDescription());
+  }
+
+  @Test
+  public void checkTagGetter() {
+    var a = new Card("name", "desc");
+    a.getTagList().add(new Tag());
+    assertEquals(1, a.getTagList().size());
+  }
+
+  @Test
+  public void checkTaskGetter() {
+    var a = new Card("name", "desc");
+    a.getTaskList().add(new Task());
+    assertEquals(1, a.getTaskList().size());
+  }
+
+  @Test
   public void checkIdGetter() {
     var a = new Card();
     assertEquals(a.id, a.getId());
