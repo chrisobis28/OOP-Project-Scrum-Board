@@ -27,7 +27,7 @@ public class Cardlist{
   public List<Card> cardSet = new ArrayList<>();
 
   public Cardlist(){
-      cardSet = new HashSet<>();
+      cardSet = new ArrayList<>();
   }
 
   public Cardlist(String cardlistName){
