@@ -4,7 +4,6 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,7 +19,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    public List<Cardlist> cardlistList;
+    public Set<Cardlist> cardlistList;
     @OneToMany(mappedBy = "board")
     public Set<Tag> tagList;
     public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF", listsBackgroundColour = "#FFFFFF";
@@ -38,7 +37,7 @@ public class Board {
    * Constructor for the board with String parameter
    */
   public Board(String boardName) {
-    cardlistList = new ArrayList<>();
+    cardlistList = new HashSet<>();
     this.boardName = boardName;
     tagList = new HashSet<>();
     isInWorkspace = false;
@@ -137,7 +136,7 @@ public class Board {
    * @return list of all the cardlists.
    */
   @JsonManagedReference
-  public List<Cardlist> getCardlistList() {
+  public Set<Cardlist> getCardlistList() {
     return cardlistList;
   }
 
