@@ -20,7 +20,7 @@ public class Board {
   @GeneratedValue(strategy = GenerationType.AUTO)
   public long id;
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-  public Set<Cardlist> cardlistList;
+  public List<Cardlist> cardlistList;
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
   public Set<Tag> tagList;
   public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF";
@@ -30,7 +30,7 @@ public class Board {
    * Constructor for the board.
    */
   public Board() {
-    cardlistList = new HashSet<>();
+    cardlistList = new ArrayList<>();
     tagList = new HashSet<>();
     isInWorkspace = false;
   }
@@ -39,7 +39,7 @@ public class Board {
    * Constructor for the board with String parameter
    */
   public Board(String boardName) {
-    cardlistList = new HashSet<>();
+    cardlistList = new ArrayList<>();
     this.boardName = boardName;
     tagList = new HashSet<>();
     isInWorkspace = false;
@@ -148,7 +148,7 @@ public class Board {
    * @return list of all the cardlists.
    */
   @JsonManagedReference
-  public Set<Cardlist> getCardlistList() {
+  public List<Cardlist> getCardlistList() {
     return cardlistList;
   }
 

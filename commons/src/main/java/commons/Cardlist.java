@@ -7,8 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Cardlist{
@@ -24,7 +24,7 @@ public class Cardlist{
   public Board board;
 
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
-  public Set<Card> cardSet = new HashSet<>();
+  public List<Card> cardSet = new ArrayList<>();
 
   public Cardlist(){}
 
@@ -82,7 +82,7 @@ public class Cardlist{
    * @return the set of cards.
    */
   @JsonManagedReference
-  public Set<Card> getCardSet() {
+  public List<Card> getCardSet() {
     return cardSet;
   }
 
@@ -98,8 +98,8 @@ public class Cardlist{
     cardSet.remove(card);
   }
 
-  public void addCard(Card card){
-    cardSet.add(card);
+  public void addCard(int index, Card card){
+    cardSet.add(index, card);
   }
 
   @Override

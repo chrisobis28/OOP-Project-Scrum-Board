@@ -38,7 +38,7 @@ public class CardlistTest {
     public void checkCardAddRemoveGetter() {
         var b = new Cardlist();
         var c = new Card();
-        b.addCard(c);
+        b.addCard(0, c);
         assertEquals(1, b.getCardSet().size());
         b.removeCard(c);
         assertEquals(0, b.getCardSet().size());
