@@ -1,12 +1,12 @@
 package server.api;
 
-import commons.Board;
+import commons.Card;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
-import server.database.BoardRepository;
+import server.database.CardRepository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,46 +14,45 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class TestBoardRepository implements BoardRepository {
+public class TestCardRepository implements CardRepository {
+    public final List<Card> cards = new ArrayList<>();
 
-    public final List<Board> boards = new ArrayList<>();
-
-    public List<Board> findAll() {
-        return boards;
+    public List<Card> findAll() {
+        return cards;
     }
 
     @Override
-    public List<Board> findAll(Sort sort) {
+    public List<Card> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public Page<Board> findAll(Pageable pageable) {
+    public Page<Card> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public List<Board> findAllById(Iterable<Long> longs) {
+    public List<Card> findAllById(Iterable<Long> longs) {
         return null;
     }
 
     @Override
     public long count() {
-        return boards.size();
+        return cards.size();
     }
 
     @Override
     public void deleteById(Long id) {
-        for(Board b : boards)
+        for(Card b : cards)
             if(b.getId() == id)
-                boards.remove(b);
+                cards.remove(b);
     }
 
     @Override
-    public void delete(Board board) {
-        for(Board b : boards)
-            if(board.equals(b))
-                boards.remove(b);
+    public void delete(Card card) {
+        for(Card b : cards)
+            if(card.equals(b))
+                cards.remove(b);
     }
 
     @Override
@@ -63,46 +62,46 @@ public class TestBoardRepository implements BoardRepository {
 
 
     @Override
-    public void deleteAll(Iterable<? extends Board> entities) {
-        boards.clear();
+    public void deleteAll(Iterable<? extends Card> entities) {
+        cards.clear();
     }
 
     @Override
     public void deleteAll() {
-        boards.clear();
+        cards.clear();
     }
 
     @Override
-    public <S extends Board> S save(S entity) {
-        boards.add(entity);
+    public <S extends Card> S save(S entity) {
+        cards.add(entity);
         return entity;
     }
 
     @Override
-    public <S extends Board> List<S> saveAll(Iterable<S> entities) {
+    public <S extends Card> List<S> saveAll(Iterable<S> entities) {
         Iterator iter = entities.iterator();
         List<S> returnList = new ArrayList<>();
         while(iter.hasNext()){
             S s = (S) iter.next();
             returnList.add(s);
-            boards.add(s);
+            cards.add(s);
         }
         return returnList;
     }
 
     @Override
-    public Optional<Board> findById(Long id) {
-        Board board = null;
-        for(Board b : boards){
+    public Optional<Card> findById(Long id) {
+        Card card = null;
+        for(Card b : cards){
             if(b.getId() == id)
-                board = b;
+                card = b;
         }
-        return Optional.ofNullable(board);
+        return Optional.ofNullable(card);
     }
 
     @Override
     public boolean existsById(Long id) {
-        for(Board b : boards)
+        for(Card b : cards)
             if(b.getId() == id)
                 return true;
         return false;
@@ -114,17 +113,17 @@ public class TestBoardRepository implements BoardRepository {
     }
 
     @Override
-    public <S extends Board> S saveAndFlush(S entity) {
+    public <S extends Card> S saveAndFlush(S entity) {
         return null;
     }
 
     @Override
-    public <S extends Board> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends Card> List<S> saveAllAndFlush(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<Board> entities) {
+    public void deleteAllInBatch(Iterable<Card> entities) {
 
     }
 
@@ -139,54 +138,56 @@ public class TestBoardRepository implements BoardRepository {
     }
 
     @Override
-    public Board getOne(Long aLong) {
+    public Card getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public Board getById(Long id) {
+    public Card getById(Long id) {
         if(existsById(id)) {
-            Board board = null;
-            for(Board b : boards)
+            Card card = null;
+            for(Card b : cards)
                 if(b.getId() == id)
-                    board = b;
-            return board;
+                    card = b;
+            return card;
         }
         throw new IndexOutOfBoundsException();
     }
 
     @Override
-    public <S extends Board> Optional<S> findOne(Example<S> example) {
+    public <S extends Card> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends Board> List<S> findAll(Example<S> example) {
+    public <S extends Card> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends Board> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends Card> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends Board> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends Card> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends Board> long count(Example<S> example) {
+    public <S extends Card> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends Board> boolean exists(Example<S> example) {
+    public <S extends Card> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends Board, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends Card, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }
+
+
