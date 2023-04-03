@@ -1,5 +1,3 @@
-
-
 package commons;
 
 
@@ -183,31 +181,31 @@ public class Board {
 //  }
 
 
-  //Moved these methods here because we may need them at some point
-  //but right now they are either causing errors due to these getters not
-  //being linked to fields, or not being used.
+    //Moved these methods here because we may need them at some point
+    //but right now they are either causing errors due to these getters not
+    //being linked to fields, or not being used.
 
-  /*/**
-   * Gets the cardlistList.size() of the board.
-   * @return the cardlistList.size() of the cardlistList array.
-   */
+    /*/**
+     * Gets the cardlistList.size() of the board.
+     * @return the cardlistList.size() of the cardlistList array.
+     */
         /*public int getSize() {
             return cardlistList.size();
         }*/
 
-  /*/**
-   * Checks if the Cardlist is empty.
-   * @return true if it is empty, false if not.
-   */
+    /*/**
+     * Checks if the Cardlist is empty.
+     * @return true if it is empty, false if not.
+     */
         /*public boolean isEmpty() {
             return cardlistList.isEmpty();
         }*/
 
-  /*/**
-   * Returns the implicit head of the Cardlist.
-   *
-   * @return the first Cardlist of the board.
-   */
+    /*/**
+     * Returns the implicit head of the Cardlist.
+     *
+     * @return the first Cardlist of the board.
+     */
        /* public Cardlist getFirst() {
             Iterator iter = cardlistList.iterator();
             return (Cardlist) iter.next();
@@ -244,4 +242,3 @@ public class Board {
 //    return (Cardlist) iter.next();
 //  }
 }
-

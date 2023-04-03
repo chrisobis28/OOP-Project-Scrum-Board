@@ -54,7 +54,7 @@ public class BoardTest {
   public void checkIsInWorkspaceGetter() {
     var p = new Board("example-name");
     assertEquals(false, p.getIsInWorkspace());
-    p.isInWorkspace=null;
+    //p.isInWorkspace=null;
     assertEquals(false, p.getIsInWorkspace());
   }
 

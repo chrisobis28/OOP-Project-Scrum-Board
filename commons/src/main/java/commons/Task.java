@@ -1,15 +1,11 @@
 package commons;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.persistence.*;
 
 @Entity
 public class Task {
@@ -32,6 +28,8 @@ public class Task {
     this.description = description;
     this.completed_status = false;
   }
+
+  public long getId() {return id;  }
 
   public void setDescription(String description) {
     this.description = description;

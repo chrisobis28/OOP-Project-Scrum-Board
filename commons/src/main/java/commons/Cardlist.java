@@ -26,7 +26,9 @@ public class Cardlist{
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
   public List<Card> cardSet = new ArrayList<>();
 
-  public Cardlist(){}
+  public Cardlist(){
+      cardSet = new ArrayList<>();
+  }
 
   public Cardlist(String cardlistName){
     this.cardlistName = cardlistName;
@@ -115,5 +117,10 @@ public class Cardlist{
   @Override
   public String toString(){
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
+
+
+  public boolean contains(Card card) {
+    return cardSet.contains(card);
   }
 }
