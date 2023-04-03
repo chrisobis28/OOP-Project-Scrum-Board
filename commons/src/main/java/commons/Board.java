@@ -14,161 +14,161 @@ import java.util.*;
 public class Board {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    public Set<Cardlist> cardlistList;
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    public Set<Tag> tagList;
-    public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF";
-    public Boolean isInWorkspace;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  public long id;
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+  public List<Cardlist> cardlistList;
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+  public Set<Tag> tagList;
+  public String description = "", boardName = "", boardBackgroundColour = "#FFFFFF";
+  public Boolean isInWorkspace;
 
-    /**
-     * Constructor for the board.
-     */
-    public Board() {
-        cardlistList = new HashSet<>();
-        tagList = new HashSet<>();
-        isInWorkspace = false;
+  /**
+   * Constructor for the board.
+   */
+  public Board() {
+    cardlistList = new ArrayList<>();
+    tagList = new HashSet<>();
+    isInWorkspace = false;
+  }
+
+  /**
+   * Constructor for the board with String parameter
+   */
+  public Board(String boardName) {
+    cardlistList = new ArrayList<>();
+    this.boardName = boardName;
+    tagList = new HashSet<>();
+    isInWorkspace = false;
+  }
+
+  /**
+   * Add the Cardlist to the end of the board when a position is not specified
+   *
+   * @param l Cardlist to be inserted
+   *          Throws Runtime exception when l is null
+   */
+  public void add(Cardlist l) throws  NullPointerException{
+    if (l == null)
+      throw new NullPointerException();
+    cardlistList.add(l);
+  }
+
+  /**
+   * Returns a string formatted form of the board, containing all the cardlistList the board has.
+   *
+   * @return the string the method constructs.
+   */
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
+
+  /**
+   * Return the id of the board.
+   *
+   * @return Long integer representing the id of the board
+   */
+  @Lob
+  public long getId() {
+    return this.id;
+  }
+
+  /**
+   * Returns the description of the board, which is empty by default.
+   *
+   * @return the description of the board.
+   */
+  @Lob
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * Returns the boardName of the board, which is empty by default.
+   *
+   * @return the boardName of the board.
+   */
+  @Lob
+  public String getBoardName() {
+    return boardName;
+  }
+
+  /**
+   * Returns the colour of the board, which is white (FFFFFF in hexadecimal) by default.
+   *
+   * @return the colour of the board.
+   */
+  @Lob
+  public String getBoardBackgroundColour() {
+    return boardBackgroundColour;
+  }
+
+  /**
+   * Returns true if this Board is in the workspace, false otherwise.
+   * @return Boolean value describing whether the board is in the workspace
+   */
+  public Boolean getIsInWorkspace() {
+    //Adding a check in case the board was created before this mr
+    if (this.isInWorkspace == null) {
+      this.isInWorkspace = false;
     }
+    return this.isInWorkspace;
+  }
 
-    /**
-     * Constructor for the board with String parameter
-     */
-    public Board(String boardName) {
-        cardlistList = new HashSet<>();
-        this.boardName = boardName;
-        tagList = new HashSet<>();
-        isInWorkspace = false;
-    }
+  /**
+   * Changes state of the board being in the workspace.
+   */
+  public void changeWorkspaceState() {isInWorkspace = !isInWorkspace; }
 
-    /**
-     * Add the Cardlist to the end of the board when a position is not specified
-     *
-     * @param l Cardlist to be inserted
-     *          Throws Runtime exception when l is null
-     */
-    public void add(Cardlist l) throws  NullPointerException{
-        if (l == null)
-            throw new NullPointerException();
-        cardlistList.add(l);
-    }
+  /**
+   * Updates the description with the provided string.
+   *
+   * @param description the new description this board should have.
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    /**
-     * Returns a string formatted form of the board, containing all the cardlistList the board has.
-     *
-     * @return the string the method constructs.
-     */
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
+  /**
+   * Updates the boardName with the provided string.
+   *
+   * @param boardName the new boardName this board should have.
+   */
+  public void setBoardName(String boardName) {
+    this.boardName = boardName;
+  }
 
-    /**
-     * Return the id of the board.
-     *
-     * @return Long integer representing the id of the board
-     */
-    @Lob
-    public long getId() {
-        return this.id;
-    }
+  /**
+   * Getter for the list of cardlists in the board.
+   *
+   * @return list of all the cardlists.
+   */
+  @JsonManagedReference
+  public List<Cardlist> getCardlistList() {
+    return cardlistList;
+  }
 
-    /**
-     * Returns the description of the board, which is empty by default.
-     *
-     * @return the description of the board.
-     */
-    @Lob
-    public String getDescription() {
-        return description;
-    }
+  /**
+   * Updates the background colour of the board.
+   *
+   * @param boardBackgroundColour String containing the hexadecimal code of the new color.
+   */
+  public void setBoardBackgroundColour(String boardBackgroundColour) {
+    this.boardBackgroundColour = boardBackgroundColour;
+  }
 
-    /**
-     * Returns the boardName of the board, which is empty by default.
-     *
-     * @return the boardName of the board.
-     */
-    @Lob
-    public String getBoardName() {
-        return boardName;
-    }
-
-    /**
-     * Returns the colour of the board, which is white (FFFFFF in hexadecimal) by default.
-     *
-     * @return the colour of the board.
-     */
-    @Lob
-    public String getBoardBackgroundColour() {
-        return boardBackgroundColour;
-    }
-
-    /**
-     * Returns true if this Board is in the workspace, false otherwise.
-     * @return Boolean value describing whether the board is in the workspace
-     */
-    public Boolean getIsInWorkspace() {
-        //Adding a check in case the board was created before this mr
-        if (this.isInWorkspace == null) {
-            this.isInWorkspace = false;
-        }
-        return this.isInWorkspace;
-    }
-
-    /**
-     * Changes state of the board being in the workspace.
-     */
-    public void changeWorkspaceState() {isInWorkspace = !isInWorkspace; }
-
-    /**
-     * Updates the description with the provided string.
-     *
-     * @param description the new description this board should have.
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Updates the boardName with the provided string.
-     *
-     * @param boardName the new boardName this board should have.
-     */
-    public void setBoardName(String boardName) {
-        this.boardName = boardName;
-    }
-
-    /**
-     * Getter for the list of cardlists in the board.
-     *
-     * @return list of all the cardlists.
-     */
-    @JsonManagedReference
-    public Set<Cardlist> getCardlistList() {
-        return cardlistList;
-    }
-
-    /**
-     * Updates the background colour of the board.
-     *
-     * @param boardBackgroundColour String containing the hexadecimal code of the new color.
-     */
-    public void setBoardBackgroundColour(String boardBackgroundColour) {
-        this.boardBackgroundColour = boardBackgroundColour;
-    }
-
-    /**
-     * Boolean method that determines whether two boards are equal or not.
-     *
-     * @param o the object that we are comparing this to.
-     * @return a boolean with the truth value of the equality.
-     */
-    @Override
-    public boolean equals(Object o) {
-        return EqualsBuilder.reflectionEquals(this, o);
-    }
+  /**
+   * Boolean method that determines whether two boards are equal or not.
+   *
+   * @param o the object that we are comparing this to.
+   * @return a boolean with the truth value of the equality.
+   */
+  @Override
+  public boolean equals(Object o) {
+    return EqualsBuilder.reflectionEquals(this, o);
+  }
 //
 //  /**
 //   * Hashcode function

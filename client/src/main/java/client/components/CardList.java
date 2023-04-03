@@ -104,8 +104,6 @@ public class CardList extends AnchorPane {
                     System.out.println(cardId);
                     commons.Card commonCard = server.getCardById(cardId);
                     commonCard.setCardList(cardList);
-                    cardList.addCard(commonCard);
-                    server.editCardList(cardList);
                     Card card = new Card(boardViewCtrl, server, commonCard, this);
 
                     int index = cards.getChildren().size();
@@ -123,6 +121,26 @@ public class CardList extends AnchorPane {
                             }
                         }
                     }
+
+                    cardList.addCard(index, commonCard);
+                    server.editCardList(cardList);
+
+                    var board = server.getBoardById(boardViewCtrl.getId());
+                    commons.Cardlist proxy = null;
+                    int j = 0;
+                    int i = 0;
+                    for(commons.Cardlist cardlist : board.getCardlistList()){
+                        if(cardlist.getId() == cardList.getId()){
+                            proxy = cardlist;
+                            index = i;
+                            break;
+                        }
+                        i++;
+                    }
+
+                    board.getCardlistList().add(j, cardList);
+                    board.getCardlistList().remove(proxy);
+                    server.editBoard(board);
 
                     cards.getChildren().add(index, card);
                     success = true;
@@ -148,7 +166,7 @@ public class CardList extends AnchorPane {
     public void addCard(){
         commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
         commons.Card commonCard = server.addCard(cardToAdd);
-        cardList.addCard(commonCard);
+        cardList.addCard(cardList.getCardSet().size(), commonCard);
         sendEdit();
         boardViewCtrl.refreshBoard();
     }

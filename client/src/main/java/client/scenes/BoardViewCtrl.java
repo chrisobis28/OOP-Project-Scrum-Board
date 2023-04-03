@@ -142,7 +142,7 @@ public class BoardViewCtrl{
      * Add a board with a given name to the repo and to the workspace.
      * @param name The name of the new Board
      */
-    public void addNewBoard(String name) {
+    public WorkspaceBoard addNewBoard(String name) {
         long boardID = boardInRepo(name);
         if (boardID == -1) {
             Board newBoard = new Board(name);
@@ -152,6 +152,7 @@ public class BoardViewCtrl{
             b.setBoardName(name);
             b.setId(saved.getId());
             workspace.getChildren().add(b);
+            return b;
         }
         else {
             if (!server.getBoardById(boardID).getIsInWorkspace()) {
@@ -160,8 +161,10 @@ public class BoardViewCtrl{
                 b.setId(boardID);
                 workspace.getChildren().add(b);
                 server.getBoardById(boardID).changeWorkspaceState();
+                return b;
             }
         }
+        return null;
     }
 
     /**
@@ -334,6 +337,9 @@ public class BoardViewCtrl{
             }
         }
         server.deleteBoard(this.id);
+        if(boardToShow == null){
+            boardToShow = addNewBoard("New Board");
+        }
         showBoard(boardToShow);
         initializeWorkspace();
     }
