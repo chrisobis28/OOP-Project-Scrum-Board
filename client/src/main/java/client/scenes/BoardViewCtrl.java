@@ -438,17 +438,23 @@ public class BoardViewCtrl{
 
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue){
+                Board board1 = server.getBoardById(this.id);
+                board1.setBoardName(textField.getText());
+                server.editBoard(board1);
                 boardTitle.setText(textField.getText());
                 boardTitle.setGraphic(null);
-//                sendBoardToServer(boardTitle.getText());
+                initializeWorkspace();
             }
         });
 
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
+                Board board1 = server.getBoardById(this.id);
+                board1.setBoardName(textField.getText());
+                server.editBoard(board1);
                 boardTitle.setText(textField.getText());
                 boardTitle.setGraphic(null);
-//                sendBoardToServer(boardTitle.getText());
+                initializeWorkspace();
             }
             else if(e.getCode().equals(KeyCode.ESCAPE)){
                 boardTitle.setText(labelBackup);
