@@ -75,6 +75,7 @@ public class Card extends Pane {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             cardList.getCardList().removeCard(card);
             server.deleteCard(card.getId());
+            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
             boardViewCtrl.refreshBoard();
         }
     }
