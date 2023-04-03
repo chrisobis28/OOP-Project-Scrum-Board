@@ -89,14 +89,14 @@ public class Card extends Pane {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.getIcons().add(new Image("C:\\Users\\Chris\\oopp-team-51\\client\\src\\main\\resources\\icon.png"));
+            stage.getIcons().add(new Image("icon.png"));
             stage.show();
         }
         catch(IOException e){
             e.printStackTrace();
         }
 
-        cardDetailedViewCtrl.load(card);
+        cardDetailedViewCtrl.load(card,this);
     }
 
     public void initDrag(){

@@ -30,11 +30,7 @@ import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -55,7 +51,9 @@ public class ServerUtils {
   /**
    * Constructor with no parameters for ServerUtils.
    */
-  public ServerUtils() {}
+  public ServerUtils() {
+    this.session = connect("ws://localhost:8080/websocket");
+  }
 
   /**
    * Constructor with a parameter for ServerUtils.
@@ -63,6 +61,11 @@ public class ServerUtils {
    * @param address IP address of the server
    */
   public ServerUtils(String address) {
+    this.server = address;
+    this.session = connect("ws://localhost:8080/websocket");
+  }
+
+  public ServerUtils(String address, Boolean b) {
     this.server = address;
   }
 
@@ -72,16 +75,6 @@ public class ServerUtils {
    */
   public String getAdminPassword() {
     return adminPassword;
-  }
-
-  public void getQuotesTheHardWay() throws IOException {
-    var url = new URL("http://localhost:8080/api/quotes");
-    var is = url.openConnection().getInputStream();
-    var br = new BufferedReader(new InputStreamReader(is));
-    String line;
-    while ((line = br.readLine()) != null) {
-      System.out.println(line);
-    }
   }
 
   public List<Quote> getQuotes() {
@@ -378,7 +371,7 @@ public class ServerUtils {
     EXEC.shutdownNow();
   }
 
-  private StompSession session = connect("ws://localhost:8080/websocket");
+  private StompSession session;
 
   private StompSession connect(String destination){
     var client = new StandardWebSocketClient();

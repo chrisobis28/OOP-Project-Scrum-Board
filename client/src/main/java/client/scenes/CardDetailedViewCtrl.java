@@ -25,6 +25,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
     private ScrollPane tagsScrollPane;
 
     private Card card;
+    private client.components.Card componentCard;
 
     @FXML
     private Button addTaskButton;
@@ -38,8 +39,9 @@ public class CardDetailedViewCtrl extends AnchorPane {
         this.server = server;
     }
 
-    public void load(Card card){
+    public void load(Card card, client.components.Card compCard){
         this.card = card;
+        this.componentCard = compCard;
         cardTitleField.setText(this.card.getCardName());
         cardTitleField.setEditable(false);
         cardDescriptionField.setText(this.card.getCardDescription());
@@ -71,8 +73,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
         cardTitleField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 card.setCardName(cardTitleField.getText());
-                server.editCard(card);
-                server.editCardList(card.getCardlist());
+                componentCard.sendEdit();
                 cardTitleField.setEditable(false);
                 boardViewCtrl.refreshBoard();
             }
@@ -80,7 +81,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
         cardTitleField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 card.setCardName(cardTitleField.getText());
-                server.editCardList(card.getCardlist());
+                componentCard.sendEdit();
                 cardTitleField.setEditable(false);
                 boardViewCtrl.refreshBoard();
             }

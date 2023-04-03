@@ -18,7 +18,7 @@ import java.io.IOException;
 public class WorkspaceBoard extends HBox {
   private long id;
 
-  private final BoardViewCtrl boardViewCtrl;
+  private BoardViewCtrl boardViewCtrl;
 
   @FXML
   private Text boardName;
@@ -73,6 +73,23 @@ public class WorkspaceBoard extends HBox {
 
   //GETTERS AND SETTERS
 
+
+  /**
+   * Gets the board's controller.
+   * @return The board's controller instance
+   */
+  public BoardViewCtrl getBoardViewCtrl() {
+    return boardViewCtrl;
+  }
+
+  /**
+   * Sets the board's boardviewctrl field to the given BoardViewCtrl instance.
+   * @param boardViewCtrl the board's new controller
+   */
+  public void setBoardViewCtrl(BoardViewCtrl boardViewCtrl) {
+    this.boardViewCtrl = boardViewCtrl;
+  }
+
   /**
    * Get the board's name.
    *
@@ -100,4 +117,8 @@ public class WorkspaceBoard extends HBox {
    * @param id the new id of the board
    */
   public void setId(long id) { this.id = id; }
+
+  public Button getOpenButton() {
+    return this.open;
+  }
 }
