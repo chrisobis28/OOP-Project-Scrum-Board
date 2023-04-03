@@ -6,6 +6,7 @@ import commons.Cardlist;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -16,6 +17,7 @@ public class CardControllerTest {
     private TestCardRepository repo;
     private CardController cardController;
 
+    private SimpMessagingTemplate messagingTemplate;
     private Board z;
     private Cardlist a , b , c ;
     private Card x, y;
@@ -23,7 +25,7 @@ public class CardControllerTest {
     public void setup() {
         repo = new TestCardRepository();
 
-        cardController = new CardController(repo);
+        cardController = new CardController(repo, messagingTemplate);
         a = new Cardlist("a");
         b = new Cardlist("b");
         c = new Cardlist("c");
