@@ -1,6 +1,7 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
+import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cardlist;
@@ -37,6 +38,7 @@ public class CardList extends AnchorPane {
     private ServerUtils server;
 
     private Cardlist cardList;
+    private MainCtrl mainCtrl;
 
     /**
      * Card list constructor.
@@ -44,7 +46,8 @@ public class CardList extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public CardList(BoardViewCtrl boardViewCtrl, ServerUtils server, Cardlist cardList) {
+    public CardList(MainCtrl mainCtrl, BoardViewCtrl boardViewCtrl, ServerUtils server, Cardlist cardList) {
+        this.mainCtrl = mainCtrl;
         this.boardViewCtrl = boardViewCtrl;
         this.server = server;
         this.cardList = cardList;
