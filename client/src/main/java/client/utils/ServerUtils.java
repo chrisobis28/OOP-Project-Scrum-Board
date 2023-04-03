@@ -38,6 +38,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -58,7 +66,9 @@ public class ServerUtils {
   /**
    * Constructor with no parameters for ServerUtils.
    */
-  public ServerUtils() {}
+  public ServerUtils() {
+    this.session = connect("ws://localhost:8080/websocket");
+  }
 
   /**
    * Constructor with a parameter for ServerUtils.
@@ -66,6 +76,11 @@ public class ServerUtils {
    * @param address IP address of the server
    */
   public ServerUtils(String address) {
+    this.server = address;
+    this.session = connect("ws://localhost:8080/websocket");
+  }
+
+  public ServerUtils(String address, Boolean b) {
     this.server = address;
   }
 
@@ -75,16 +90,6 @@ public class ServerUtils {
    */
   public String getAdminPassword() {
     return adminPassword;
-  }
-
-  public void getQuotesTheHardWay() throws IOException {
-    var url = new URL("http://localhost:8080/api/quotes");
-    var is = url.openConnection().getInputStream();
-    var br = new BufferedReader(new InputStreamReader(is));
-    String line;
-    while ((line = br.readLine()) != null) {
-      System.out.println(line);
-    }
   }
 
   public List<Quote> getQuotes() {
@@ -347,43 +352,6 @@ public class ServerUtils {
             });
   }
 
-  private StompSession session = connect("ws://localhost:8080/");
-
-  private StompSession connect(String url) {
-    var client = new StandardWebSocketClient();
-    var stomp = new WebSocketStompClient(client);
-    stomp.setMessageConverter(new MappingJackson2MessageConverter());
-    try{
-      return stomp.connect(url, new StompSessionHandlerAdapter() {}).get();
-
-      }
-      catch(InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-      catch(ExecutionException e) {
-        throw new RuntimeException(e);
-      }
-    throw new IllegalStateException();
-    }
-
-    public void registerForMessages(String destination, Consumer<Board> boardconsumer){
-    session.subscribe(destination, new StompFrameHandler() {
-      @Override
-      public Type getPayloadType(StompHeaders headers) {
-        return Board.class;
-      }
-
-      @Override
-      public void handleFrame(StompHeaders headers, Object board) {
-        boardconsumer.accept((Board) board);
-      }
-    });
-  }
-
-  public void  send(String destination, Object object){
-    session.send(destination, object);
-  }
-
   //A separate thread so that the data synchronization can run in parallel.
   private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
 
@@ -417,4 +385,38 @@ public class ServerUtils {
   public void stop() {
     EXEC.shutdownNow();
   }
+
+  private StompSession session;
+
+  private StompSession connect(String destination){
+    var client = new StandardWebSocketClient();
+    var stomp = new WebSocketStompClient(client);
+    stomp.setMessageConverter(new MappingJackson2MessageConverter());
+    try{
+      return stomp.connect(destination, new StompSessionHandlerAdapter() {}).get();
+      }
+    catch (InterruptedException e){
+      Thread.currentThread().interrupt();
+    }
+    catch (ExecutionException e){
+      throw new RuntimeException();
+    }
+    throw new IllegalStateException();
+  }
+
+  public void registerForCards(String destination, Consumer<Card> cardConsumer){
+    session.subscribe(destination, new StompFrameHandler() {
+      @Override
+      public Type getPayloadType(StompHeaders headers) {
+        return Card.class;
+      }
+
+      @Override
+      public void handleFrame(StompHeaders headers, Object payload) {
+        cardConsumer.accept((Card) payload);
+      }
+    });
+  }
+
+
 }

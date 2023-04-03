@@ -29,6 +29,7 @@ dependencies {
 	
 	implementation 'org.openjfx:javafx-controls:19.0.2.1'
 	implementation 'org.openjfx:javafx-fxml:19.0.2.1'
+    implementation 'junit:junit:4.13.1'
 	// JUnit 5
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 

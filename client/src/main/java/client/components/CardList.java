@@ -1,6 +1,7 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
+import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cardlist;
@@ -37,6 +38,7 @@ public class CardList extends AnchorPane {
     private ServerUtils server;
 
     private Cardlist cardList;
+    private MainCtrl mainCtrl;
 
     /**
      * Card list constructor.
@@ -44,7 +46,8 @@ public class CardList extends AnchorPane {
      * @param boardViewCtrl the controller of the board on which this list resides.
      */
     @Inject
-    public CardList(BoardViewCtrl boardViewCtrl, ServerUtils server, Cardlist cardList) {
+    public CardList(MainCtrl mainCtrl, BoardViewCtrl boardViewCtrl, ServerUtils server, Cardlist cardList) {
+        this.mainCtrl = mainCtrl;
         this.boardViewCtrl = boardViewCtrl;
         this.server = server;
         this.cardList = cardList;
@@ -103,7 +106,7 @@ public class CardList extends AnchorPane {
                     commonCard.setCardList(cardList);
                     cardList.addCard(commonCard);
                     server.editCardList(cardList);
-                    Card card = new Card(server, commonCard, this);
+                    Card card = new Card(boardViewCtrl, server, commonCard, this);
 
                     int index = cards.getChildren().size();
                     if(index!= 0 && event.getY() < cards.getChildren().get(0).getBoundsInParent().getMinY()){
@@ -135,7 +138,7 @@ public class CardList extends AnchorPane {
 
     public void constructVBox(){
         for(commons.Card card : cardList.getCardSet()){
-            cards.getChildren().add(new Card(server, card, this));
+            cards.getChildren().add(new Card(boardViewCtrl, server, card, this));
         }
     }
 
@@ -143,11 +146,11 @@ public class CardList extends AnchorPane {
      * Add a card to this list.
      */
     public void addCard(){
-        commons.Card commonCard = server.addCard(new commons.Card("Name", "Description", cardList));
+        commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
+        commons.Card commonCard = server.addCard(cardToAdd);
         cardList.addCard(commonCard);
-        Card card = new Card(server, commonCard, this);
-        cards.getChildren().add(card);
-        server.editCardList(cardList);
+        sendEdit();
+        boardViewCtrl.refreshBoard();
     }
 
     /**
