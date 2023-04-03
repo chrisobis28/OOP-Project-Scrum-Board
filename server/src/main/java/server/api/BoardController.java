@@ -134,9 +134,7 @@ public class BoardController {
             listeners.remove(key);
         });
 
-        res.onTimeout(() ->
-                res.setErrorResult(
-                        ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)));
+
         return res;
     }
 
