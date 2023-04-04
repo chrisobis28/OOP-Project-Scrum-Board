@@ -65,6 +65,7 @@ public class AddCardlistCtrl {
             Cardlist cardlist = new Cardlist(name, board);
             board.add(cardlist);
             server.editBoard(board);
+
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);
