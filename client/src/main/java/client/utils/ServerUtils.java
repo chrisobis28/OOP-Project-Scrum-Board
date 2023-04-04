@@ -16,10 +16,7 @@
 
 package client.utils;
 
-import commons.Board;
-import commons.Card;
-import commons.Cardlist;
-import commons.Quote;
+import commons.*;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -143,6 +140,14 @@ public class ServerUtils {
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(card, APPLICATION_JSON), Card.class);
+  }
+
+  public Task addTask(Task task){
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path("api/tasks")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(task, APPLICATION_JSON), Task.class);
   }
 
   /**

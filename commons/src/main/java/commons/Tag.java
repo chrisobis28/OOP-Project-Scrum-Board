@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -44,6 +46,15 @@ public class Tag {
 
   public void setFontColour(String fontColour) {
     this.fontColour = fontColour;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  @JsonBackReference
+  public Card getCard() {
+    return card;
   }
 
   @Override

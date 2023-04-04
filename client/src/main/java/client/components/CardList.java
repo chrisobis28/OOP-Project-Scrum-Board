@@ -132,7 +132,7 @@ public class CardList extends AnchorPane {
                     for(commons.Cardlist cardlist : board.getCardlistList()){
                         if(cardlist.getId() == cardList.getId()){
                             proxy = cardlist;
-                            index = i;
+                            j = i;
                             break;
                         }
                         i++;

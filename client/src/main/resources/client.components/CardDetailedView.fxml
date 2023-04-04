@@ -33,25 +33,17 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button layoutX="312.0" layoutY="360.0" mnemonicParsing="false" text="ADD TASK" />
-      <Button layoutX="502.0" layoutY="360.0" mnemonicParsing="false" text="ADD TAG" />
-      <VBox layoutX="24.0" layoutY="240.0" prefHeight="118.0" prefWidth="361.0">
-         <children>
-            <ScrollPane fx:id="tasksScrollPane" prefHeight="163.0" prefWidth="337.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="270.0" prefWidth="345.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </VBox>
-      <VBox layoutX="409.0" layoutY="240.0" prefHeight="118.0" prefWidth="159.0">
-         <children>
-            <ScrollPane fx:id="tagsScrollPane" prefHeight="200.0" prefWidth="200.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="174.0" prefWidth="139.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </VBox>
+      <Button fx:id="addTaskButton" layoutX="324.0" layoutY="360.0" mnemonicParsing="false" text="ADD TASK" />
+      <Button fx:id="addTagButton" layoutX="502.0" layoutY="360.0" mnemonicParsing="false" text="ADD TAG" />
+      <ScrollPane fx:id="tagsScrollPane" layoutX="409.0" layoutY="240.0" prefHeight="118.0" prefWidth="159.0">
+         <content>
+            <VBox fx:id="tagsVBOX" prefHeight="100.0" prefWidth="156.0" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="24.0" layoutY="240.0" prefHeight="118.0" prefWidth="369.0" style="-fx-background-color: #c5d1c9;">
+         <content>
+            <VBox fx:id="tasksVBOX" prefHeight="114.0" prefWidth="345.0" style="-fx-background-color: #c5d1c9;" />
+         </content>
+      </ScrollPane>
    </children>
 </fx:root>
