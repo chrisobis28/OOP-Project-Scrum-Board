@@ -31,6 +31,10 @@ public class Task {
     this.completed_status = false;
   }
 
+  public Task(String description){
+    this.description = description;
+  }
+
   public long getId() {return id;  }
 
   public void setDescription(String description) {
