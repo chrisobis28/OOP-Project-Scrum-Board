@@ -156,15 +156,19 @@ public class BoardViewCtrl{
             b.setBoardName(name);
             b.setId(saved.getId());
             workspace.getChildren().add(b);
+            showBoard(b);
             return b;
         }
         else {
-            if (!server.getBoardById(boardID).getIsInWorkspace()) {
+            Board board1 = server.getBoardById(boardID);
+            if (!board1.getIsInWorkspace()) {
                 var b = new WorkspaceBoard(this);
                 b.setBoardName(name);
                 b.setId(boardID);
                 workspace.getChildren().add(b);
-                server.getBoardById(boardID).changeWorkspaceState();
+                board1.changeWorkspaceState();
+                server.editBoard(board1);
+                showBoard(b);
                 return b;
             }
         }
@@ -345,15 +349,7 @@ public class BoardViewCtrl{
         translate.setToX(-300);
         translate.play();
         refreshBoard();
-        /*server.registerForCards("/topic/cards", card -> {
-            for (Node node : board.getChildren()) {
-                CardList clist = (CardList) node;
-                if (clist.getCardlistId()==card.getCardlist().getId()) {
-                    client.components.Card card1 = new client.components.Card(server, card, clist);
-                    clist.getChildren().add(card1);
-                }
-            }
-        });*/
+        server.registerForCards("/topic/cards", card -> refreshBoard());
 
         scrollpane.setFitToHeight(true);
         scrollpane.setFitToWidth(true);
@@ -457,8 +453,4 @@ public class BoardViewCtrl{
         server.stop();
     }
 
-//    public void sendBoardToServer(String text){
-//        Board board = new Board(id, text);
-//        server.editBoard(board);
-//    }
 }
