@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.components.CardList;
 import client.components.WorkspaceBoard;
+import client.services.ClientServices;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.Card;
@@ -62,6 +63,8 @@ public class BoardViewCtrl{
 
     private final MainCtrl mainCtrl;
 
+    private ClientServices services;
+
     /**
      * Constructor for the BoardViewCtrl
      *
@@ -71,6 +74,7 @@ public class BoardViewCtrl{
     public BoardViewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
         this.server = server;
+        this.services = new ClientServices(server);
         adminLoggedIn = false;
     }
 
@@ -143,7 +147,7 @@ public class BoardViewCtrl{
      * @param name The name of the new Board
      */
     public WorkspaceBoard addNewBoard(String name) {
-        long boardID = boardInRepo(name);
+        long boardID = services.boardInRepo(name);
         if (boardID == -1) {
             Board newBoard = new Board(name);
             newBoard.changeWorkspaceState();
@@ -176,22 +180,6 @@ public class BoardViewCtrl{
         this.id = boardToShow.getBoardId();
         this.boardTitle.setText(boardToShow.getBoardName().getText());
         refreshBoard();
-    }
-
-    /**
-     * Function that checks whether a board with a given name is in the database.
-     *
-     * @param name The name of the board to be checked
-     * @return the board's id if the board is present in the repo, -1 otherwise
-     */
-    public long boardInRepo(String name) {
-        if (server.getBoardList().isEmpty())
-            return -1;
-        for (Board board : server.getBoardList()) {
-            if (board.getBoardName().equals(name))
-                return board.getId();
-        }
-        return -1;
     }
 
     /**
@@ -438,17 +426,22 @@ public class BoardViewCtrl{
 
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue){
+                services.editBoardNameById(this.id, textField.getText());
+                Board board1 = server.getBoardById(this.id);
+                board1.setBoardName(textField.getText());
+                server.editBoard(board1);
                 boardTitle.setText(textField.getText());
                 boardTitle.setGraphic(null);
-//                sendBoardToServer(boardTitle.getText());
+                initializeWorkspace();
             }
         });
 
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
+                services.editBoardNameById(this.id, textField.getText());
                 boardTitle.setText(textField.getText());
                 boardTitle.setGraphic(null);
-//                sendBoardToServer(boardTitle.getText());
+                initializeWorkspace();
             }
             else if(e.getCode().equals(KeyCode.ESCAPE)){
                 boardTitle.setText(labelBackup);
