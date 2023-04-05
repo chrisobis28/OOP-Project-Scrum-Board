@@ -77,23 +77,6 @@ public class ServerUtils {
     return adminPassword;
   }
 
-  public List<Quote> getQuotes() {
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/quotes") //
-            .request(APPLICATION_JSON) //
-            .accept(APPLICATION_JSON) //
-            .get(new GenericType<List<Quote>>() {
-            });
-  }
-
-  public Quote addQuote(Quote quote) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/quotes") //
-            .request(APPLICATION_JSON) //
-            .accept(APPLICATION_JSON) //
-            .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-  }
-
   /**
    * Function to check validity of an IP address by checking if the output is the same
    *     as the output from the local server.

@@ -56,7 +56,6 @@ public class WelcomeScreenCtrl {
    */
   public void connect() {
     System.out.println("You tried to connect to: " + serverInput.getText());
-    serverInput.setText("http://localhost:8080");
     this.server = new ServerUtils(serverInput.getText());
     if (this.server.checkServerValidity()) {
       //switch to board scene.
@@ -89,7 +88,6 @@ public class WelcomeScreenCtrl {
     if (Objects.requireNonNull(e.getCode()) == KeyCode.ENTER) {
       connect();
     }
-
     e.consume();
   }
 }
