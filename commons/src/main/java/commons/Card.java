@@ -1,6 +1,7 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -71,10 +72,12 @@ public class Card {
     return id;
   }
 
+  @JsonManagedReference
   public List<Task> getTaskList() {
     return taskList;
   }
 
+  @JsonManagedReference
   public List<Tag> getTagList() {
     return tagList;
   }

@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,9 +25,14 @@ public class Task {
 
   public Task(){}
 
+  public Task(String description, Card card){
+    this.description = description;
+    this.card = card;
+    this.completed_status = false;
+  }
+
   public Task(String description){
     this.description = description;
-    this.completed_status = false;
   }
 
   public long getId() {return id;  }
@@ -37,6 +43,19 @@ public class Task {
 
   public void complete(){
     completed_status = true;
+  }
+
+  public boolean isCompleted_status() {
+    return completed_status;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  @JsonBackReference
+  public Card getCard(){
+    return this.card;
   }
 
   @Override
