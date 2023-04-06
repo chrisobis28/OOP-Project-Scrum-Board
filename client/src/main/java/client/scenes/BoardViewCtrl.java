@@ -44,9 +44,13 @@ public class BoardViewCtrl{
     @FXML
     private FlowPane board;
     @FXML
+    private FlowPane tagsPane;
+    @FXML
     private Button newListButton, adminLogin;
     @FXML
     private Button refreshButton, leaveBoardButton, deleteBoardButton;
+    @FXML
+    private Button addTagButton;
     @FXML
     private Label boardTitle;
     @FXML
@@ -451,6 +455,10 @@ public class BoardViewCtrl{
      */
     public void stop() {
         server.stop();
+    }
+
+    public void addTag(){
+
     }
 
 }

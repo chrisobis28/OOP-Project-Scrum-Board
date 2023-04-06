@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.components.TagView;
 import client.components.TaskView;
 import client.utils.ServerUtils;
 import commons.Card;
@@ -55,7 +56,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
             addTaskToVBOX(task);
         }
         for(Tag tag : this.card.getTagList()){
-            //to be updated
+            addTagToVBOX(tag);
         }
         this.setTextFunctionalities();
         this.setButtons();
@@ -94,7 +95,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
 
         cardDescriptionField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                card.setCardName(cardDescriptionField.getText());
+                card.setCardDescription(cardDescriptionField.getText());
                 componentCard.sendEdit();
                 cardDescriptionField.setEditable(false);
                 boardViewCtrl.refreshBoard();
@@ -121,14 +122,27 @@ public class CardDetailedViewCtrl extends AnchorPane {
         Task otherTask = server.addTask(task);
         card.getTaskList().add(otherTask);
         componentCard.sendEdit();
-        //STOP HERE IN CASE
         addTaskToVBOX(otherTask);
+    }
+
+    public void addTagToVBOX(Tag tag){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/TagView.fxml"));
+        TagView tagView = new TagView(tag, componentCard);
+        fxmlLoader.setController(tagView);
+        try{
+            Parent root = fxmlLoader.load();
+            tagView.loadTagView();
+            tagsVBOX.getChildren().add(root);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void addTaskToVBOX(Task task){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/TaskView.fxml"));
-        TaskView taskView = new TaskView(task);
+        TaskView taskView = new TaskView(task, this);
         fxmlLoader.setController(taskView);
+
         try{
             Parent root = fxmlLoader.load();
             taskView.loadTaskView();
@@ -136,5 +150,40 @@ public class CardDetailedViewCtrl extends AnchorPane {
         } catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public client.components.Card getComponentCard() {
+        return componentCard;
+    }
+
+    public void deleteTask(Task task){
+        int index = card.getTaskList().indexOf(task);
+        card.getTaskList().remove(task);
+        tasksVBOX.getChildren().remove(index);
+        componentCard.sendEdit();
+    }
+
+    public void moveTaskUp(Task task){
+        int index = card.getTaskList().indexOf(task);
+        if(index!=0){
+            var x = tasksVBOX.getChildren().remove(index);
+            tasksVBOX.getChildren().add(index-1, x);
+            var a = card.getTaskList().remove(index);
+            card.getTaskList().add(index-1, a);
+        }
+    }
+
+    public void moveTaskDown(Task task){
+        int index = card.getTaskList().indexOf(task);
+        if(index!=tasksVBOX.getChildren().size()-1){
+            var x = tasksVBOX.getChildren().remove(index);
+            tasksVBOX.getChildren().add(index+1, x);
+            var a = card.getTaskList().remove(index);
+            card.getTaskList().add(index+1, a);
+        }
+    }
+
+    public VBox getTasksVBOX() {
+        return tasksVBOX;
     }
 }

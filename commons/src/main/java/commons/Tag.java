@@ -52,6 +52,14 @@ public class Tag {
     return board;
   }
 
+  public String getTagName() {
+    return tagName;
+  }
+
+  public String getBackgroundColour() {
+    return backgroundColour;
+  }
+
   @JsonBackReference
   public Card getCard() {
     return card;
