@@ -1,20 +1,18 @@
 package client.scenes;
 
+import client.services.ClientServices;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Board;
-import commons.Cardlist;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddCardlistCtrl {
 
+    private ClientServices services;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private Stage stage;
@@ -31,6 +29,7 @@ public class AddCardlistCtrl {
         this.mainCtrl = mainCtrl;
         this.server = server;
         this.boardViewCtrl = boardViewCtrl;
+        this.services = new ClientServices(server);
     }
 
     /**
@@ -61,17 +60,9 @@ public class AddCardlistCtrl {
         else name = listName.getText();
 
         try {
-            Board board = server.getBoardById(boardViewCtrl.getId());
-            Cardlist cardlist = new Cardlist(name, board);
-            board.add(cardlist);
-            server.editBoard(board);
-
+            services.addListToBoardService(name, boardViewCtrl.getId());
         } catch (WebApplicationException e) {
-
-            var alert = new Alert(Alert.AlertType.ERROR);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            services.showNewAlert(e);
             return;
         }
         stage.close();
