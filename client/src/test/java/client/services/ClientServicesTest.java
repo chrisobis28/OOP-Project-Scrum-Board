@@ -2,7 +2,10 @@ package client.services;
 
 import client.utils.ServerUtils;
 import commons.Board;
+import commons.Card;
+import commons.Cardlist;
 import org.checkerframework.checker.units.qual.C;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -11,10 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientServicesTest {
@@ -22,9 +24,15 @@ public class ClientServicesTest {
   @Mock
   ServerUtils serverMock;
 
+  ClientServices service;
+
+  @BeforeEach
+  public void setup() {
+    service = new ClientServices(serverMock);
+  }
+
   @Test
   public void checkBoardInRepo() {
-    ClientServices service = new ClientServices(serverMock);
     List<Board> boardList = new ArrayList<>();
     when(serverMock.getBoardList()).thenReturn(boardList);
     //test empty server list
@@ -39,11 +47,69 @@ public class ClientServicesTest {
 
   @Test
   public void checkEditBoardNameById() {
-    ClientServices service = new ClientServices(serverMock);
     Board board = new Board("name");
     when(serverMock.getBoardById(anyLong())).thenReturn(board);
-    doNothing().when(serverMock).editBoard(any());
     service.editBoardNameById(3,"newName");
     assertEquals("newName", board.getBoardName());
+  }
+
+  @Test
+  public void checkAddListToBoard() {
+    Board board = new Board("name");
+    Cardlist cardlist = new Cardlist("name", board);
+    doNothing().when(serverMock).editBoard(any());
+    when(serverMock.getBoardById(anyLong())).thenReturn(board);
+    when(serverMock.addCardList(any())).thenReturn(cardlist);
+    service.addListToBoardService("name", 3);
+    assertTrue(board.getCardlistList().contains(cardlist));
+
+    //Check whether methods were called on the mock object
+    verify(serverMock).getBoardById(anyLong());
+    verify(serverMock).addCardList(any());
+    verify(serverMock).editBoard(any());
+  }
+
+  @Test
+  public void checkCreateNewBoard() {
+    when(serverMock.addBoard(any())).thenReturn(new Board());
+    Board board = service.createNewBoard("great");
+    assertEquals(true, board.getIsInWorkspace());
+    assertEquals("great", board.getBoardName());
+
+    //Check whether methods were called on the mock object
+    verify(serverMock).addBoard(any());
+  }
+
+  @Test
+  public void checkWorkspaceStateChange() {
+    Board board = new Board("board");
+    doNothing().when(serverMock).editBoard(any());
+    service.changeWorkspaceStateService(board);
+    assertEquals(true, board.getIsInWorkspace());
+
+    //Check whether methods were called on the mock object
+    verify(serverMock).editBoard(any());
+  }
+
+  @Test
+  public void checkGetFirstBoardInWorkspace() {
+    List<Board> boards = new ArrayList<>();
+    when(serverMock.getBoardList()).thenReturn(boards);
+
+    //check that empty list of boards returns a null
+    assertNull(service.getFirstBoardInWorkspaceService());
+
+    //check that a list with no boards in the workspace returns null
+    boards.add(new Board("name"));
+    assertNull(service.getFirstBoardInWorkspaceService());
+
+    //check whether a list with a boards in the workspace correctly returns the first one.
+    Board goodBoard = new Board("good");
+    goodBoard.changeWorkspaceState();
+    boards.add(goodBoard);
+    Board secondBoard = new Board("fine");
+    secondBoard.changeWorkspaceState();
+    boards.add(secondBoard);
+    assertEquals(goodBoard, service.getFirstBoardInWorkspaceService());
   }
 }

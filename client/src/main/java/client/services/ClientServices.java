@@ -43,13 +43,23 @@ public class ClientServices {
     server.editBoard(board1);
   }
 
+  /**
+   * Adds a cardlist with a given name to the board with the given id.
+   * @param name The name of the new cardlist
+   * @param boardId The id of the board to be updated
+   */
   public void addListToBoardService(String name, long boardId) {
     Board board = server.getBoardById(boardId);
     Cardlist cardlist = new Cardlist(name, board);
-    board.add(cardlist);
+    Cardlist saved = server.addCardList(cardlist);
+    board.add(saved);
     server.editBoard(board);
   }
 
+  /**
+   * Shows an alert with a given exception message.
+   * @param e The exception message to be shown.
+   */
   public void showNewAlert(Exception e) {
     var alert = new Alert(Alert.AlertType.ERROR);
     alert.initModality(Modality.APPLICATION_MODAL);
@@ -57,6 +67,11 @@ public class ClientServices {
     alert.showAndWait();
   }
 
+  /**
+   * Creates a new Board instance with the given name and adds it to the db and to the workspace.
+   * @param name The name of the new Board
+   * @return The instance of the created board.
+   */
   public Board createNewBoard(String name) {
     Board newBoard = new Board(name);
     newBoard.changeWorkspaceState();
@@ -64,11 +79,20 @@ public class ClientServices {
     return newBoard;
   }
 
+  /**
+   * Changes the given Board's workspace state and sends the update to the database.
+   * @param board The board to be updated
+   */
   public void changeWorkspaceStateService(Board board) {
     board.changeWorkspaceState();
     server.editBoard(board);
   }
 
+  /**
+   * Finds and returns the first board that is present in the workspace.
+   * @return Board instance of the first board in the workspace, null if there
+   * is no board in the workspace.
+   */
   public Board getFirstBoardInWorkspaceService() {
     for (Board b : server.getBoardList())
       if (b.getIsInWorkspace()) {
