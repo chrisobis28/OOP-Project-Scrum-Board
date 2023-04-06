@@ -1,7 +1,6 @@
 package server.api;
 
 
-import commons.Board;
 import commons.Task;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
