@@ -34,32 +34,21 @@
         <padding>
             <Insets left="10.0" />
         </padding>
-        <HBox alignment="CENTER" prefHeight="36.0" prefWidth="442.0" spacing="5.0">
-            <padding>
-                <Insets top="10.0" />
-            </padding>
-            <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="140.0" prefHeight="26.0" prefWidth="281.0" promptText="Search for a board..." style="-fx-background-color: #80808020;">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin></TextField>
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#search" prefHeight="25.0" prefWidth="33.0" text="OK">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-        </HBox>
-        <Label fx:id="boardTitle" alignment="TOP_LEFT" text="Board Name" textAlignment="CENTER">
+        <Label fx:id="boardTitle" alignment="CENTER" prefHeight="53.0" prefWidth="219.0" style="-fx-background-color: rgb(250,250,250); -fx-background-radius: 100;" text="Board Name" textAlignment="CENTER">
             <font>
                 <Font size="36.0" />
             </font>
             <padding>
-                <Insets bottom="10.0" top="10.0" />
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
             </padding>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
         </Label>
-      <ScrollPane fx:id="scrollpane" pannable="true" prefHeight="455.0" prefWidth="734.0" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollpane" prefHeight="455.0" prefWidth="734.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="38.0" />
          </VBox.margin>
@@ -116,6 +105,6 @@
          <Image url="@/closeButton.png" />
       </image>
    </ImageView>
-   <Button fx:id="deleteBoardButton" onAction="#deleteBoard" mnemonicParsing="false" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" />
-   <Button fx:id="leaveBoardButton" onAction="#leaveBoard" mnemonicParsing="false" text="Leave Board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="215.0" />
+   <Button fx:id="deleteBoardButton" mnemonicParsing="false" onAction="#deleteBoard" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" />
+   <Button fx:id="leaveBoardButton" mnemonicParsing="false" onAction="#leaveBoard" text="Leave Board" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="215.0" />
 </AnchorPane>

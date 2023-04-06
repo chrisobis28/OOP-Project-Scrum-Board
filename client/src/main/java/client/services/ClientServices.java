@@ -2,6 +2,9 @@ package client.services;
 
 import client.utils.ServerUtils;
 import commons.Board;
+import commons.Cardlist;
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,5 +41,39 @@ public class ClientServices {
     Board board1 = server.getBoardById(id);
     board1.setBoardName(name);
     server.editBoard(board1);
+  }
+
+  public void addListToBoardService(String name, long boardId) {
+    Board board = server.getBoardById(boardId);
+    Cardlist cardlist = new Cardlist(name, board);
+    board.add(cardlist);
+    server.editBoard(board);
+  }
+
+  public void showNewAlert(Exception e) {
+    var alert = new Alert(Alert.AlertType.ERROR);
+    alert.initModality(Modality.APPLICATION_MODAL);
+    alert.setContentText(e.getMessage());
+    alert.showAndWait();
+  }
+
+  public Board createNewBoard(String name) {
+    Board newBoard = new Board(name);
+    newBoard.changeWorkspaceState();
+    server.addBoard(newBoard);
+    return newBoard;
+  }
+
+  public void changeWorkspaceStateService(Board board) {
+    board.changeWorkspaceState();
+    server.editBoard(board);
+  }
+
+  public Board getFirstBoardInWorkspaceService() {
+    for (Board b : server.getBoardList())
+      if (b.getIsInWorkspace()) {
+        return b;
+      }
+    return null;
   }
 }
