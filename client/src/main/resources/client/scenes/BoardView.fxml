@@ -34,30 +34,19 @@
         <padding>
             <Insets left="10.0" />
         </padding>
-        <HBox alignment="CENTER" prefHeight="36.0" prefWidth="442.0" spacing="5.0">
-            <padding>
-                <Insets top="10.0" />
-            </padding>
-            <TextField fx:id="searchKey" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="140.0" prefHeight="26.0" prefWidth="281.0" promptText="Search for a board..." style="-fx-background-color: #80808020;">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin></TextField>
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#search" prefHeight="25.0" prefWidth="33.0" text="OK">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-        </HBox>
-        <Label fx:id="boardTitle" alignment="TOP_LEFT" onDragDetected="#addTag" text="Board Name" textAlignment="CENTER">
+        <Label fx:id="boardTitle" alignment="CENTER" onDragDetected="#addTag" prefHeight="53.0" prefWidth="219.0" style="-fx-background-color: rgb(250,250,250); -fx-background-radius: 100;" text="Board Name" textAlignment="CENTER">
             <font>
                 <Font size="36.0" />
             </font>
             <padding>
-                <Insets bottom="10.0" top="10.0" />
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
             </padding>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
         </Label>
       <Button fx:id="addTagButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-alignment: center;" text="Add a Tag" textAlignment="CENTER" />
       <ScrollPane prefHeight="49.0" prefWidth="578.0">

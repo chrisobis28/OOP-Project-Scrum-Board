@@ -83,13 +83,6 @@ public class BoardViewCtrl{
     }
 
     /**
-     * Searches the database for a board with the name in the searchbar
-     */
-    public void search(){
-        //TODO: search function
-    }
-
-    /**
      * For handling e key pressed
      *
      * @param e the event when a key is pressed
@@ -152,31 +145,31 @@ public class BoardViewCtrl{
      */
     public WorkspaceBoard addNewBoard(String name) {
         long boardID = services.boardInRepo(name);
+        if(boardID!= -1 && server.getBoardById(boardID).getIsInWorkspace())
+            return null;
+
+        WorkspaceBoard b = null;
         if (boardID == -1) {
-            Board newBoard = new Board(name);
-            newBoard.changeWorkspaceState();
-            Board saved = server.addBoard(newBoard);
-            var b = new WorkspaceBoard(this);
-            b.setBoardName(name);
-            b.setId(saved.getId());
-            workspace.getChildren().add(b);
-            showBoard(b);
-            return b;
+            Board board1 = services.createNewBoard(name);
+            b = initWorkspaceBoard(name, board1.getId());
         }
         else {
             Board board1 = server.getBoardById(boardID);
             if (!board1.getIsInWorkspace()) {
-                var b = new WorkspaceBoard(this);
-                b.setBoardName(name);
-                b.setId(boardID);
-                workspace.getChildren().add(b);
-                board1.changeWorkspaceState();
-                server.editBoard(board1);
-                showBoard(b);
-                return b;
+                b = initWorkspaceBoard(name, boardID);
+                services.changeWorkspaceStateService(board1);
             }
         }
-        return null;
+        showBoard(b);
+        return b;
+    }
+
+    public WorkspaceBoard initWorkspaceBoard(String name, long savedId) {
+        var b = new WorkspaceBoard(this);
+        b.setBoardName(name);
+        b.setId(savedId);
+        workspace.getChildren().add(b);
+        return b;
     }
 
     /**
@@ -224,20 +217,14 @@ public class BoardViewCtrl{
         workspace.getChildren().clear();
         for (Board board : server.getBoardList()) {
             if (board.getIsInWorkspace()) {
-                var b = new WorkspaceBoard(this);
-                b.setBoardName(board.getBoardName());
-                b.setId(board.getId());
-                workspace.getChildren().add(b);
+                initWorkspaceBoard(board.getBoardName(), board.getId());
             }
         }
         //add boards not in the workspace if the user is logged in as an admin
         if (this.adminLoggedIn) {
             for (Board board : server.getBoardList()) {
                 if (!board.getIsInWorkspace()) {
-                    var b = new WorkspaceBoard(this);
-                    b.setBoardName(board.getBoardName());
-                    b.setId(board.getId());
-                    workspace.getChildren().add(b);
+                    initWorkspaceBoard(board.getBoardName(), board.getId());
                 }
             }
         }
@@ -301,8 +288,7 @@ public class BoardViewCtrl{
         //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
         Board board = server.getBoardById(this.getId());
         if (board.getIsInWorkspace()) {
-            board.changeWorkspaceState();
-            server.editBoard(board);
+            services.changeWorkspaceStateService(board);
             //deletes the board with this name from the workspace, not showing it anymore,
             //so we can find a new board to show
             for (Node node : workspace.getChildren()) {
@@ -382,20 +368,14 @@ public class BoardViewCtrl{
             //Case where there are no boards created.
             //Creates a new board.
             boardTitle.setText("Board Name");
-            Board board = new Board(boardTitle.getText());
-            board.changeWorkspaceState();
-            Board saved = server.addBoard(board);
+            Board saved = services.createNewBoard(boardTitle.getText());
             this.id = saved.getId();
         } else {
             //Case where boards already exist.
             //Gets first board in the workspace.
-            for(Board b : server.getBoardList()) {
-                if(b.getIsInWorkspace()) {
-                    boardTitle.setText(b.boardName);
-                    this.id = b.getId();
-                    break;
-                }
-            }
+            var b = services.getFirstBoardInWorkspaceService();
+            this.id = b.getId();
+            boardTitle.setText(b.boardName);
         }
 
         //When you update the board, run the refresh board method.
@@ -426,28 +406,28 @@ public class BoardViewCtrl{
 
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue){
-                services.editBoardNameById(this.id, textField.getText());
-                Board board1 = server.getBoardById(this.id);
-                board1.setBoardName(textField.getText());
-                server.editBoard(board1);
-                boardTitle.setText(textField.getText());
-                boardTitle.setGraphic(null);
-                initializeWorkspace();
+                confirmChange(textField);
             }
         });
 
         textField.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.ENTER)){
-                services.editBoardNameById(this.id, textField.getText());
-                boardTitle.setText(textField.getText());
-                boardTitle.setGraphic(null);
-                initializeWorkspace();
+                confirmChange(textField);
             }
             else if(e.getCode().equals(KeyCode.ESCAPE)){
-                boardTitle.setText(labelBackup);
-                boardTitle.setGraphic(null);
+                changeTitle(labelBackup);
             }
         });
+    }
+
+    public void confirmChange(TextField tf) {
+        services.editBoardNameById(this.id, tf.getText());
+        changeTitle(tf.getText());
+        initializeWorkspace();
+    }
+    public void changeTitle(String newTitle) {
+        boardTitle.setText(newTitle);
+        boardTitle.setGraphic(null);
     }
 
     /**
