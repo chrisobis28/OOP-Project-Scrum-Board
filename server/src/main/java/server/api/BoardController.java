@@ -121,7 +121,6 @@ public class BoardController {
      */
     @GetMapping(path = {"/update"})
     public DeferredResult<ResponseEntity<Board>> getUpdates() {
-        System.out.println("I have been called upon!");
         var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         var res = new DeferredResult<ResponseEntity<Board>>(5000L, noContent);
 
