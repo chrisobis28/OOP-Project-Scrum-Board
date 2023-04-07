@@ -2,11 +2,28 @@
 
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="40.0" prefWidth="150.0" style="-fx-border-color: #73877a; -fx-border-width: 5px; -fx-border-radius: 15px; -fx-background-color: #c5d1c9;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="40.0" prefWidth="194.0" style="-fx-border-color: #73877a; -fx-border-width: 5px; -fx-border-radius: 15px; -fx-background-color: #c5d1c9;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <CheckBox fx:id="checkBox" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" />
         <Label fx:id="label" layoutX="37.0" layoutY="13.0" prefHeight="17.0" prefWidth="69.0" text="Label" />
+      <ImageView fx:id="moveUp" fitHeight="17.0" fitWidth="17.0" layoutX="122.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../up.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="moveDown" fitHeight="17.0" fitWidth="17.0" layoutX="142.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../down.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="deleteTask" fitHeight="17.0" fitWidth="17.0" layoutX="163.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../closeButton.png" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>
