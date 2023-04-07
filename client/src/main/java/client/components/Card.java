@@ -39,6 +39,21 @@ public class Card extends Pane {
     @FXML
     private ImageView edit;
 
+    /**
+     * Constructor to help with testing by removing the fxml part.
+     * @param boardViewCtrl controller of the card
+     * @param server server of the card
+     * @param card the associated commons card
+     * @param cardList the card's cardlist
+     * @param b the boolean to differentiate between the two constructors
+     */
+    public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList, Boolean b) {
+        this.server = server;
+        this.card = card;
+        this.cardList = cardList;
+        this.boardViewCtrl = boardViewCtrl;
+    }
+
     public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
         this.server = server;
         this.card = card;
@@ -124,9 +139,9 @@ public class Card extends Pane {
         return cardList;
     }
 
-    public String getTitle(){
-        return this.title.getText();
-    }
+//    public String getTitle(){
+//        return this.title.getText();
+//    }
 
     /**
      * Allow the user to edit a list title by showing a TextField over the label
@@ -197,7 +212,7 @@ public class Card extends Pane {
         return card;
     }
 
-    public void setTitle(String title){
-        this.title.setText(title);
-    }
+//    public void setTitle(String title){
+//        this.title.setText(title);
+//    }
 }

@@ -154,11 +154,11 @@ public class CardList extends AnchorPane {
         });
     }
 
-    public void constructVBox(){
+    /*public void constructVBox(){
         for(commons.Card card : cardList.getCardSet()){
             cards.getChildren().add(new Card(boardViewCtrl, server, card, this));
         }
-    }
+    }*/
 
     /**
      * Add a card to this list.
@@ -268,27 +268,27 @@ public class CardList extends AnchorPane {
 
     // GETTERS AND SETTERS
 
-    /**
-     * Get the list name.
-     *
-     * @return Label with the list name.
-     */
-    public Label getListname() {
-        return listname;
-    }
+//    /**
+//     * Get the list name.
+//     *
+//     * @return Label with the list name.
+//     */
+//    public Label getListname() {
+//        return listname;
+//    }
 
     public Cardlist getCardList() {
         return cardList;
     }
 
-    /**
-     * Sets the list name to be a given String.
-     *
-     * @param listname the updated name of the list.
-     */
-    public void setListname(String listname) {
-        this.listname.setText(listname);
-    }
+//    /**
+//     * Sets the list name to be a given String.
+//     *
+//     * @param listname the updated name of the list.
+//     */
+//    public void setListname(String listname) {
+//        this.listname.setText(listname);
+//    }
 
     /**
      * Gets the VBox containing the tasks.
