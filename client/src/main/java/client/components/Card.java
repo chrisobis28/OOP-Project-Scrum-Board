@@ -120,6 +120,14 @@ public class Card extends Pane {
         });
     }
 
+    public CardList getCardList() {
+        return cardList;
+    }
+
+    public String getTitle(){
+        return this.title.getText();
+    }
+
     /**
      * Allow the user to edit a list title by showing a TextField over the label
      *  then taking the updated text and replacing it in the label.
