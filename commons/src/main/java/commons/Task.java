@@ -42,7 +42,7 @@ public class Task {
   }
 
   public void complete(){
-    completed_status = true;
+    completed_status = !completed_status;
   }
 
   public boolean isCompleted_status() {

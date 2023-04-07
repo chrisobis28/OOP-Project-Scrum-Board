@@ -165,8 +165,6 @@ public class Card extends Pane {
                 sendEdit();
             }
         });
-
-
     }
 
     /**
@@ -187,6 +185,9 @@ public class Card extends Pane {
         cardList.sendEdit();
     }
 
+    public commons.Card getCard() {
+        return card;
+    }
 
     public void setTitle(String title){
         this.title.setText(title);

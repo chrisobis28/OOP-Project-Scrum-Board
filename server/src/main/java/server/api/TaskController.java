@@ -4,12 +4,7 @@ package server.api;
 import commons.Task;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.database.TaskRepository;
 
 @RestController
@@ -46,5 +41,16 @@ public class TaskController {
     Task saved = repo.save(task);
     return ResponseEntity.ok(saved);
   }
+
+    @DeleteMapping(path = {"/{id}"})
+    public ResponseEntity<Task> delete(@PathVariable("id") long id) {
+        if (id<0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Task deleted = repo.findById(id).get();
+        repo.delete(deleted);
+        return ResponseEntity.ok(deleted);
+    }
 
 }

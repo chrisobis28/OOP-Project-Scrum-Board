@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<fx:root prefHeight="400.0" prefWidth="600.0" style="-fx-border-color: #73877a; -fx-border-radius: 50px; -fx-border-width: 10px;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="468.0" prefWidth="620.0" style="-fx-border-color: #73877a; -fx-border-radius: 50px; -fx-border-width: 10px;" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="24.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CARD TITLE" wrappingWidth="144.80340957641602">
          <font>
@@ -33,16 +33,16 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button fx:id="addTaskButton" layoutX="324.0" layoutY="360.0" mnemonicParsing="false" text="ADD TASK" />
-      <Button fx:id="addTagButton" layoutX="502.0" layoutY="360.0" mnemonicParsing="false" text="ADD TAG" />
-      <ScrollPane fx:id="tagsScrollPane" layoutX="409.0" layoutY="240.0" prefHeight="118.0" prefWidth="159.0">
+      <Button fx:id="addTaskButton" layoutX="322.0" layoutY="417.0" mnemonicParsing="false" text="ADD TASK" />
+      <Button fx:id="addTagButton" layoutX="504.0" layoutY="417.0" mnemonicParsing="false" text="ADD TAG" />
+      <ScrollPane fx:id="tagsScrollPane" layoutX="409.0" layoutY="240.0" prefHeight="175.0" prefWidth="159.0">
          <content>
-            <VBox fx:id="tagsVBOX" prefHeight="100.0" prefWidth="156.0" />
+            <VBox fx:id="tagsVBOX" prefHeight="173.0" prefWidth="156.0" />
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="24.0" layoutY="240.0" prefHeight="118.0" prefWidth="369.0" style="-fx-background-color: #c5d1c9;">
+      <ScrollPane layoutX="24.0" layoutY="240.0" prefHeight="175.0" prefWidth="369.0" style="-fx-background-color: #c5d1c9;">
          <content>
-            <VBox fx:id="tasksVBOX" prefHeight="114.0" prefWidth="345.0" style="-fx-background-color: #c5d1c9;" />
+            <VBox fx:id="tasksVBOX" prefHeight="174.0" prefWidth="353.0" style="-fx-background-color: #c5d1c9;" />
          </content>
       </ScrollPane>
    </children>

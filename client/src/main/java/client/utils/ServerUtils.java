@@ -168,6 +168,19 @@ public class ServerUtils {
     }
   }
 
+  public void deleteTask(long id) {
+    try {
+      String path = "api/tasks/" + id;
+      ClientBuilder.newClient(new ClientConfig()) //
+              .target(server).path(path) //
+              .request(APPLICATION_JSON) //
+              .accept(APPLICATION_JSON) //
+              .delete();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Add a Board to the repo by sending a POST request to the path 'api/board'.
    *
