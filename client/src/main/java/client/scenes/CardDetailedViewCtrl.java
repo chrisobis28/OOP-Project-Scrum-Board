@@ -112,9 +112,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
     }
 
     public void setButtons(){
-        this.addTaskButton.setOnAction(event -> {
-            createTask();
-        });
+        this.addTaskButton.setOnAction(event -> createTask());
     }
 
     public void createTask(){
@@ -159,6 +157,7 @@ public class CardDetailedViewCtrl extends AnchorPane {
     public void deleteTask(Task task){
         int index = card.getTaskList().indexOf(task);
         card.getTaskList().remove(task);
+        server.deleteTask(task.getId());
         tasksVBOX.getChildren().remove(index);
         componentCard.sendEdit();
     }
