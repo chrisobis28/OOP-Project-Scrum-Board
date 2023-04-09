@@ -2,6 +2,7 @@ package client.components;
 
 import client.scenes.BoardViewCtrl;
 import client.scenes.MainCtrl;
+import client.services.ComponentsServices;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cardlist;
@@ -40,6 +41,8 @@ public class CardList extends AnchorPane {
     private Cardlist cardList;
     private MainCtrl mainCtrl;
 
+    private ComponentsServices componentsServices;
+
     /**
      * Card list constructor.
      *
@@ -51,6 +54,7 @@ public class CardList extends AnchorPane {
         this.boardViewCtrl = boardViewCtrl;
         this.server = server;
         this.cardList = cardList;
+        this.componentsServices = new ComponentsServices(server);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
@@ -167,7 +171,7 @@ public class CardList extends AnchorPane {
         commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
         commons.Card commonCard = server.addCard(cardToAdd);
         cardList.addCard(cardList.getCardSet().size(), commonCard);
-        sendEdit();
+        componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
         boardViewCtrl.refreshBoard();
     }
 
@@ -222,7 +226,7 @@ public class CardList extends AnchorPane {
             if(!n){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }
         });
 
@@ -232,12 +236,12 @@ public class CardList extends AnchorPane {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }
         });
     }
@@ -250,20 +254,6 @@ public class CardList extends AnchorPane {
     public void toLabel(TextField tf){
         listname.setGraphic(null);
         listname.setText(tf.getText());
-    }
-
-    /**
-     * Pass this card list to the board view controller to send the update to the server.
-     */
-    public void sendEdit() {
-        var board = server.getBoardById(boardViewCtrl.getId());
-        for (var cardlist : board.getCardlistList()) {
-            if (cardlist.getId() == cardList.getId()) {
-                cardlist.setCardlistName(cardList.getCardlistName());
-            }
-        }
-        server.editCardList(cardList);
-        server.editBoard(board);
     }
 
     // GETTERS AND SETTERS

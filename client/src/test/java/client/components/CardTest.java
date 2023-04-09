@@ -1,6 +1,7 @@
 package client.components;
 
 import client.scenes.BoardViewCtrl;
+import client.services.ComponentsServices;
 import client.utils.ServerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,11 +24,13 @@ public class CardTest {
   CardList cardListMock;
   @Mock
   BoardViewCtrl boardViewCtrlMock;
+  @Mock
+  ComponentsServices componentsServices;
   Card card;
 
   @BeforeEach
   public void setup() {
-    this.card = new Card(boardViewCtrlMock, serverMock, cardMock, cardListMock, false);
+    this.card = new Card(boardViewCtrlMock, serverMock, cardMock, cardListMock, componentsServices);
   }
 
   @Test
@@ -38,10 +41,10 @@ public class CardTest {
   @Test
   public void checkSendEdit() {
     doNothing().when(serverMock).editCard(any());
-    doNothing().when(cardListMock).sendEdit();
+    doNothing().when(componentsServices).CardlistSendEdit(anyLong(), any());
     card.sendEdit();
     verify(serverMock, times(1)).editCard(any());
-    verify(cardListMock, times(1)).sendEdit();
+    verify(componentsServices, times(1)).CardlistSendEdit(anyLong(), any());
   }
 
   @Test
