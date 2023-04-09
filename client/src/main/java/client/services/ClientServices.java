@@ -75,8 +75,8 @@ public class ClientServices {
   public Board createNewBoard(String name) {
     Board newBoard = new Board(name);
     newBoard.changeWorkspaceState();
-    server.addBoard(newBoard);
-    return newBoard;
+    Board saved = server.addBoard(newBoard);
+    return saved;
   }
 
   /**
