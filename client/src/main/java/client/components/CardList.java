@@ -71,7 +71,7 @@ public class CardList extends AnchorPane {
         this.listname.setText(cardList.getCardlistName());
 
         listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
-        this.toAddCard.setOnAction(event -> addCard());
+        this.toAddCard.setOnAction(event -> componentsServices.addCardToCardlist(cardList, boardViewCtrl));
         this.toDelete.setOnAction(event -> deleteList());
         this.toAddCard.setText("Add a Card");
         this.toEdit.setOnAction(event -> editTitle());
@@ -165,17 +165,6 @@ public class CardList extends AnchorPane {
     }*/
 
     /**
-     * Add a card to this list.
-     */
-    public void addCard(){
-        commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
-        commons.Card commonCard = server.addCard(cardToAdd);
-        cardList.addCard(cardList.getCardSet().size(), commonCard);
-        componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
-        boardViewCtrl.refreshBoard();
-    }
-
-    /**
      * Deletes this list.
      * Shows a Confirmation alert before deleting to avoid
      *  the user accidentally deleting a list.
@@ -190,12 +179,7 @@ public class CardList extends AnchorPane {
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            server.deleteCardList(cardList.getId());
-            for(commons.Card card : cardList.getCardSet()){
-                server.deleteCard(card.getId());
-            }
-            //trigger an edit on the board.
-            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
+            componentsServices.deleteList(boardViewCtrl.getId(), cardList);
         }
     }
 

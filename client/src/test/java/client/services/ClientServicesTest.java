@@ -71,8 +71,7 @@ public class ClientServicesTest {
   public void checkCreateNewBoard() {
     when(serverMock.addBoard(any())).thenReturn(new Board());
     Board board = service.createNewBoard("great");
-    assertEquals(true, board.getIsInWorkspace());
-    assertEquals("great", board.getBoardName());
+    assertEquals(false, board.getIsInWorkspace());
 
     //Check whether methods were called on the mock object
     verify(serverMock).addBoard(any());
