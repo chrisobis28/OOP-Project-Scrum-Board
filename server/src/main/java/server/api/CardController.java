@@ -60,6 +60,11 @@ public class CardController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
+    @GetMapping(path = {"/clear"})
+    public void clear() {
+        repo.deleteAll();
+    }
+
     @GetMapping(path = {"/all/{id}"})
     public List<Card> getAllByCardListId(@PathVariable("id") long id) {
         return repo.findByCardListId(id);

@@ -53,6 +53,8 @@ public class ComponentsServices {
   public void addCardToCardlist(Cardlist cardList, BoardViewCtrl boardViewCtrl) {
     commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
     commons.Card commonCard = server.addCard(cardToAdd);
+    commonCard.setPosition((long) cardList.getCardSet().size());
+    server.editCard(commonCard);
     cardList.addCard(cardList.getCardSet().size(), commonCard);
     for (var cardlist : server.getBoardById(boardViewCtrl.getId()).getCardlistList()) {
       if (cardlist.getId() == cardList.getId()) {

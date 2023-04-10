@@ -33,7 +33,7 @@ public class Card {
   public Cardlist cardlist;
 
   public Long cardlistID;
-
+  public Long position;
   public Card(){
       // nothing really
   }
@@ -81,6 +81,14 @@ public class Card {
 
   public void setCardlistID(Long cardlistID) {
     this.cardlistID = cardlistID;
+  }
+
+  public Long getPosition() {
+    return position;
+  }
+
+  public void setPosition(Long position) {
+    this.position = position;
   }
 
   @JsonManagedReference

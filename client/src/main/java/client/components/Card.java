@@ -4,6 +4,7 @@ import client.scenes.BoardViewCtrl;
 import client.scenes.CardDetailedViewCtrl;
 import client.services.ComponentsServices;
 import client.utils.ServerUtils;
+import commons.Cardlist;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -92,10 +93,20 @@ public class Card extends Pane {
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
+            removeThisCard();
             cardList.getCardList().removeCard(card);
+            server.editCardList(cardList.getCardList());
             server.deleteCard(card.getId());
             server.editBoard(server.getBoardById(boardViewCtrl.getId()));
-            boardViewCtrl.refreshBoard();
+        }
+    }
+
+    public void removeThisCard() {
+        for (commons.Card card1 : cardList.getCardList().getCardSet()) {
+            if (card1.getPosition()>card.getPosition()) {
+                card1.setPosition(card1.getPosition() - 1);
+                server.editCard(card1);
+            }
         }
     }
 
@@ -131,8 +142,26 @@ public class Card extends Pane {
 
         setOnDragDone(event -> {
             if(event.getTransferMode() == TransferMode.MOVE){
-                cardList.getCardList().removeCard(card);
+                for (commons.Card card1 : cardList.getCardList().getCardSet()) {
+                    if (card1.getId()==card.getId()) {
+                        cardList.getCardList().removeCard(card1);
+                        break;
+                    }
+                }
+                for (Cardlist cardlist : server.getBoardById(boardViewCtrl.getId()).getCardlistList()) {
+                    if (cardlist.getId()==cardList.getCardList().getId()) {
+                        cardlist.removeCard(card);
+                        break;
+                    }
+                }
+                long i = 0;
+                for (commons.Card card1 : cardList.getCardList().getCardSet()) {
+                    card1.setPosition(i++);
+                    server.editCard(card1);
+                }
+                server.editCardList(cardList.getCardList());
                 cardList.getCards().getChildren().remove(this);
+                server.editBoard(server.getBoardById(boardViewCtrl.getId()));
             }
             event.consume();
         });
@@ -207,6 +236,10 @@ public class Card extends Pane {
      * Pass this card to the server to save the update.
      */
     public void sendEdit() {
+        for (commons.Card card1 : cardList.getCardList().getCardSet()) {
+            if (card1.getId() == card.getId())
+                card1.setCardName(card.getCardName());
+        }
         server.editCard(card);
         componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList.getCardList());
     }

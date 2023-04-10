@@ -105,9 +105,16 @@ public class CardList extends AnchorPane {
             if(db.hasString()){
                 try{
                     long cardId = Long.parseLong(db.getString());
-                    System.out.println(cardId);
                     commons.Card commonCard = server.getCardById(cardId);
+                    for (commons.Card card : server.getCardlistById(commonCard.getCardlistID()).getCardSet()) {
+                        if (card.getId()== commonCard.getId()) {
+                            card.setCardList(cardList);
+                            break;
+                        }
+                    }
                     commonCard.setCardList(cardList);
+                    server.editCard(commonCard);
+                    server.editCardList(cardList);
                     Card card = new Card(boardViewCtrl, server, commonCard, this);
 
                     int index = cards.getChildren().size();
@@ -125,27 +132,25 @@ public class CardList extends AnchorPane {
                             }
                         }
                     }
+                    commonCard.setPosition((long) index);
+                    server.editCard(commonCard);
+
+                    for (commons.Card card1 : cardList.getCardSet()) {
+                        if (card1.getPosition()<=commonCard.getPosition()) {
+                            card1.setPosition(card1.getPosition()+1);
+                        }
+                    }
 
                     cardList.addCard(index, commonCard);
                     server.editCardList(cardList);
-
                     var board = server.getBoardById(boardViewCtrl.getId());
-                    commons.Cardlist proxy = null;
-                    int j = 0;
-                    int i = 0;
                     for(commons.Cardlist cardlist : board.getCardlistList()){
                         if(cardlist.getId() == cardList.getId()){
-                            proxy = cardlist;
-                            j = i;
+                            cardlist.addCard(index, commonCard);
                             break;
                         }
-                        i++;
                     }
-
-                    board.getCardlistList().add(j, cardList);
-                    board.getCardlistList().remove(proxy);
                     server.editBoard(board);
-
                     cards.getChildren().add(index, card);
                     success = true;
                 }
