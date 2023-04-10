@@ -37,6 +37,9 @@ public class TestCardRepository implements CardRepository {
     }
 
     @Override
+    public List<Card> findByCardListId(long id) {return null;}
+
+    @Override
     public long count() {
         return cards.size();
     }
