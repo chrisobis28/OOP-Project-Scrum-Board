@@ -4,7 +4,6 @@ import client.scenes.BoardViewCtrl;
 import client.scenes.CardDetailedViewCtrl;
 import client.services.ComponentsServices;
 import client.utils.ServerUtils;
-import commons.Cardlist;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
