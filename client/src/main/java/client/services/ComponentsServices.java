@@ -24,6 +24,7 @@ public class ComponentsServices {
     for (var cardlist : board.getCardlistList()) {
       if (cardlist.getId() == cardList.getId()) {
         cardlist.setCardlistName(cardList.getCardlistName());
+        break;
       }
     }
     server.editCardList(cardList);
@@ -53,6 +54,12 @@ public class ComponentsServices {
     commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
     commons.Card commonCard = server.addCard(cardToAdd);
     cardList.addCard(cardList.getCardSet().size(), commonCard);
+    for (var cardlist : server.getBoardById(boardViewCtrl.getId()).getCardlistList()) {
+      if (cardlist.getId() == cardList.getId()) {
+        cardlist.addCard(cardlist.getCardSet().size(), commonCard);
+        break;
+      }
+    }
     this.CardlistSendEdit(boardViewCtrl.getId(), cardList);
     boardViewCtrl.refreshBoard();
   }
