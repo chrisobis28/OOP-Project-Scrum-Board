@@ -140,12 +140,32 @@ public class ServerUtils {
    * @return The list containing all the card lists for a board.
    */
   public List<Cardlist> getCardLists(long id) {
-    String path = new String("api/cardlist/"+id);
+    String path = "api/cardlist/" + id;
     return ClientBuilder.newClient(new ClientConfig()) //
             .target(server).path(path) //
             .request(APPLICATION_JSON) //
             .accept(APPLICATION_JSON) //
             .get(new GenericType<List<Cardlist>>() {
+            });
+  }
+
+  public Cardlist getCardlistById(long id) {
+    String path = "api/cardlist/specific/" + id;
+    return ClientBuilder.newClient(new ClientConfig())
+            .target(server).path(path)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Cardlist>() {
+            });
+  }
+
+  public List<Card> getCards(long id) {
+    String path = "api/cards/all/" + id;
+    return ClientBuilder.newClient(new ClientConfig()) //
+            .target(server).path(path) //
+            .request(APPLICATION_JSON) //
+            .accept(APPLICATION_JSON) //
+            .get(new GenericType<List<Card>>() {
             });
   }
 
@@ -406,7 +426,6 @@ public class ServerUtils {
       }
     });
   }
-
 
 
 }
