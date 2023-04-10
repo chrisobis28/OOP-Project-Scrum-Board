@@ -193,7 +193,7 @@ public class BoardViewCtrl{
         ObservableList<Node> data2;
         for (var cardlist : cardlists) {
             var v = new CardList(mainCtrl, this, server, cardlist);
-            for (Card card : cardlist.getCardSet()) {
+            for (Card card : server.getCards(cardlist.getId())) {
                 client.components.Card compCard = new client.components.Card(this,server, card, v);
                 cardnodes.add(compCard);
             }
