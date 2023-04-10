@@ -6,6 +6,7 @@ import client.services.ClientServices;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.Card;
+import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -332,6 +333,12 @@ public class BoardViewCtrl{
                     boardToShow = wboard;
                     break;
                 }
+            }
+            for (Cardlist cardlist : server.getCardLists(this.id)) {
+                for (Card card : server.getCards(cardlist.getId())) {
+                    server.deleteCard(card.getId());
+                }
+                server.deleteCardList(cardlist.getId());
             }
             server.deleteBoard(this.id);
             if (boardToShow == null) {
