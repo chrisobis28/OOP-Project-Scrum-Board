@@ -50,13 +50,9 @@ public class CardlistControlller {
         var res = new DeferredResult<ResponseEntity<Cardlist>>(1024L, noContent);
 
         var key = new Object();
-        listeners.put(key, list -> {
-            res.setResult(ResponseEntity.ok(list));
-        });
+        listeners.put(key, list -> res.setResult(ResponseEntity.ok(list)));
 
-        res.onCompletion(() -> {
-            listeners.remove(key);
-        });
+        res.onCompletion(() -> listeners.remove(key));
         return res;
     }
 
@@ -70,6 +66,14 @@ public class CardlistControlller {
     @GetMapping(path = {"/{id}"})
     public List<Cardlist> getAllByBoardId(@PathVariable("id") long id) {
         return repo.findByBoardId(id);
+    }
+
+    @GetMapping("/specific/{id}")
+    public ResponseEntity<Cardlist> getCardlistById(@PathVariable("id") long id) {
+        if (id < 0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(repo.findById(id).get());
     }
 
     /**
