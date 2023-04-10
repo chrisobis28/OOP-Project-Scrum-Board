@@ -32,6 +32,8 @@ public class Card {
   @JoinColumn(name = "cardlist_id")
   public Cardlist cardlist;
 
+  public Long cardlistID;
+
   public Card(){
       // nothing really
   }
@@ -42,6 +44,7 @@ public class Card {
     this.cardlist = cardlist;
     tagList = new ArrayList<>();
     taskList = new ArrayList<>();
+    this.cardlistID=cardlist.getId();
   }
 
   public Card(String cardName, String cardDescription){
@@ -72,6 +75,14 @@ public class Card {
     return id;
   }
 
+  public Long getCardlistID() {
+    return cardlistID;
+  }
+
+  public void setCardlistID(Long cardlistID) {
+    this.cardlistID = cardlistID;
+  }
+
   @JsonManagedReference
   public List<Task> getTaskList() {
     return taskList;
@@ -84,6 +95,7 @@ public class Card {
 
   public void setCardList(Cardlist cardlist){
     this.cardlist = cardlist;
+    this.cardlistID = cardlist.getId();
   }
 
   public void setCardDescription(String cardDescription) {

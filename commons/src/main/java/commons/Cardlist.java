@@ -23,6 +23,8 @@ public class Cardlist{
   @JoinColumn(name = "board_id")
   public Board board;
 
+  public Long boardID;
+
   @OneToMany(mappedBy = "cardlist", cascade = CascadeType.ALL)
   public List<Card> cardSet = new ArrayList<>();
 
@@ -54,6 +56,7 @@ public class Cardlist{
   public Cardlist(String cardlistName, Board board){
     this.board = board;
     this.cardlistName = cardlistName;
+    this.boardID = board.getId();
   }
 
   public void setCardlistName(String cardlistName) {
@@ -76,6 +79,14 @@ public class Cardlist{
    */
   public long getId() {
     return id;
+  }
+
+  public Long getBoardID() {
+    return boardID;
+  }
+
+  public void setBoardID(Long boardID) {
+    this.boardID = boardID;
   }
 
   /**
