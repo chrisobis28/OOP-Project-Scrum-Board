@@ -2,6 +2,7 @@ package client.components;
 
 import client.scenes.BoardViewCtrl;
 import client.scenes.CardDetailedViewCtrl;
+import client.services.ComponentsServices;
 import client.utils.ServerUtils;
 import commons.Task;
 import javafx.fxml.FXML;
@@ -36,20 +37,37 @@ public class Card extends Pane {
 
     private CardList cardList;
     private BoardViewCtrl boardViewCtrl;
+    private ComponentsServices componentsServices;
 
     @FXML
     private ImageView edit;
-
     @FXML
     private Label tasksLabel;
     @FXML
     private ProgressBar tasksProgressBar;
+
+    /**
+     * Constructor to help with testing by removing the fxml part.
+     * @param boardViewCtrl controller of the card
+     * @param server server of the card
+     * @param card the associated commons card
+     * @param cardList the card's cardlist
+     * @param componentsServices the service class instance for this card
+     */
+    public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList, ComponentsServices componentsServices) {
+        this.server = server;
+        this.card = card;
+        this.cardList = cardList;
+        this.boardViewCtrl = boardViewCtrl;
+        this.componentsServices = componentsServices;
+    }
 
     public Card(BoardViewCtrl boardViewCtrl, ServerUtils server, commons.Card card, CardList cardList){
         this.server = server;
         this.card = card;
         this.cardList = cardList;
         this.boardViewCtrl = boardViewCtrl;
+        this.componentsServices = new ComponentsServices(server);
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Card.fxml"));
@@ -97,7 +115,6 @@ public class Card extends Pane {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
             cardList.getCardList().removeCard(card);
-            server.editCardList(cardList.getCardList());
             server.deleteCard(card.getId());
             server.editBoard(server.getBoardById(boardViewCtrl.getId()));
             boardViewCtrl.refreshBoard();
@@ -147,9 +164,9 @@ public class Card extends Pane {
         return cardList;
     }
 
-    public String getTitle(){
-        return this.title.getText();
-    }
+//    public String getTitle(){
+//        return this.title.getText();
+//    }
 
     /**
      * Allow the user to edit a list title by showing a TextField over the label
@@ -213,14 +230,14 @@ public class Card extends Pane {
      */
     public void sendEdit() {
         server.editCard(card);
-        cardList.sendEdit();
+        componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList.getCardList());
     }
 
     public commons.Card getCard() {
         return card;
     }
 
-    public void setTitle(String title){
-        this.title.setText(title);
-    }
+//    public void setTitle(String title){
+//        this.title.setText(title);
+//    }
 }

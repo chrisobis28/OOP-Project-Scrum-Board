@@ -2,6 +2,7 @@ package client.components;
 
 import client.scenes.BoardViewCtrl;
 import client.scenes.MainCtrl;
+import client.services.ComponentsServices;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Cardlist;
@@ -40,6 +41,8 @@ public class CardList extends AnchorPane {
     private Cardlist cardList;
     private MainCtrl mainCtrl;
 
+    private ComponentsServices componentsServices;
+
     /**
      * Card list constructor.
      *
@@ -51,6 +54,7 @@ public class CardList extends AnchorPane {
         this.boardViewCtrl = boardViewCtrl;
         this.server = server;
         this.cardList = cardList;
+        this.componentsServices = new ComponentsServices(server);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.components/Cardlist.fxml"));
         fxmlLoader.setRoot(this);
@@ -67,7 +71,7 @@ public class CardList extends AnchorPane {
         this.listname.setText(cardList.getCardlistName());
 
         listname.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
-        this.toAddCard.setOnAction(event -> addCard());
+        this.toAddCard.setOnAction(event -> componentsServices.addCardToCardlist(cardList, boardViewCtrl));
         this.toDelete.setOnAction(event -> deleteList());
         this.toAddCard.setText("Add a Card");
         this.toEdit.setOnAction(event -> editTitle());
@@ -154,22 +158,11 @@ public class CardList extends AnchorPane {
         });
     }
 
-    public void constructVBox(){
+    /*public void constructVBox(){
         for(commons.Card card : cardList.getCardSet()){
             cards.getChildren().add(new Card(boardViewCtrl, server, card, this));
         }
-    }
-
-    /**
-     * Add a card to this list.
-     */
-    public void addCard(){
-        commons.Card cardToAdd = new commons.Card("Name","Description", cardList);
-        commons.Card commonCard = server.addCard(cardToAdd);
-        cardList.addCard(cardList.getCardSet().size(), commonCard);
-        sendEdit();
-        boardViewCtrl.refreshBoard();
-    }
+    }*/
 
     /**
      * Deletes this list.
@@ -186,12 +179,7 @@ public class CardList extends AnchorPane {
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            server.deleteCardList(cardList.getId());
-            for(commons.Card card : cardList.getCardSet()){
-                server.deleteCard(card.getId());
-            }
-            //trigger an edit on the board.
-            server.editBoard(server.getBoardById(boardViewCtrl.getId()));
+            componentsServices.deleteList(boardViewCtrl.getId(), cardList);
         }
     }
 
@@ -222,7 +210,7 @@ public class CardList extends AnchorPane {
             if(!n){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }
         });
 
@@ -232,12 +220,12 @@ public class CardList extends AnchorPane {
             if(e.getCode().equals(KeyCode.ENTER)){
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }else if(e.getCode().equals(KeyCode.ESCAPE)){
                 textField.setText(backup);
                 toLabel(textField);
                 cardList.setCardlistName(textField.getText());
-                sendEdit();
+                componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList);
             }
         });
     }
@@ -252,43 +240,29 @@ public class CardList extends AnchorPane {
         listname.setText(tf.getText());
     }
 
-    /**
-     * Pass this card list to the board view controller to send the update to the server.
-     */
-    public void sendEdit() {
-        var board = server.getBoardById(boardViewCtrl.getId());
-        for (var cardlist : board.getCardlistList()) {
-            if (cardlist.getId() == cardList.getId()) {
-                cardlist.setCardlistName(cardList.getCardlistName());
-            }
-        }
-        server.editCardList(cardList);
-        server.editBoard(board);
-    }
-
     // GETTERS AND SETTERS
 
-    /**
-     * Get the list name.
-     *
-     * @return Label with the list name.
-     */
-    public Label getListname() {
-        return listname;
-    }
+//    /**
+//     * Get the list name.
+//     *
+//     * @return Label with the list name.
+//     */
+//    public Label getListname() {
+//        return listname;
+//    }
 
     public Cardlist getCardList() {
         return cardList;
     }
 
-    /**
-     * Sets the list name to be a given String.
-     *
-     * @param listname the updated name of the list.
-     */
-    public void setListname(String listname) {
-        this.listname.setText(listname);
-    }
+//    /**
+//     * Sets the list name to be a given String.
+//     *
+//     * @param listname the updated name of the list.
+//     */
+//    public void setListname(String listname) {
+//        this.listname.setText(listname);
+//    }
 
     /**
      * Gets the VBox containing the tasks.

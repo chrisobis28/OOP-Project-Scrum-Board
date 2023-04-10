@@ -13,10 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -26,6 +24,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -285,46 +284,75 @@ public class BoardViewCtrl{
      * "Leaves" a board, removing it from the workspace.
      */
     public void leaveBoard() {
-        //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
-        Board board = server.getBoardById(this.getId());
-        if (board.getIsInWorkspace()) {
-            services.changeWorkspaceStateService(board);
-            //deletes the board with this name from the workspace, not showing it anymore,
-            //so we can find a new board to show
-            for (Node node : workspace.getChildren()) {
-                WorkspaceBoard wboard = (WorkspaceBoard) node;
-                if (wboard.getBoardId()==this.getId()) {
-                    workspace.getChildren().remove(node);
-                    break;
+        Optional<ButtonType> result = this.showError("Leave Board", false);
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //change the isInWorkspace field to false so that the board is included in the workspace after refreshing it
+            Board board = server.getBoardById(this.getId());
+            if (board.getIsInWorkspace()) {
+                services.changeWorkspaceStateService(board);
+                //deletes the board with this name from the workspace, not showing it anymore,
+                //so we can find a new board to show
+                for (Node node : workspace.getChildren()) {
+                    WorkspaceBoard wboard = (WorkspaceBoard) node;
+                    if (wboard.getBoardId() == this.getId()) {
+                        workspace.getChildren().remove(node);
+                        break;
+                    }
                 }
+                //always show the first board from the updated workspace
+                if (workspace.getChildren().isEmpty())
+                    addNewBoard("New Board");
+                WorkspaceBoard firstWBoard = (WorkspaceBoard) workspace.getChildren().get(0);
+                showBoard(firstWBoard);
+                boardName.clear();
             }
-            //always show the first board from the updated workspace
-            WorkspaceBoard firstWBoard = (WorkspaceBoard) workspace.getChildren().get(0);
-            showBoard(firstWBoard);
+            //refresh workspace
+            initializeWorkspace();
         }
-        //refresh workspace
-        initializeWorkspace();
     }
 
     /**
      * Deletes a board from the database as well as from the workspace.
      */
     public void deleteBoard() {
-        WorkspaceBoard boardToShow = null;
-        for (Node node : workspace.getChildren()) {
-            WorkspaceBoard wboard = (WorkspaceBoard) node;
-            if (wboard.getBoardId() != this.getId()) {
-                boardToShow = wboard;
-                break;
+        Optional<ButtonType> result = this.showError("Delete Board", true);
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            WorkspaceBoard boardToShow = null;
+            for (Node node : workspace.getChildren()) {
+                WorkspaceBoard wboard = (WorkspaceBoard) node;
+                if (wboard.getBoardId() != this.getId()) {
+                    boardToShow = wboard;
+                    break;
+                }
             }
+            server.deleteBoard(this.id);
+            if (boardToShow == null) {
+                boardToShow = addNewBoard("New Board");
+            }
+            showBoard(boardToShow);
+            boardName.clear();
+            initializeWorkspace();
         }
-        server.deleteBoard(this.id);
-        if(boardToShow == null){
-            boardToShow = addNewBoard("New Board");
-        }
-        showBoard(boardToShow);
-        initializeWorkspace();
     }
+
+    /**
+     * Method that shows an alert before leaving/deleting a board
+     * @param message The title of the alert
+     * @param action true in case of deletion, false in case of leaving action
+     * @return The user's response to the alert in the form of a button.
+     */
+    public Optional<ButtonType> showError(String message, Boolean action) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        String act = action ? "delete " : "leave ";
+        alert.setHeaderText("You are about to " + act + "this board" + "!");
+        alert.setTitle(message);
+        alert.setContentText("Are you sure?");
+        var stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("icon.png"));
+
+        return alert.showAndWait();
+    }
+
 
     /**
      * Method that is always called at the beginning of showing the BoardView scene that sets up the scene.
