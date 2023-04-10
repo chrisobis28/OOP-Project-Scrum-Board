@@ -194,8 +194,9 @@ public class BoardViewCtrl{
         for (var cardlist : cardlists) {
             var v = new CardList(mainCtrl, this, server, cardlist);
             int index = 0;
-            while (index < cardlist.getCardSet().size()) {
-                for (Card card : cardlist.getCardSet()) {
+            List<Card> listOfCards= server.getCards(cardlist.getId());
+            while (index < listOfCards.size()) {
+                for (Card card : listOfCards) {
                     if (card.getPosition()==(long) index) {
                         client.components.Card compCard = new client.components.Card(this, server, card, v);
                         cardnodes.add(compCard);
