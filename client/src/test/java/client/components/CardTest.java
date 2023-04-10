@@ -3,11 +3,15 @@ package client.components;
 import client.scenes.BoardViewCtrl;
 import client.services.ComponentsServices;
 import client.utils.ServerUtils;
+import commons.Cardlist;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +44,8 @@ public class CardTest {
 
   @Test
   public void checkSendEdit() {
+    when(cardListMock.getCardList()).thenReturn(new Cardlist());
+    when(serverMock.getCards(anyLong())).thenReturn(new ArrayList<commons.Card>());
     doNothing().when(serverMock).editCard(any());
     doNothing().when(componentsServices).CardlistSendEdit(anyLong(), any());
     card.sendEdit();
