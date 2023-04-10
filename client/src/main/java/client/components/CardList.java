@@ -111,7 +111,8 @@ public class CardList extends AnchorPane {
 //                            card.setCardList(cardList);
 //                            break;
 //                        }
-//                    }
+//                  }
+                    boolean changeoflists= commonCard.getCardlistID() != cardList.getId();
                     commonCard.setCardList(cardList);
                     server.editCard(commonCard);
                     Card card = new Card(boardViewCtrl, server, commonCard, this);
@@ -133,9 +134,8 @@ public class CardList extends AnchorPane {
                     }
                     commonCard.setPosition((long) index);
                     server.editCard(commonCard);
-
                     for (commons.Card card1 : server.getCards(cardList.getId())) {
-                        if (card1.getPosition()>=commonCard.getPosition()&&card1.getId()!=commonCard.getId()) {
+                        if (changeoflists&&card1.getPosition()>=commonCard.getPosition()&&card1.getId()!=commonCard.getId()) {
                             card1.setPosition(card1.getPosition()+1);
                             server.editCard(card1);
                         }

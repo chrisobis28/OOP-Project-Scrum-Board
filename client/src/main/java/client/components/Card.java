@@ -130,7 +130,9 @@ public class Card extends Pane {
     }
 
     public void initDrag(){
-
+        int noofcards = server.getCards(cardList.getCardList().getId()).size();
+        long initialPosition = card.getPosition();
+        long oldListId = card.getCardlistID();
         setOnDragDetected(event -> {
             Dragboard db = startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -154,12 +156,31 @@ public class Card extends Pane {
 //                    }
 //                }
                 long i = 0;
-                for (commons.Card card1 : server.getCards(cardList.getCardList().getId())) {
-                    card1.setPosition(i);
-                    i++;
-                    server.editCard(card1);
+                card = server.getCardById(card.id);
+                if (noofcards==server.getCards(oldListId).size()) {
+                    boolean moveLower = initialPosition < card.getPosition();
+                    for (commons.Card card1 : server.getCards(oldListId)) {
+                        if (card1.getId()!=card.getId()) {
+                            if (!moveLower && card1.getPosition() < initialPosition && card1.getPosition() >= card.getPosition()) {
+                                card1.setPosition(card1.getPosition()+1);
+                                server.editCard(card1);
+                            }
+                            else if (card1.getPosition() > initialPosition && card1.getPosition() <= card.getPosition()) {
+                                card1.setPosition(card1.getPosition()-1);
+                                server.editCard(card1);
+                            }
+                        }
+                    }
                 }
-                server.editCardList(cardList.getCardList());
+                else {
+                    for (commons.Card card1 : server.getCards(oldListId)) {
+                        if (card1.getPosition()>initialPosition) {
+                            card1.setPosition(card1.getPosition()-1);
+                            server.editCard(card1);
+                        }
+                    }
+                }
+                server.editCardList(server.getCardlistById(oldListId));
                 cardList.getCards().getChildren().remove(this);
                 server.editBoard(server.getBoardById(boardViewCtrl.getId()));
             }
