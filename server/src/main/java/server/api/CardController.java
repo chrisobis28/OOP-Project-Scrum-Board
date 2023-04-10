@@ -6,6 +6,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cards")
 public class CardController {
@@ -56,5 +58,10 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(repo.findById(id).get());
+    }
+
+    @GetMapping(path = {"/all/{id}"})
+    public List<Card> getAllByCardListId(@PathVariable("id") long id) {
+        return repo.findByCardListId(id);
     }
 }
