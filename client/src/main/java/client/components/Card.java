@@ -4,6 +4,7 @@ import client.scenes.BoardViewCtrl;
 import client.scenes.CardDetailedViewCtrl;
 import client.services.ComponentsServices;
 import client.utils.ServerUtils;
+import commons.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -40,6 +41,10 @@ public class Card extends Pane {
 
     @FXML
     private ImageView edit;
+    @FXML
+    private Label tasksLabel;
+    @FXML
+    private ProgressBar tasksProgressBar;
 
     /**
      * Constructor to help with testing by removing the fxml part.
@@ -80,7 +85,24 @@ public class Card extends Pane {
         title.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editTitle(); }); // double click to edit.
         cardDeleteButton.setOnAction(event -> deleteCard());
         edit.setOnMouseClicked(event -> editCard());
+
+        tasksLabel.setStyle("text-allign: center;");
+        int a = calculateCompleted();
+        int b = card.getTaskList().size();
+        tasksLabel.setText("Tasks completed: " + a + "/" + b);
+
+        tasksProgressBar.setProgress((double) a/b);
         initDrag();
+    }
+
+    public int calculateCompleted(){
+        int k = 0;
+        for(Task task : card.getTaskList()){
+            if(task.isCompleted_status()){
+                k++;
+            }
+        }
+        return k;
     }
     public void deleteCard(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
