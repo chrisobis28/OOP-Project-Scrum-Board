@@ -28,7 +28,7 @@ public class Card {
   @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
   public List<Tag> tagList;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cardlist_id")
   public Cardlist cardlist;
 
