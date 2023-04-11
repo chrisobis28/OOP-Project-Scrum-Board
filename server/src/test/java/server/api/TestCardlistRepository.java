@@ -194,8 +194,4 @@ public class TestCardlistRepository implements CardlistRepository {
         return null;
     }
 
-    @Override
-    public void deleteByBoardId(long cardlistId) {
-
-    }
 }

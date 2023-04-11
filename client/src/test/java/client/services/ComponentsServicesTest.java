@@ -52,6 +52,7 @@ public class ComponentsServicesTest {
 
   @Test
   public void checkDeleteList() {
+    when(serverMock.getCards(anyLong())).thenReturn(cardlist1.getCardSet());
     doNothing().when(serverMock).deleteCardList(anyLong());
     doNothing().when(serverMock).deleteCard(anyLong());
     doNothing().when(serverMock).editBoard(any());

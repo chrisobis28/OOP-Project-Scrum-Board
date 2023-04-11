@@ -51,6 +51,7 @@ public class ClientServices {
   public void addListToBoardService(String name, long boardId) {
     Board board = server.getBoardById(boardId);
     Cardlist cardlist = new Cardlist(name, board);
+    cardlist.setBoardID(board.getId());
     Cardlist saved = server.addCardList(cardlist);
     board.add(saved);
     server.editBoard(board);
@@ -75,8 +76,7 @@ public class ClientServices {
   public Board createNewBoard(String name) {
     Board newBoard = new Board(name);
     newBoard.changeWorkspaceState();
-    Board saved = server.addBoard(newBoard);
-    return saved;
+    return server.addBoard(newBoard);
   }
 
   /**

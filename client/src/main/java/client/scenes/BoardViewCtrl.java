@@ -6,6 +6,7 @@ import client.services.ClientServices;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.Card;
+import commons.Cardlist;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -193,9 +194,17 @@ public class BoardViewCtrl{
         ObservableList<Node> data2;
         for (var cardlist : cardlists) {
             var v = new CardList(mainCtrl, this, server, cardlist);
-            for (Card card : cardlist.getCardSet()) {
-                client.components.Card compCard = new client.components.Card(this,server, card, v);
+            List<Card> listOfCards= server.getCards(cardlist.getId());
+            listOfCards.sort((a, b) -> (int) (a.getPosition() - b.getPosition()));
+            long pos = 0;
+            for (Card card : listOfCards) {
+                if (card.getPosition() != pos) {
+                    card.setPosition(pos);
+                    server.editCard(card);
+                }
+                client.components.Card compCard = new client.components.Card(this, server, card, v);
                 cardnodes.add(compCard);
+                pos++;
             }
             data2 = FXCollections.observableList(cardnodes);
             v.getCards().getChildren().clear();
@@ -324,6 +333,12 @@ public class BoardViewCtrl{
                     boardToShow = wboard;
                     break;
                 }
+            }
+            for (Cardlist cardlist : server.getCardLists(this.id)) {
+                for (Card card : server.getCards(cardlist.getId())) {
+                    server.deleteCard(card.getId());
+                }
+                server.deleteCardList(cardlist.getId());
             }
             server.deleteBoard(this.id);
             if (boardToShow == null) {

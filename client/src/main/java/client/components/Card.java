@@ -114,10 +114,20 @@ public class Card extends Pane {
 
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            cardList.getCardList().removeCard(card);
+            removeThisCard();
+            //cardList.getCardList().removeCard(card);
             server.deleteCard(card.getId());
+            server.editCardList(cardList.getCardList());
             server.editBoard(server.getBoardById(boardViewCtrl.getId()));
-            boardViewCtrl.refreshBoard();
+        }
+    }
+
+    public void removeThisCard() {
+        for (commons.Card card1 : server.getCards(cardList.getCardList().getId())) {
+            if (card1.getPosition()>card.getPosition()) {
+                card1.setPosition(card1.getPosition() - 1);
+                server.editCard(card1);
+            }
         }
     }
 
@@ -142,7 +152,9 @@ public class Card extends Pane {
     }
 
     public void initDrag(){
-
+        int noofcards = server.getCards(cardList.getCardList().getId()).size();
+        long initialPosition = card.getPosition();
+        long oldListId = card.getCardlistID();
         setOnDragDetected(event -> {
             Dragboard db = startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -153,8 +165,46 @@ public class Card extends Pane {
 
         setOnDragDone(event -> {
             if(event.getTransferMode() == TransferMode.MOVE){
-                cardList.getCardList().removeCard(card);
+//                for (commons.Card card1 : server.getCards(cardList.getCardList().getId())) {
+//                    if (card1.getId()==card.getId()) {
+//                        cardList.getCardList().removeCard(card1);
+//                        break;
+//                    }
+//                }
+//                for (Cardlist cardlist : server.getBoardById(boardViewCtrl.getId()).getCardlistList()) {
+//                    if (cardlist.getId()==cardList.getCardList().getId()) {
+//                        cardlist.removeCard(card);
+//                        break;
+//                    }
+//                }
+                long i = 0;
+                card = server.getCardById(card.id);
+                if (noofcards==server.getCards(oldListId).size()) {
+                    boolean moveLower = initialPosition < card.getPosition();
+                    for (commons.Card card1 : server.getCards(oldListId)) {
+                        if (card1.getId()!=card.getId()) {
+                            if (!moveLower && card1.getPosition() < initialPosition && card1.getPosition() >= card.getPosition()) {
+                                card1.setPosition(card1.getPosition()+1);
+                                server.editCard(card1);
+                            }
+                            else if (card1.getPosition() > initialPosition && card1.getPosition() <= card.getPosition()) {
+                                card1.setPosition(card1.getPosition()-1);
+                                server.editCard(card1);
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (commons.Card card1 : server.getCards(oldListId)) {
+                        if (card1.getPosition()>initialPosition) {
+                            card1.setPosition(card1.getPosition()-1);
+                            server.editCard(card1);
+                        }
+                    }
+                }
+                server.editCardList(server.getCardlistById(oldListId));
                 cardList.getCards().getChildren().remove(this);
+                server.editBoard(server.getBoardById(boardViewCtrl.getId()));
             }
             event.consume();
         });
@@ -229,6 +279,10 @@ public class Card extends Pane {
      * Pass this card to the server to save the update.
      */
     public void sendEdit() {
+        for (commons.Card card1 : server.getCards(cardList.getCardList().getId())) {
+            if (card1.getId() == card.getId())
+                card1.setCardName(card.getCardName());
+        }
         server.editCard(card);
         componentsServices.CardlistSendEdit(boardViewCtrl.getId(), cardList.getCardList());
     }
