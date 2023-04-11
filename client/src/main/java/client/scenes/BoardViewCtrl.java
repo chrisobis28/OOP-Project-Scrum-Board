@@ -194,17 +194,17 @@ public class BoardViewCtrl{
         ObservableList<Node> data2;
         for (var cardlist : cardlists) {
             var v = new CardList(mainCtrl, this, server, cardlist);
-            int index = 0;
             List<Card> listOfCards= server.getCards(cardlist.getId());
-            while (index < listOfCards.size()) {
-                for (Card card : listOfCards) {
-                    if (card.getPosition()==(long) index) {
-                        client.components.Card compCard = new client.components.Card(this, server, card, v);
-                        cardnodes.add(compCard);
-                        break;
-                    }
+            listOfCards.sort((a, b) -> (int) (a.getPosition() - b.getPosition()));
+            long pos = 0;
+            for (Card card : listOfCards) {
+                if (card.getPosition() != pos) {
+                    card.setPosition(pos);
+                    server.editCard(card);
                 }
-                index++;
+                client.components.Card compCard = new client.components.Card(this, server, card, v);
+                cardnodes.add(compCard);
+                pos++;
             }
             data2 = FXCollections.observableList(cardnodes);
             v.getCards().getChildren().clear();
