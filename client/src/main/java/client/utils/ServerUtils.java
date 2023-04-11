@@ -19,6 +19,7 @@ package client.utils;
 import commons.*;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
@@ -48,10 +49,13 @@ public class ServerUtils {
   //password is currently hard coded, not mandatory but we might want to change it in the future
   private final String adminPassword = "oopp51";
 
+  private WebTarget serverTarget;
+
   /**
    * Constructor with no parameters for ServerUtils.
    */
   public ServerUtils() {
+    this.serverTarget = ClientBuilder.newClient(new ClientConfig()).target(server);
     this.session = connect("ws://localhost:8080/websocket");
   }
 
@@ -61,12 +65,14 @@ public class ServerUtils {
    * @param address IP address of the server
    */
   public ServerUtils(String address) {
-    this.server = address;
+    this.serverTarget = ClientBuilder.newClient(new ClientConfig()).target(server);
     this.session = connect("ws://localhost:8080/websocket");
   }
 
-  public ServerUtils(String address, Boolean b) {
+  //testing constructor
+  public ServerUtils(String address, WebTarget target) {
     this.server = address;
+    this.serverTarget = target;
   }
 
   /**
@@ -86,8 +92,7 @@ public class ServerUtils {
    */
   public Boolean checkServerValidity() {
     try {
-     return ClientBuilder.newClient(new ClientConfig())
-              .target(server).path("")
+     return serverTarget.path("")
               .request(APPLICATION_JSON)
               .accept(APPLICATION_JSON)
               .get(String.class).equals("Hello world!");
@@ -104,8 +109,7 @@ public class ServerUtils {
    * @return Response entity for the Cardlist.
    */
   public Cardlist addCardList(Cardlist cardlist) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/cardlist") //
+    return serverTarget.path("api/cardlist") //
             .request(APPLICATION_JSON) //
             .accept(APPLICATION_JSON) //
             .post(Entity.entity(cardlist, APPLICATION_JSON), Cardlist.class);
@@ -118,16 +122,14 @@ public class ServerUtils {
    * @return Response entity for the Card
    */
   public Card addCard(Card card){
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/cards")
+    return serverTarget.path("api/cards")
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(card, APPLICATION_JSON), Card.class);
   }
 
   public Task addTask(Task task){
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/tasks")
+    return serverTarget.path("api/tasks")
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(task, APPLICATION_JSON), Task.class);
@@ -208,8 +210,7 @@ public class ServerUtils {
    * @return Response Entity for the Board
    */
   public Board addBoard(Board board) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-            .target(server).path("api/boards")
+    return serverTarget.path("api/boards")
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(board, APPLICATION_JSON), Board.class);
