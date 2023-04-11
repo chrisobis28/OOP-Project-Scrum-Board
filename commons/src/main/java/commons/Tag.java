@@ -52,6 +52,8 @@ public class Tag {
     return board;
   }
 
+  public void setBoard(Board board) {this.board = board;}
+
   public String getTagName() {
     return tagName;
   }
@@ -63,6 +65,10 @@ public class Tag {
   @JsonBackReference
   public Card getCard() {
     return card;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
   }
 
   @Override

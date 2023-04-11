@@ -35,6 +35,14 @@ public class CardlistTest {
     }
 
     @Test
+    public void checkBoardIdGetterSetter() {
+        var b = new Board();
+        var c = new Cardlist("ewfe");
+        c.setBoardID(b.id);
+        assertEquals(c.getBoardID(), b.id);
+    }
+
+    @Test
     public void checkCardAddRemoveGetter() {
         var b = new Cardlist();
         var c = new Card();

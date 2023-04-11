@@ -59,6 +59,20 @@ public class CardTest {
   }
 
   @Test
+  public void checkCardlistIdGetterSetter() {
+    var a = new Card();
+    a.setCardlistID((long) 2);
+    assertEquals(2, a.getCardlistID());
+  }
+
+  @Test
+  public void checkPositionSetterGetter() {
+    var a = new Card();
+    a.setPosition((long) 1);
+    assertEquals(1, a.getPosition());
+  }
+
+  @Test
   public void cardDescriptionSetter(){
     var a = new Card("card-name", "description");
     a.setCardDescription("desc");

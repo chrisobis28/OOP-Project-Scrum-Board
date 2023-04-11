@@ -8,16 +8,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TaskTest {
 
     @Test
-    public void checkConstructor(){
+    public void checkConstructors(){
         var a = new Task("description");
         assertEquals("description", a.description);
         assertFalse(a.completed_status);
+
+        var c = new Card();
+        var t = new Task("description", c);
+        assertEquals(c, t.getCard());
+        assertEquals("description", t.getDescription());
     }
 
     @Test
     public void checkDefaultConstructor() {
         var a = new Task();
-        assertSame(a.getClass(), (new Task()).getClass());
+        assertSame(a.getClass(), Task.class);
+    }
+
+    @Test
+    public void checkIDGetter() {
+        var a = new Task();
+        assertEquals(a.id, a.getId());
     }
 
     @Test
@@ -28,10 +39,24 @@ public class TaskTest {
     }
 
     @Test
-    public void checkDescriptionSetter(){
+    public void checkDescriptionSetterGetter(){
         var a = new Task("something");
         a.setDescription("else");
-        assertEquals("else", a.description);
+        assertEquals("else", a.getDescription());
+    }
+
+    @Test
+    public void checkStatusGetter() {
+        var c = new Card();
+        var t = new Task("description", c);
+        assertFalse(t.isCompleted_status());
+    }
+
+    @Test
+    public void checkCardGetter() {
+        var c = new Card();
+        var t = new Task("description", c);
+        assertEquals(c, t.getCard());
     }
 
     @Test
