@@ -375,7 +375,7 @@ public class BoardViewCtrl{
     public void myinitialize() {
 
         boardTitle.setOnMouseClicked(e -> { if(e.getClickCount() == 2) editBoardTitle(); }); // double click to edit.
-        refreshButton.setOnAction(e -> refreshBoard());
+        refreshButton.setOnAction(e -> {refreshBoard(); initializeWorkspace();});
         // place the side menu off scene
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(sideMenu);

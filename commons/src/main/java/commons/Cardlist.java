@@ -19,7 +19,7 @@ public class Cardlist{
 
   private String cardlistName;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JoinColumn(name = "board_id")
   public Board board;
 
@@ -120,18 +120,8 @@ public class Cardlist{
     return EqualsBuilder.reflectionEquals(this, obj);
   }
 
-//  @Override
-//  public int hashCode(){
-//    return HashCodeBuilder.reflectionHashCode(this);
-//  }
-
   @Override
   public String toString(){
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-  }
-
-
-  public boolean contains(Card card) {
-    return cardSet.contains(card);
   }
 }

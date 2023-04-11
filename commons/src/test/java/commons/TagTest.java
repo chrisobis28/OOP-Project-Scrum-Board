@@ -14,17 +14,39 @@ public class TagTest {
     }
 
     @Test
+    public void checkBoardSetterGetter() {
+        var t = new Tag();
+        Board b = new Board();
+        t.setBoard(b);
+        assertEquals(b,t.getBoard());
+    }
+
+    @Test
+    public void checkTagNameGetter() {
+        var t = new Tag("ew");
+        assertEquals("ew", t.getTagName());
+    }
+
+    @Test
     public void checkConstructor(){
         var a = new Tag("name");
         assertEquals("name", a.tagName);
     }
 
     @Test
-    public void checkBackgroundColourSetter(){
+    public void checkBackgroundColourSetterGetter(){
         var a = new Tag("something");
-        assertEquals("#FFFFFF", a.backgroundColour);
+        assertEquals("#FFFFFF", a.getBackgroundColour());
         a.setBackgroundColour("#CCCDDD");
-        assertEquals("#CCCDDD", a.backgroundColour);
+        assertEquals("#CCCDDD", a.getBackgroundColour());
+    }
+
+    @Test
+    public void checkCardSetterGetter() {
+        var a = new Tag();
+        var c = new Card();
+        a.setCard(c);
+        assertEquals(a.getCard(), c);
     }
 
     @Test
