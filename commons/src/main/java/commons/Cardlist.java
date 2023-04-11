@@ -19,7 +19,7 @@ public class Cardlist{
 
   private String cardlistName;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "board_id")
   public Board board;
 
