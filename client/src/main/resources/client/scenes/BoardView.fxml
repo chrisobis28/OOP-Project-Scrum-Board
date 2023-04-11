@@ -34,7 +34,7 @@
         <padding>
             <Insets left="10.0" />
         </padding>
-        <Label fx:id="boardTitle" alignment="CENTER" onDragDetected="#addTag" prefHeight="53.0" prefWidth="219.0" style="-fx-background-color: rgb(250,250,250); -fx-background-radius: 100;" text="Board Name" textAlignment="CENTER">
+        <Label fx:id="boardTitle" alignment="CENTER" onDragDetected="#addTag" prefHeight="64.0" prefWidth="379.0" style="-fx-background-color: rgb(250,250,250); -fx-background-radius: 100;" text="Board Name" textAlignment="CENTER">
             <font>
                 <Font size="36.0" />
             </font>
@@ -48,12 +48,6 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
         </Label>
-      <Button fx:id="addTagButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-alignment: center;" text="Add a Tag" textAlignment="CENTER" />
-      <ScrollPane prefHeight="49.0" prefWidth="578.0">
-         <content>
-            <FlowPane fx:id="tagsPane" prefHeight="35.0" prefWidth="717.0" />
-         </content>
-      </ScrollPane>
       <ScrollPane fx:id="scrollpane" pannable="true" prefHeight="455.0" prefWidth="734.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="38.0" />
